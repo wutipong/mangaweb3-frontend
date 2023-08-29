@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { variables } from '$lib/variables';
-	import AboutDialog from '$lib/AboutDialog.svelte';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
 	import ImageViewer from './ImageViewer.svelte';
 	import PageScroll from './PageScroll.svelte';
@@ -24,9 +23,11 @@
 	import { page } from '$app/stores';
 	import { goto, afterNavigate } from '$app/navigation';
 	import { base } from '$app/paths';
+	import { aboutURL, tagURL, browseURL } from '$lib/routes';
 
 	let current = 0;
 	let viewer: ImageViewer;
+	let toast: Toast;
 
 	interface Request {
 		name: string;
@@ -73,9 +74,6 @@
 
 		return output;
 	}
-
-	let aboutDialog: AboutDialog;
-	let toast: Toast;
 
 	function downloadManga() {
 		const url = new URL('/view/download', variables.basePath);
@@ -181,13 +179,17 @@
 	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
 		<Nav navbar>
 			<Dropdown nav inNavbar>
-				<DropdownToggle nav caret>Tags</DropdownToggle>
+				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu>
+					<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
+						<Icon name="list-ul" class="me-3" />
+						All items
+					</DropdownItem>
+					<DropdownItem divider />
 					{#each response.tags as tag}
-						<DropdownItem>
-							<a class="dropdown-item" href={createBrowseTagURL(tag).toString()}>
-								<Icon name="tag" class="me-3" />{tag}
-							</a>
+						<DropdownItem on:click={() => goto(browseURL($page.url.origin, { tag: tag }))}>
+							<Icon name="tag" class="me-3"/>
+							{tag}
 						</DropdownItem>
 					{/each}
 				</DropdownMenu>
@@ -211,7 +213,7 @@
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink on:click={() => aboutDialog.show()}>About</NavLink>
+				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 		<Nav class="ms-auto" navbar>
@@ -230,5 +232,3 @@
 </Navbar>
 
 <Toast bind:this={toast} />
-
-<AboutDialog bind:this={aboutDialog} />

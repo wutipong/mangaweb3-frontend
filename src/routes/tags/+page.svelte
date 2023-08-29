@@ -2,7 +2,6 @@
 	import { page } from '$app/stores';
 	import Item from './Item.svelte';
 	import type { PageData } from './$types';
-	import AboutDialog from '$lib/AboutDialog.svelte';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import { variables } from '$lib/variables';
 	import {
@@ -23,6 +22,7 @@
 	import Toast from '$lib/Toast.svelte';
 	import Pagination from '$lib/Pagination.svelte';
 	import { goto } from '$app/navigation';
+	import { aboutURL, tagURL, browseURL } from '$lib/routes';
 
 	export let data: PageData;
 
@@ -31,16 +31,9 @@
 	$: total_page = data.total_page;
 
 	let favoriteOnly = false;
-	let aboutDialog: AboutDialog;
 	let toast: Toast;
-
-	function createBrowseURL(name: string) {
-		const output = new URL('/browse', $page.url.origin);
-		output.searchParams.append('tag', name);
-
-		return output;
-	}
 	let navbarToggleOpen = false;
+
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
@@ -53,13 +46,6 @@
 			'Thumbnails recreating in progress. Please refresh after a few minutes.'
 		);
 	}
-
-	function onPageClick(i: number) {
-		let url = new URL($page.url);
-		url.searchParams.set('page', i.toString());
-
-		goto(url.toString());
-	}
 </script>
 
 <Navbar color="dark" dark expand="md" sticky={'top'}>
@@ -70,18 +56,16 @@
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu end>
-					<DropdownItem
-						on:click={() => {
-							goto(createBrowseURL(''));
-						}}
-					>
-						<Icon name="list-ul" class="me-3" />
-						All items
-					</DropdownItem>
-					<DropdownItem on:click={() => goto($page.url)}>
-						<Icon name="tags-fill" class="me-3" />
-						Tag list
-					</DropdownItem>
+					<DropdownMenu end>
+						<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
+							<Icon name="list-ul" class="me-3" />
+							All items
+						</DropdownItem>
+						<DropdownItem on:click={() => goto(tagURL($page.url.origin))}>
+							<Icon name="tags-fill" class="me-3" />
+							Tag list
+						</DropdownItem>
+					</DropdownMenu>
 				</DropdownMenu>
 			</Dropdown>
 			<Dropdown nav inNavbar>
@@ -102,7 +86,7 @@
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink on:click={() => aboutDialog.show()}>About</NavLink>
+				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 	</Collapse>
@@ -125,8 +109,6 @@
 <div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
 	<Pagination bind:currentPage={current_page} bind:totalPage={total_page} />
 </div>
-
-<AboutDialog bind:this={aboutDialog} version={'development'} />
 
 <MoveToTop />
 

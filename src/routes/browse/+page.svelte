@@ -21,15 +21,15 @@
 		Input,
 		Button
 	} from 'sveltestrap';
-	import AboutDialog from '$lib/AboutDialog.svelte';
 	import Item from './Item.svelte';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
 	import Toast from '$lib/Toast.svelte';
 	import { goto } from '$app/navigation';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
+	import { aboutURL, tagURL, browseURL } from '$lib/routes';
 
-	console.log(variables.basePath)
+	console.log(variables.basePath);
 
 	interface Request {
 		favorite_only: boolean;
@@ -65,7 +65,6 @@
 	}
 
 	let toast: Toast;
-	let aboutDialog: AboutDialog;
 
 	let request = defaultRequest();
 
@@ -197,11 +196,6 @@
 		invalidate(request);
 	}
 
-	function onPageClick(i: number): void {
-		request.page = i;
-		invalidate(request);
-	}
-
 	let navbarToggleOpen = false;
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
@@ -243,17 +237,14 @@
 			<Nav navbar>
 				<Dropdown nav inNavbar>
 					<DropdownToggle nav caret>Browse</DropdownToggle>
-					<DropdownMenu>
-						<DropdownItem
-							on:click={() => {
-								request = defaultRequest();
-								invalidate(request);
-							}}
-						>
-							<Icon name="list-ul" class="me-3" /> All items
+					<DropdownMenu end>
+						<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
+							<Icon name="list-ul" class="me-3" />
+							All items
 						</DropdownItem>
-						<DropdownItem on:click={() => goto(new URL('/tags', $page.url.origin).toString())}>
-							<Icon name="tags-fill" class="me-3" /> Tag list
+						<DropdownItem on:click={() => goto(tagURL($page.url.origin))}>
+							<Icon name="tags-fill" class="me-3" />
+							Tag list
 						</DropdownItem>
 					</DropdownMenu>
 				</Dropdown>
@@ -304,7 +295,7 @@
 					</DropdownMenu>
 				</Dropdown>
 				<NavItem>
-					<NavLink on:click={() => aboutDialog.show()}>About</NavLink>
+					<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 				</NavItem>
 			</Nav>
 			<Nav class="ms-auto me-3" navbar>
@@ -318,9 +309,9 @@
 				<NavItem>
 					<InputGroup>
 						<Input type="text" bind:value={request.search} />
-						<Button on:click={() => onSearchClick()}
-							><Icon name="search" class="me-3" />Search</Button
-						>
+						<Button on:click={() => onSearchClick()}>
+							<Icon name="search" class="me-3" />Search
+						</Button>
 					</InputGroup>
 				</NavItem>
 			</Nav>
@@ -355,5 +346,3 @@
 <Toast bind:this={toast} />
 
 <MoveToTop />
-
-<AboutDialog bind:this={aboutDialog} />

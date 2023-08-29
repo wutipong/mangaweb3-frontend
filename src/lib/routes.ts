@@ -15,7 +15,7 @@ export function tagURL(base: URL | string, options?: { page?: number }): URL {
 }
 
 export function browseURL(base: URL | string, options?: {
-    favorite_only: boolean;
+    favorite_only?: boolean;
     item_per_page?: number;
     order?: 'ascending' | 'descending';
     page?: number;

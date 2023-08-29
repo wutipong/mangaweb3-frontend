@@ -346,7 +346,7 @@
 	<div style="height: 100px;" />
 
 	<div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
-		<Pagination currentPage={request.page} totalPage={response.total_page} {onPageClick} />
+		<Pagination currentPage={request.page} totalPage={response.total_page} />
 	</div>
 {:catch}
 	<Icon name="exclamation-octagon-fill" color="danger" /> Cannot fetch browse data from {variables.basePath}.

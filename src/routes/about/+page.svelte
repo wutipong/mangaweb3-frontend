@@ -52,7 +52,7 @@
 		</Nav>
 	</Collapse>
 </Navbar>
-
+<Container>
 <h1>MangaWeb 3</h1>
 
 <h6>Version {version}</h6>
@@ -93,3 +93,4 @@
 		>
 	</li>
 </ul>
+</Container>

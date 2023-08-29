@@ -31,7 +31,9 @@
 </script>
 
 <Card class="{classStr} h-100" id={tag.id.toString()}>
-	<CardImg top src={createThumbnailUrl(tag.name).toString()} />
+	<a href={createBrowseURL(tag.name).toString()}>
+		<CardImg top src={createThumbnailUrl(tag.name).toString()} />
+	</a>
 	<CardBody>
 		<a href={createBrowseURL(tag.name).toString()}>{tag.name}</a>
 	</CardBody>

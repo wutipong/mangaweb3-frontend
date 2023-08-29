@@ -32,13 +32,15 @@
 		} else if (!isRead) {
 			classStr += ' border-yellow';
 		}
-	};
+	}
 
 	let classStr = '';
 </script>
 
 <Card class="{classStr} h-100" {id}>
-	<CardImg top src={thumbnailURL} />
+	<a href={viewURL}>
+		<CardImg top src={thumbnailURL} />
+	</a>
 	<CardBody>
 		<a href={viewURL}>{name}</a>
 	</CardBody>

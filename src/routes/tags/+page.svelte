@@ -55,17 +55,16 @@
 		<Nav navbar>
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
+
 				<DropdownMenu end>
-					<DropdownMenu end>
-						<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
-							<Icon name="list-ul" class="me-3" />
-							All items
-						</DropdownItem>
-						<DropdownItem on:click={() => goto(tagURL($page.url.origin))}>
-							<Icon name="tags-fill" class="me-3" />
-							Tag list
-						</DropdownItem>
-					</DropdownMenu>
+					<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
+						<Icon name="list-ul" class="me-3" />
+						All items
+					</DropdownItem>
+					<DropdownItem on:click={() => goto(tagURL($page.url.origin))}>
+						<Icon name="tags-fill" class="me-3" />
+						Tag list
+					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
 			<Dropdown nav inNavbar>

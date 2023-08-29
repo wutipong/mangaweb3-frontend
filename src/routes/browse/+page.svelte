@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { variables } from '$lib/variables';
-	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import {
 		Spinner,
@@ -28,128 +27,77 @@
 	import { goto } from '$app/navigation';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
 	import { aboutURL, tagURL, browseURL } from '$lib/routes';
-
-	console.log(variables.basePath);
-
-	interface Request {
-		favorite_only: boolean;
-		item_per_page: number;
-		order: 'ascending' | 'descending';
-		page: number;
-		search: string;
-		sort: 'name' | 'createTime';
-		tag: string;
-	}
-
-	interface Item {
-		create_time: string;
-		favorite: boolean;
-		id: number;
-		is_read: boolean;
-		name: string;
-	}
-
-	interface Page {
-		content: string;
-		is_active: boolean;
-		is_enabled: boolean;
-		is_hidden_on_small: boolean;
-		link_url: string;
-	}
-
-	interface Response {
-		items: Item[];
-		pages: Page[];
-		tag_favorite: boolean;
-		total_page: number;
-	}
+	import type { PageData } from './$types';
 
 	let toast: Toast;
 
-	let request = defaultRequest();
+	export let data: PageData;
 
-	let response: Response = {
-		items: [],
-		pages: [],
-		tag_favorite: true,
-		total_page: 0
-	};
+	$: favoriteOnly = data.request.favorite_only;
+	$: items = data.response.items;
+	$: order = data.request.order;
+	$: pageIndex = data.request.page;
+	let search = data.request.search;
+	$: sort = data.request.sort;
+	$: tag = data.request.tag;
+	$: tag_favorite = data.response.tag_favorite;
+	$: totalPage = data.response.total_page;
 
-	let promise: Promise<void>;
-	onMount(() => {
-		parseParams();
-		invalidate(request);
-	});
+	function createBrowseURL(options?: {
+		favorite_only?: boolean;
+		item_per_page?: number;
+		order?: 'ascending' | 'descending';
+		page?: number;
+		search?: string;
+		sort?: 'name' | 'createTime';
+		tag?: string;
+	}): URL {
+		let callOptions = data.request;
+		if (options != null) {
+			const { favorite_only, item_per_page, order, page, search, sort, tag } = options;
+			if (favorite_only != null) {
+				callOptions.favorite_only = favorite_only;
+			}
+			if (item_per_page != null) {
+				callOptions.item_per_page = item_per_page;
+			}
+			if (order != null) {
+				callOptions.order = order;
+			}
+			if (page != null) {
+				callOptions.page = page;
+			}
 
-	function defaultRequest(): Request {
-		return {
-			favorite_only: false,
-			item_per_page: 30,
-			order: 'descending',
-			page: 0,
-			search: '',
-			sort: 'createTime',
-			tag: ''
-		};
-	}
+			if (search != null) {
+				callOptions.search = search;
+			}
 
-	function parseParams() {
-		const params = $page.url.searchParams;
-		if (params.has('favorite_only')) {
-			request.favorite_only = params.get('favorite_only') == 'true';
-		}
-
-		if (params.has('order')) {
-			const v = params.get('order');
-			if (v == 'ascending') {
-				request.order = 'ascending';
-			} else if (v == 'descending') {
-				request.order = 'descending';
+			if (sort != null) {
+				callOptions.sort = sort;
+			}
+			if (tag != null) {
+				callOptions.tag = tag;
 			}
 		}
 
-		if (params.has('tag')) {
-			request.tag = params.get('tag') as string;
-		}
-
-		if (params.has('page')) {
-			let v = params.get('page');
-			if (v != null) {
-				request.page = parseInt(v);
-			}
-		}
+		return browseURL($page.url.origin, callOptions);
 	}
 
-	async function loadData() {
-		let u = new URL('/browse', variables.basePath);
-		const r = await fetch(u, { method: 'POST', body: JSON.stringify(request) });
-		response = await r.json();
-	}
+	function createSortBrowseURL(sort: 'name' | 'createTime'): URL {
+		let options: {
+			sort?: 'name' | 'createTime';
+			order?: 'ascending' | 'descending';
+		} = {};
 
-	function changeSort(sortBy: 'name' | 'createTime') {
-		request.sort = sortBy;
-		switch (sortBy) {
+		options.sort = sort;
+		switch (sort) {
 			case 'name':
-				request.order = 'ascending';
+				options.order = 'ascending';
 			case 'createTime':
-				request.order = 'descending';
+				options.order = 'descending';
 		}
 
-		request.page = 0;
-		invalidate(request);
-	}
-
-	function changeOrder(order: 'ascending' | 'descending') {
-		request.order = order;
-		request.page = 0;
-
-		invalidate(request);
-	}
-
-	function onFilterFavorite() {
-		request.favorite_only = !request.favorite_only;
-		request.page = 0;
-		invalidate(request);
+		return browseURL($page.url, options);
 	}
 
 	async function rescanLibrary() {
@@ -172,8 +120,8 @@
 
 	async function onTagFavorite() {
 		const req = {
-			favorite: !response.tag_favorite,
-			tag: request.tag
+			favorite: !tag_favorite,
+			tag: tag
 		};
 
 		const url = new URL('/tag/set_favorite', variables.basePath);
@@ -182,166 +130,136 @@
 		const json = await resp.json();
 
 		if (json.favorite) {
-			toast.show('Favorite', `The tag "${request.tag}" is now your favorite.`);
+			toast.show('Favorite', `The tag "${tag}" is now your favorite.`);
 		} else {
-			toast.show('Favorite', `The tag "${request.tag}" is no longer your favorite.`);
+			toast.show('Favorite', `The tag "${tag}" is no longer your favorite.`);
 		}
 
-		response.tag_favorite = json.favorite;
-	}
-
-	let searchText = '';
-	function onSearchClick() {
-		request.search = searchText;
-		invalidate(request);
+		tag_favorite = json.favorite;
 	}
 
 	let navbarToggleOpen = false;
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
-
-	function invalidate(req: Request) {
-		request = req;
-
-		$page.url.searchParams.set('favorite_only', `${request.favorite_only}`);
-		$page.url.searchParams.set('order', request.order);
-		$page.url.searchParams.set('page', request.page.toString());
-
-		if (request.search == '') {
-			$page.url.searchParams.delete('search');
-		} else {
-			$page.url.searchParams.set('search', request.tag);
-		}
-
-		$page.url.searchParams.set('sort', request.sort);
-
-		if (request.tag == '') {
-			$page.url.searchParams.delete('tag');
-		} else {
-			$page.url.searchParams.set('tag', request.tag);
-		}
-
-		goto($page.url);
-		promise = loadData();
-	}
 </script>
 
-{#await promise}
-	<div><Spinner type="grow" /> Loading ...</div>
-{:then}
-	<Navbar color="dark" dark expand="md" sticky={'top'}>
-		<NavbarBrand href="/">{request.tag == '' ? 'Browse' : `Browse: ${request.tag}`}</NavbarBrand>
-		<NavbarToggler on:click={() => (navbarToggleOpen = !navbarToggleOpen)} />
-		<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
-			<Nav navbar>
-				<Dropdown nav inNavbar>
-					<DropdownToggle nav caret>Browse</DropdownToggle>
-					<DropdownMenu end>
-						<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
-							<Icon name="list-ul" class="me-3" />
-							All items
-						</DropdownItem>
-						<DropdownItem on:click={() => goto(tagURL($page.url.origin))}>
-							<Icon name="tags-fill" class="me-3" />
-							Tag list
-						</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
-				<Dropdown nav inNavbar>
-					<DropdownToggle nav caret>Sort By</DropdownToggle>
-					<DropdownMenu>
-						<DropdownItem active={request.sort == 'name'} on:click={() => changeSort('name')}>
-							<Icon name="type" class="me-3" /> Name
-						</DropdownItem>
-						<DropdownItem
-							active={request.sort == 'createTime'}
-							on:click={() => changeSort('createTime')}
-						>
-							<Icon name="clock" class="me-3" /> Create time
-						</DropdownItem>
-						<DropdownItem divider />
-						<DropdownItem
-							active={request.order == 'ascending'}
-							on:click={() => changeOrder('ascending')}
-						>
-							<Icon name="sort-down-alt" class="me-3" />Ascending
-						</DropdownItem>
-						<DropdownItem
-							active={request.order == 'descending'}
-							on:click={() => changeOrder('descending')}
-						>
-							<Icon name="sort-up-alt" class="me-3" /> Descending
-						</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
-				<Dropdown nav inNavbar>
-					<DropdownToggle nav caret>Filter</DropdownToggle>
-					<DropdownMenu>
-						<DropdownItem active={request.favorite_only} on:click={() => onFilterFavorite()}>
-							<Icon name="star" class="me-3" /> Favorite
-						</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
-				<Dropdown nav inNavbar>
-					<DropdownToggle nav caret>Tools</DropdownToggle>
-					<DropdownMenu>
-						<DropdownItem on:click={() => rescanLibrary()}>
-							<Icon name="arrow-clockwise" class="me-3" /> Rescan library
-						</DropdownItem>
-						<DropdownItem on:click={() => recreateThumbnails()}>
-							<Icon name="file-image" class="me-3" /> Recreate thumbnails
-						</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
-				<NavItem>
-					<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
-				</NavItem>
-			</Nav>
-			<Nav class="ms-auto me-3" navbar>
-				<NavItem hidden={request.tag == '' ? true : undefined}>
-					<FavoriteButton on:click={() => onTagFavorite()} isFavorite={response.tag_favorite}>
-						Favorite tag
-					</FavoriteButton>
-				</NavItem>
-			</Nav>
-			<Nav navbar>
-				<NavItem>
-					<InputGroup>
-						<Input type="text" bind:value={request.search} />
-						<Button on:click={() => onSearchClick()}>
-							<Icon name="search" class="me-3" />Search
-						</Button>
-					</InputGroup>
-				</NavItem>
-			</Nav>
-		</Collapse>
-	</Navbar>
+<Navbar color="dark" dark expand="md" sticky={'top'}>
+	<NavbarBrand href="/">
+		{data.request.tag == '' ? 'Browse' : `Browse: ${data.request.tag}`}
+	</NavbarBrand>
 
-	<div class="container-fluid" style="padding-top:30px;">
-		<div class="grid-container">
-			<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-				{#each response.items as item}
-					<div class="col">
-						<Item
-							favorite={item.favorite}
-							isRead={item.is_read}
-							id={item.id.toString()}
-							name={item.name}
-						/>
-					</div>
-				{/each}
-			</div>
+	<NavbarToggler on:click={() => (navbarToggleOpen = !navbarToggleOpen)} />
+
+	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
+		<Nav navbar>
+			<Dropdown nav inNavbar>
+				<DropdownToggle nav caret>Browse</DropdownToggle>
+				<DropdownMenu end>
+					<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
+						<Icon name="list-ul" class="me-3" />
+						All items
+					</DropdownItem>
+					<DropdownItem on:click={() => goto(tagURL($page.url.origin))}>
+						<Icon name="tags-fill" class="me-3" />
+						Tag list
+					</DropdownItem>
+				</DropdownMenu>
+			</Dropdown>
+			<Dropdown nav inNavbar>
+				<DropdownToggle nav caret>Sort By</DropdownToggle>
+				<DropdownMenu>
+					<DropdownItem active={sort == 'name'} on:click={() => goto(createSortBrowseURL('name'))}>
+						<Icon name="type" class="me-3" /> Name
+					</DropdownItem>
+					<DropdownItem
+						active={sort == 'createTime'}
+						on:click={() => goto(createSortBrowseURL('createTime'))}
+					>
+						<Icon name="clock" class="me-3" /> Create time
+					</DropdownItem>
+					<DropdownItem divider />
+					<DropdownItem
+						active={order == 'ascending'}
+						on:click={() => goto(createBrowseURL({ order: 'ascending' }))}
+					>
+						<Icon name="sort-down-alt" class="me-3" />Ascending
+					</DropdownItem>
+					<DropdownItem
+						active={order == 'descending'}
+						on:click={() => goto(createBrowseURL({ order: 'descending' }))}
+					>
+						<Icon name="sort-up-alt" class="me-3" /> Descending
+					</DropdownItem>
+				</DropdownMenu>
+			</Dropdown>
+			<Dropdown nav inNavbar>
+				<DropdownToggle nav caret>Filter</DropdownToggle>
+				<DropdownMenu>
+					<DropdownItem
+						active={favoriteOnly}
+						on:click={() => goto(browseURL($page.url, { favorite_only: !favoriteOnly }))}
+					>
+						<Icon name="star" class="me-3" /> Favorite
+					</DropdownItem>
+				</DropdownMenu>
+			</Dropdown>
+			<Dropdown nav inNavbar>
+				<DropdownToggle nav caret>Tools</DropdownToggle>
+				<DropdownMenu>
+					<DropdownItem on:click={() => rescanLibrary()}>
+						<Icon name="arrow-clockwise" class="me-3" /> Rescan library
+					</DropdownItem>
+					<DropdownItem on:click={() => recreateThumbnails()}>
+						<Icon name="file-image" class="me-3" /> Recreate thumbnails
+					</DropdownItem>
+				</DropdownMenu>
+			</Dropdown>
+			<NavItem>
+				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+			</NavItem>
+		</Nav>
+		<Nav class="ms-auto me-3" navbar>
+			<NavItem hidden={tag == '' ? true : undefined}>
+				<FavoriteButton on:click={() => onTagFavorite()} isFavorite={tag_favorite}>
+					Favorite tag
+				</FavoriteButton>
+			</NavItem>
+		</Nav>
+		<Nav navbar>
+			<NavItem>
+				<InputGroup>
+					<Input type="text" bind:value={search} />
+					<Button on:click={() => goto(browseURL($page.url.origin, {search: search}))}>
+						<Icon name="search" class="me-3" />Search
+					</Button>
+				</InputGroup>
+			</NavItem>
+		</Nav>
+	</Collapse>
+</Navbar>
+
+<div class="container-fluid" style="padding-top:30px;">
+	<div class="grid-container">
+		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
+			{#each items as item}
+				<div class="col">
+					<Item
+						favorite={item.favorite}
+						isRead={item.is_read}
+						id={item.id.toString()}
+						name={item.name}
+					/>
+				</div>
+			{/each}
 		</div>
 	</div>
-	<div style="height: 100px;" />
+</div>
+<div style="height: 100px;" />
 
-	<div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
-		<Pagination currentPage={request.page} totalPage={response.total_page} />
-	</div>
-{:catch}
-	<Icon name="exclamation-octagon-fill" color="danger" /> Cannot fetch browse data from {variables.basePath}.
-{/await}
+<div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
+	<Pagination currentPage={pageIndex} {totalPage} />
+</div>
 
 <Toast bind:this={toast} />
 

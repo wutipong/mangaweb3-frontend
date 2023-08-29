@@ -24,6 +24,7 @@ export function browseURL(base: URL | string, options?: {
     tag?: string;
 }): URL {
     const output = new URL("/browse", base);
+    
     if (options != null) {
         const { favorite_only, item_per_page, order, page, search, sort, tag } = options;
         if (favorite_only != null) {

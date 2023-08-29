@@ -14,7 +14,7 @@
 	let thumbnailURL = '';
 	let viewURL = '';
 
-	onMount(async () => {
+	$: {
 		let u = new URL('/browse/thumbnail', variables.basePath);
 		u.searchParams.append('name', name);
 		thumbnailURL = u.toString();
@@ -32,7 +32,7 @@
 		} else if (!isRead) {
 			classStr += ' border-yellow';
 		}
-	});
+	};
 
 	let classStr = '';
 </script>

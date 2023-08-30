@@ -1,19 +1,17 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
 	import { Badge, Card, CardBody, CardFooter, CardImg, Icon } from 'sveltestrap';
-	import type {Tag} from '$lib/tag'
-	import { page } from '$app/stores'
+	import type { Tag } from '$lib/tag';
+	import { page } from '$app/stores';
 	import { variables } from '$lib/variables';
 
-    export let tag: Tag
+	export let tag: Tag;
 
-    let classStr = '';
-
-    onMount(async () => {
-		if (tag.favorite) {
-			classStr = 'border border-pink';
+	function createClassStr(fav: boolean) {
+		if (fav) {
+			return 'border border-pink';
 		}
-	});
+		return '';
+	}
 
 	function createBrowseURL(name: string) {
 		const output = new URL('/browse', $page.url.origin);
@@ -30,7 +28,7 @@
 	}
 </script>
 
-<Card class="{classStr} h-100" id={tag.id.toString()}>
+<Card class="{createClassStr(tag.favorite)} h-100" id={tag.id.toString()}>
 	<a href={createBrowseURL(tag.name).toString()}>
 		<CardImg top src={createThumbnailUrl(tag.name).toString()} />
 	</a>
@@ -42,10 +40,10 @@
 			<Badge class="bg-pink">
 				<span><Icon name="star-fill" /> Favorite </span>
 			</Badge>
-        {:else}
-        <Badge>
-            <span><Icon name="tag" />  </span>
-        </Badge>
+		{:else}
+			<Badge>
+				<span><Icon name="tag" /> </span>
+			</Badge>
 		{/if}
 	</CardFooter>
 </Card>

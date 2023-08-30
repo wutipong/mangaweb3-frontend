@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { variables } from '$lib/variables';
-	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { Badge, Card, CardBody, CardFooter, CardImg, Icon } from 'sveltestrap';
 

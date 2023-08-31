@@ -34,16 +34,30 @@ interface Response {
     total_page: number;
 }
 
-export const load: PageLoad = async ({ fetch, url }) => {
-    const request: Request = {
+function createDefaultRequest(): Request {
+    let sortField: "name" | "createTime" = "createTime"
+    if (variables.defaultSortField == "name") {
+        sortField = "name"
+    }
+
+    let order: "descending" | "ascending" = "descending"
+    if (variables.defaultOrder == "ascending") {
+        order = "ascending"
+    }
+
+    return {
         favorite_only: false,
         item_per_page: 30,
-        order: 'descending',
+        order: order,
         page: 0,
         search: '',
-        sort: 'createTime',
+        sort: sortField,
         tag: ''
     };
+}
+
+export const load: PageLoad = async ({ fetch, url }) => {
+    const request = createDefaultRequest();
 
     const params = url.searchParams;
     if (params.has('favorite_only')) {

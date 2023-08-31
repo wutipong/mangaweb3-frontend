@@ -24,6 +24,7 @@
 	import { goto, afterNavigate } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { aboutURL, tagURL, browseURL } from '$lib/routes';
+	import type { Tag } from '$lib/tag';
 
 	let current = 0;
 	let viewer: ImageViewer;
@@ -37,7 +38,7 @@
 		browse_url: string;
 		favorite: boolean;
 		indices: number[];
-		tags: string[];
+		tags: Tag[];
 	}
 
 	let request: Request = {
@@ -149,13 +150,6 @@
 		navbarToggleOpen = event.detail;
 	}
 
-	function createBrowseTagURL(tag: string): URL {
-		const u = new URL('/browse', $page.url.origin);
-		u.searchParams.set('tag', tag);
-
-		return u;
-	}
-
 	let previousPage: string = base;
 
 	afterNavigate(({ from }) => {
@@ -186,10 +180,15 @@
 						All items
 					</DropdownItem>
 					<DropdownItem divider />
+					<DropdownItem header>Tags</DropdownItem>
 					{#each response.tags as tag}
-						<DropdownItem on:click={() => goto(browseURL($page.url.origin, { tag: tag }))}>
-							<Icon name="tag" class="me-3"/>
-							{tag}
+						<DropdownItem on:click={() => goto(browseURL($page.url.origin, { tag: tag.name }))}>
+							{#if tag.favorite}
+								<Icon name="star-fill"  class="me-3"/>
+							{:else}
+								<Icon name="tag" class="me-3"/>
+							{/if}
+							{tag.name}
 						</DropdownItem>
 					{/each}
 				</DropdownMenu>

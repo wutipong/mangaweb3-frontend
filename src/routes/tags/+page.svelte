@@ -3,7 +3,6 @@
 	import Item from './Item.svelte';
 	import type { PageData } from './$types';
 	import MoveToTop from '$lib/MoveToTop.svelte';
-	import { variables } from '$lib/variables';
 	import {
 		Container,
 		Icon,
@@ -19,7 +18,6 @@
 		DropdownMenu,
 		DropdownItem
 	} from 'sveltestrap';
-	import Toast from '$lib/Toast.svelte';
 	import Pagination from '$lib/Pagination.svelte';
 	import { goto } from '$app/navigation';
 	import { aboutURL, tagURL, browseURL } from '$lib/routes';
@@ -31,20 +29,10 @@
 	$: total_page = data.total_page;
 
 	let favoriteOnly = false;
-	let toast: Toast;
 	let navbarToggleOpen = false;
 
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
-	}
-
-	async function recreateThumbnails() {
-		const url = new URL('/tag/recreate_thumbnails', variables.basePath);
-		await fetch(url);
-		toast.show(
-			'Re-create thumbnail',
-			'Thumbnails recreating in progress. Please refresh after a few minutes.'
-		);
 	}
 </script>
 
@@ -76,14 +64,6 @@
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
-			<Dropdown nav inNavbar>
-				<DropdownToggle nav caret>Tools</DropdownToggle>
-				<DropdownMenu>
-					<DropdownItem on:click={() => recreateThumbnails()}>
-						<Icon name="file-image" class="me-3" /> Recreate thumbnails
-					</DropdownItem>
-				</DropdownMenu>
-			</Dropdown>
 			<NavItem>
 				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
@@ -110,5 +90,3 @@
 </div>
 
 <MoveToTop />
-
-<Toast bind:this={toast} />

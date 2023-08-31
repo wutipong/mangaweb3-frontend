@@ -23,7 +23,7 @@
 	import { page } from '$app/stores';
 	import { goto, afterNavigate } from '$app/navigation';
 	import { base } from '$app/paths';
-	import { aboutURL, tagURL, browseURL } from '$lib/routes';
+	import { aboutURL, browseURL } from '$lib/routes';
 	import type { Tag } from '$lib/tag';
 
 	let current = 0;

@@ -1,33 +1,31 @@
 <script lang="ts">
-	import { variables } from '$lib/variables';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import {
-		Spinner,
-		Icon,
-		Collapse,
-		Navbar,
-		NavbarToggler,
-		NavbarBrand,
-		Nav,
-		NavItem,
-		NavLink,
-		Dropdown,
-		DropdownToggle,
-		DropdownMenu,
-		DropdownItem,
-		InputGroup,
-		InputGroupText,
-		Input,
-		Button
-	} from 'sveltestrap';
-	import Item from './Item.svelte';
+	import FavoriteButton from '$lib/FavoriteButton.svelte';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
 	import Toast from '$lib/Toast.svelte';
-	import { goto } from '$app/navigation';
-	import FavoriteButton from '$lib/FavoriteButton.svelte';
-	import { aboutURL, tagURL, browseURL } from '$lib/routes';
+	import { aboutURL, browseURL, tagURL } from '$lib/routes';
+	import { variables } from '$lib/variables';
+	import {
+		Button,
+		Collapse,
+		Dropdown,
+		DropdownItem,
+		DropdownMenu,
+		DropdownToggle,
+		Icon,
+		Input,
+		InputGroup,
+		Nav,
+		NavItem,
+		NavLink,
+		Navbar,
+		NavbarBrand,
+		NavbarToggler
+	} from 'sveltestrap';
 	import type { PageData } from './$types';
+	import Item from './Item.svelte';
 
 	let toast: Toast;
 
@@ -98,24 +96,6 @@
 		}
 
 		return browseURL($page.url, options);
-	}
-
-	async function rescanLibrary() {
-		const url = new URL('/browse/rescan_library', variables.basePath);
-		await fetch(url);
-		toast.show(
-			'Re-scan Library',
-			'Library re-scanning in progress. Please refresh after a few minutes.'
-		);
-	}
-
-	async function recreateThumbnails() {
-		const url = new URL('/browse/recreate_thumbnails', variables.basePath);
-		await fetch(url);
-		toast.show(
-			'Re-create thumbnail',
-			'Thumbnails recreating in progress. Please refresh after a few minutes.'
-		);
 	}
 
 	async function onTagFavorite() {
@@ -201,17 +181,6 @@
 						on:click={() => goto(browseURL($page.url, { favorite_only: !favoriteOnly }))}
 					>
 						<Icon name="star" class="me-3" /> Favorite
-					</DropdownItem>
-				</DropdownMenu>
-			</Dropdown>
-			<Dropdown nav inNavbar>
-				<DropdownToggle nav caret>Tools</DropdownToggle>
-				<DropdownMenu>
-					<DropdownItem on:click={() => rescanLibrary()}>
-						<Icon name="arrow-clockwise" class="me-3" /> Rescan library
-					</DropdownItem>
-					<DropdownItem on:click={() => recreateThumbnails()}>
-						<Icon name="file-image" class="me-3" /> Recreate thumbnails
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>

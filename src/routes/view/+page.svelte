@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
 	import Toast from '$lib/Toast.svelte';
@@ -29,10 +29,10 @@
 
 	export let data: PageData;
 
-	let name = data.name;
-	let favorite = data.favorite;
-	let pageCount = data.pageCount;
-	let tags = data.tags;
+	$: name = data.name;
+	$: favorite = data.favorite;
+	$: pageCount = data.pageCount;
+	$: tags = data.tags;
 
 	function createImageUrls(name: string, pageCount: number): string[] {
 		const url = new URL('/view/get_image', variables.basePath);
@@ -80,6 +80,22 @@
 		}
 
 		favorite = json.favorite;
+	}
+
+	async function fixMetaData() {
+		const url = new URL('/view/fix_meta', variables.basePath);
+		const req = {
+			name: name
+		};
+
+		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
+		const json = await resp.json();
+		if (json.success) {
+			toast.show('Fix metadata', 'The metadata has been updated.');
+			invalidateAll();
+		} else {
+			toast.show('Fix metadata', 'The metadata updates fails.');
+		}
 	}
 
 	async function updateCover() {
@@ -157,6 +173,7 @@
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Tools</DropdownToggle>
 				<DropdownMenu>
+					<DropdownItem header>Download</DropdownItem>
 					<DropdownItem on:click={() => downloadPage()}>
 						<Icon name="download" class="me-3" />
 						Download Current Page
@@ -166,9 +183,14 @@
 						Download Manga
 					</DropdownItem>
 					<DropdownItem divider />
+					<DropdownItem header>Maintenance</DropdownItem>
 					<DropdownItem on:click={() => updateCover()}>
 						<Icon name="journal-arrow-up" class="me-3" />
 						Replace Cover
+					</DropdownItem>
+					<DropdownItem on:click={() => fixMetaData()}>
+						<Icon name="tools" class="me-3" />
+						Fix the manga
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
@@ -176,9 +198,9 @@
 				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
-		<Nav navbar class="ms-auto" >
+		<Nav navbar class="ms-auto">
 			<NavItem class="me-3 d-none d-md-block">
-				<NavLink>{name.length > 40? `${name.substring(0, 35)}...`: name }</NavLink>
+				<NavLink>{name.length > 40 ? `${name.substring(0, 35)}...` : name}</NavLink>
 			</NavItem>
 			<NavItem class="me-3">
 				<FavoriteButton on:click={() => toggleFavorite()} isFavorite={favorite}>

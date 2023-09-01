@@ -7,6 +7,7 @@
 
 	export let favorite = false;
 	export let isRead = false;
+	export let favoriteTag = false;
 	export let id = '';
 	export let name = '';
 
@@ -22,14 +23,12 @@
 		u.searchParams.append('name', name);
 		viewURL = u.toString();
 
-		if (favorite || !isRead) {
-			classStr = 'border';
-		}
-
-		if (favorite) {
-			classStr += ' border-pink';
-		} else if (!isRead) {
-			classStr += ' border-yellow';
+		if (favorite || favoriteTag) {
+			classStr += 'border border-2 border-pink';
+		} 
+		
+		if (!isRead) {
+			classStr += 'border border-2 border-yellow';
 		}
 	}
 
@@ -48,7 +47,15 @@
 			<Badge class="bg-pink">
 				<span><Icon name="star-fill" /> Favorite </span>
 			</Badge>
-		{:else if !isRead}
+		{/if}
+
+		{#if favoriteTag}
+			<Badge class="bg-pink">
+				<span><Icon name="tag" /> Favorite Tag</span>
+			</Badge>
+		{/if}
+
+		{#if !isRead}
 			<Badge class="bg-yellow">
 				<span><Icon name="lightning-fill" /> New </span>
 			</Badge>

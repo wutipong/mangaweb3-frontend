@@ -215,7 +215,7 @@
 				<div class="col">
 					<Item
 						favorite={item.favorite}
-						isRead={item.is_read}
+						isRead={item.read}
 						id={item.id.toString()}
 						name={item.name}
 					/>

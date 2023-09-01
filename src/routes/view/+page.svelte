@@ -149,12 +149,6 @@
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
-
-	let previousPage: string = base;
-
-	afterNavigate(({ from }) => {
-		previousPage = from?.url.pathname || previousPage;
-	});
 </script>
 
 <PageScroll PageCount={response.page_count} {onValueChange} Current={current} />
@@ -220,11 +214,6 @@
 				<FavoriteButton on:click={() => toggleFavorite()} isFavorite={response.favorite}>
 					Favorite
 				</FavoriteButton>
-			</NavItem>
-			<NavItem>
-				<Button on:click={() => goto(previousPage)} color="danger">
-					<Icon name="x-circle" class=" me-3" /> Close
-				</Button>
 			</NavItem>
 		</Nav>
 	</Collapse>

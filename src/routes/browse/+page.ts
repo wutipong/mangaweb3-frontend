@@ -15,7 +15,7 @@ interface Item {
     create_time: string;
     favorite: boolean;
     id: number;
-    is_read: boolean;
+    read: boolean;
     name: string;
 }
 

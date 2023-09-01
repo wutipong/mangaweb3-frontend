@@ -149,12 +149,6 @@
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
-
-	let previousPage: string = base;
-
-	afterNavigate(({ from }) => {
-		previousPage = from?.url.pathname || previousPage;
-	});
 </script>
 
 <PageScroll PageCount={response.indices.length} {onValueChange} Current={current} />
@@ -184,9 +178,9 @@
 					{#each response.tags as tag}
 						<DropdownItem on:click={() => goto(browseURL($page.url.origin, { tag: tag.name }))}>
 							{#if tag.favorite}
-								<Icon name="star-fill"  class="me-3"/>
+								<Icon name="star-fill" class="me-3" />
 							{:else}
-								<Icon name="tag" class="me-3"/>
+								<Icon name="tag" class="me-3" />
 							{/if}
 							{tag.name}
 						</DropdownItem>
@@ -220,11 +214,6 @@
 				<FavoriteButton on:click={() => toggleFavorite()} isFavorite={response.favorite}>
 					Favorite
 				</FavoriteButton>
-			</NavItem>
-			<NavItem>
-				<Button on:click={() => goto(previousPage)} color="danger">
-					<Icon name="x-circle" class=" me-3" /> Close
-				</Button>
 			</NavItem>
 		</Nav>
 	</Collapse>

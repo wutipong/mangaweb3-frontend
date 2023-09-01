@@ -1,67 +1,38 @@
 <script lang="ts">
-	import { variables } from '$lib/variables';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
-	import ImageViewer from './ImageViewer.svelte';
-	import PageScroll from './PageScroll.svelte';
 	import Toast from '$lib/Toast.svelte';
-	import { onMount } from 'svelte';
+	import { aboutURL, browseURL } from '$lib/routes';
+	import { variables } from '$lib/variables';
 	import {
-		Icon,
 		Collapse,
-		Navbar,
-		NavbarToggler,
-		NavbarBrand,
+		Dropdown,
+		DropdownItem,
+		DropdownMenu,
+		DropdownToggle,
+		Icon,
 		Nav,
 		NavItem,
 		NavLink,
-		Dropdown,
-		DropdownToggle,
-		DropdownMenu,
-		DropdownItem,
-		Button
+		Navbar,
+		NavbarBrand,
+		NavbarToggler
 	} from 'sveltestrap';
-	import { page } from '$app/stores';
-	import { goto, afterNavigate } from '$app/navigation';
-	import { base } from '$app/paths';
-	import { aboutURL, browseURL } from '$lib/routes';
-	import type { Tag } from '$lib/tag';
+	import type { PageData } from './$types';
+	import ImageViewer from './ImageViewer.svelte';
+	import PageScroll from './PageScroll.svelte';
 
 	let current = 0;
 	let viewer: ImageViewer;
 	let toast: Toast;
 
-	interface Request {
-		name: string;
-	}
+	export let data: PageData;
 
-	interface Response {
-		browse_url: string;
-		favorite: boolean;
-		page_count: number;
-		tags: Tag[];
-	}
-
-	let request: Request = {
-		name: ''
-	};
-
-	let response: Response = {
-		browse_url: '',
-		favorite: false,
-		page_count: 0,
-		tags: []
-	};
-
-	onMount(async () => {
-		const params = $page.url.searchParams;
-		if (params.has('name')) {
-			request.name = params.get('name') as string;
-		}
-
-		const url = new URL('/view', variables.basePath);
-		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(request) });
-		response = await resp.json();
-	});
+	let name = data.name;
+	let favorite = data.favorite;
+	let pageCount = data.pageCount;
+	let tags = data.tags;
 
 	function createImageUrls(name: string, pageCount: number): string[] {
 		const url = new URL('/view/get_image', variables.basePath);
@@ -78,14 +49,14 @@
 
 	function downloadManga() {
 		const url = new URL('/view/download', variables.basePath);
-		url.searchParams.set('name', request.name);
+		url.searchParams.set('name', name);
 
 		download(url.toString());
 	}
 
 	function downloadPage() {
 		const url = new URL('/view/get_image', variables.basePath);
-		url.searchParams.set('name', request.name);
+		url.searchParams.set('name', name);
 		url.searchParams.set('i', current.toString());
 
 		download(url.toString());
@@ -93,8 +64,8 @@
 
 	async function toggleFavorite() {
 		const req = {
-			favorite: !response.favorite,
-			name: request.name
+			favorite: !favorite,
+			name: name
 		};
 
 		const url = new URL('/view/set_favorite', variables.basePath);
@@ -108,14 +79,14 @@
 			toast.show('Favorite', 'The current manga is no longer your favorite.');
 		}
 
-		response.favorite = json.favorite;
+		favorite = json.favorite;
 	}
 
 	async function updateCover() {
 		const url = new URL('/view/update_cover', variables.basePath);
 		const req = {
 			index: current,
-			name: request.name
+			name: name
 		};
 
 		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
@@ -151,18 +122,14 @@
 	}
 </script>
 
-<PageScroll PageCount={response.page_count} {onValueChange} Current={current} />
+<PageScroll PageCount={pageCount} {onValueChange} Current={current} />
 
 <div class="fullscreen" style="padding-top:80px;">
-	<ImageViewer
-		imageURLs={createImageUrls(request.name, response.page_count)}
-		{onIndexChange}
-		bind:this={viewer}
-	/>
+	<ImageViewer imageURLs={createImageUrls(name, pageCount)} {onIndexChange} bind:this={viewer} />
 </div>
 
 <Navbar color="dark" dark expand="md" sticky={'top'}>
-	<NavbarBrand href="/">{`View ${request.name}`}</NavbarBrand>
+	<NavbarBrand href="/">View</NavbarBrand>
 	<NavbarToggler on:click={() => (navbarToggleOpen = !navbarToggleOpen)} />
 	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
 		<Nav navbar>
@@ -175,7 +142,7 @@
 					</DropdownItem>
 					<DropdownItem divider />
 					<DropdownItem header>Tags</DropdownItem>
-					{#each response.tags as tag}
+					{#each tags as tag}
 						<DropdownItem on:click={() => goto(browseURL($page.url.origin, { tag: tag.name }))}>
 							{#if tag.favorite}
 								<Icon name="star-fill" class="me-3" />
@@ -209,9 +176,12 @@
 				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
-		<Nav class="ms-auto" navbar>
+		<Nav navbar class="ms-auto" >
+			<NavItem class="me-3 d-none d-md-block">
+				<NavLink>{name.length > 40? `${name.substring(0, 35)}...`: name }</NavLink>
+			</NavItem>
 			<NavItem class="me-3">
-				<FavoriteButton on:click={() => toggleFavorite()} isFavorite={response.favorite}>
+				<FavoriteButton on:click={() => toggleFavorite()} isFavorite={favorite}>
 					Favorite
 				</FavoriteButton>
 			</NavItem>

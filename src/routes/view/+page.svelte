@@ -37,7 +37,7 @@
 	interface Response {
 		browse_url: string;
 		favorite: boolean;
-		indices: number[];
+		page_count: number;
 		tags: Tag[];
 	}
 
@@ -48,7 +48,7 @@
 	let response: Response = {
 		browse_url: '',
 		favorite: false,
-		indices: [],
+		page_count: 0,
 		tags: []
 	};
 
@@ -63,13 +63,13 @@
 		response = await resp.json();
 	});
 
-	function createImageUrls(name: string, indices: number[]): string[] {
+	function createImageUrls(name: string, pageCount: number): string[] {
 		const url = new URL('/view/get_image', variables.basePath);
 		const output = [];
 
 		url.searchParams.append('name', name);
-		for (const i in indices) {
-			url.searchParams.set('i', indices[i].toString());
+		for (let i = 0; i < pageCount; i++) {
+			url.searchParams.set('i', i.toString());
 			output.push(url.toString());
 		}
 
@@ -157,11 +157,11 @@
 	});
 </script>
 
-<PageScroll PageCount={response.indices.length} {onValueChange} Current={current} />
+<PageScroll PageCount={response.page_count} {onValueChange} Current={current} />
 
 <div class="fullscreen" style="padding-top:80px;">
 	<ImageViewer
-		imageURLs={createImageUrls(request.name, response.indices)}
+		imageURLs={createImageUrls(request.name, response.page_count)}
 		{onIndexChange}
 		bind:this={viewer}
 	/>
@@ -184,9 +184,9 @@
 					{#each response.tags as tag}
 						<DropdownItem on:click={() => goto(browseURL($page.url.origin, { tag: tag.name }))}>
 							{#if tag.favorite}
-								<Icon name="star-fill"  class="me-3"/>
+								<Icon name="star-fill" class="me-3" />
 							{:else}
-								<Icon name="tag" class="me-3"/>
+								<Icon name="tag" class="me-3" />
 							{/if}
 							{tag.name}
 						</DropdownItem>

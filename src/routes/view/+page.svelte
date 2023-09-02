@@ -138,6 +138,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>View: {name}</title>
+</svelte:head>
+
 <PageScroll PageCount={pageCount} {onValueChange} Current={current} />
 
 <div class="fullscreen" style="padding-top:80px;">

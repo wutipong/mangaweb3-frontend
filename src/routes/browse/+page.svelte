@@ -124,6 +124,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Browse: {tag}</title>
+</svelte:head>
+
 <Navbar color="dark" dark expand="md" sticky={'top'}>
 	<NavbarBrand href="/">
 		{data.request.tag == '' ? 'Browse' : `Browse: ${data.request.tag}`}

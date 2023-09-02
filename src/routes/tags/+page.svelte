@@ -36,6 +36,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Tag List</title>
+</svelte:head>
+
 <Navbar color="dark" dark expand="md" sticky={'top'}>
 	<NavbarBrand href="/">{`Tag list`}</NavbarBrand>
 	<NavbarToggler on:click={() => (navbarToggleOpen = !navbarToggleOpen)} />

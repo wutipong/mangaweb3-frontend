@@ -85,6 +85,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>About: Mangaweb 3</title>
+</svelte:head>
+
 <Navbar color="dark" dark expand="md" sticky={'top'}>
 	<NavbarBrand href="/">About</NavbarBrand>
 	<NavbarToggler on:click={() => (navbarToggleOpen = !navbarToggleOpen)} />

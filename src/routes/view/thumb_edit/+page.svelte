@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { browseURL, aboutURL, tagURL } from '$lib/routes';
 	import {
@@ -24,6 +24,7 @@
 	import type { PageData } from './$types';
 	import { variables } from '$lib/variables';
 	import Cropper from 'svelte-easy-crop';
+	import MessageDialog from '$lib/MessageDialog.svelte';
 
 	let navbarToggleOpen = false;
 	function handleUpdate(event: CustomEvent<boolean>) {
@@ -67,6 +68,24 @@
 	function onCropComplete(e: CustomEvent<CropperEvent>) {
 		cropDetails = e.detail.pixels;
 		console.log(cropDetails);
+	}
+
+	let dialog: MessageDialog;
+	async function updateCover() {
+		const url = new URL('/view/update_cover', variables.basePath);
+		const req = {
+			index: index,
+			name: name,
+			crop_details: cropDetails,
+		};
+
+		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
+		const json = await resp.json();
+		if (json.success) {
+			dialog.show('Update Cover', 'The cover image is updated successfully.');
+		} else {
+			dialog.show('Update Cover', 'The cover is not updated.');
+		}
 	}
 </script>
 
@@ -124,3 +143,5 @@
 	</FormGroup>
 	<Button>Save</Button>
 </Container>
+
+<MessageDialog bind:this={dialog}></MessageDialog>

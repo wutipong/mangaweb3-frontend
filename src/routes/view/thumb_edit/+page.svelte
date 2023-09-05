@@ -50,7 +50,7 @@
 
 	let crop = { x: 0, y: 0 };
 	let zoom = 1;
-	let aspect = 148 / 210;
+	let aspect = 127 / 180;
 
 	interface CropDetails {
 		x: number;
@@ -130,7 +130,7 @@
 	</div>
 
 	<FormGroup>
-		<Label for="pageIndex">Image Index</Label>
+		<Label for="pageIndex">Page</Label>
 		<Input
 			type="number"
 			name="number"
@@ -141,7 +141,7 @@
 			max={pageCount}
 		/>
 	</FormGroup>
-	<Button>Save</Button>
+	<Button on:click={()=>updateCover()}>Save</Button>
 </Container>
 
 <MessageDialog bind:this={dialog}></MessageDialog>

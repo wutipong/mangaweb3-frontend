@@ -99,19 +99,11 @@
 	}
 
 	async function updateCover() {
-		const url = new URL('/view/update_cover', variables.basePath);
-		const req = {
-			index: current,
-			name: name
-		};
+		const url = new URL('/view/thumb_edit', $page.url.origin);
+		url.searchParams.set('index', `${current}`)
+		url.searchParams.set('name', name)
 
-		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
-		const json = await resp.json();
-		if (json.success) {
-			toast.show('Update Cover', 'The cover image is updated successfully.');
-		} else {
-			toast.show('Update Cover', 'The cover is not updated.');
-		}
+		goto(url)
 	}
 
 	function download(url: string) {

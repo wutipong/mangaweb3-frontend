@@ -11,7 +11,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+		"grpc": "protoc -I=../mangaweb3-backend/service ../mangaweb3-backend/service/service.proto --js_out=import_style=commonjs:src/lib/grpc --grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/lib/grpc"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
@@ -40,6 +41,7 @@
 		"bootstrap-icons": "^1.10.5",
 		"bootswatch": "^5.3.1",
 		"dotenv": "^16.3.1",
+		"grpc-web": "^1.4.2",
 		"svelte-easy-crop": "^2.0.1",
 		"sveltestrap": "^5.11.1"
 	}

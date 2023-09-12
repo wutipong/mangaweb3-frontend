@@ -1,5 +1,7 @@
 import type { PageLoad } from './$types';
 import { variables } from '$lib/variables';
+import { MetaServiceClient } from '$lib/grpc/ServiceServiceClientPb'
+import { MetaListRequest } from '$lib/grpc/service_pb';
 
 interface Request {
     favorite_only: boolean;
@@ -104,6 +106,12 @@ export const load: PageLoad = async ({ fetch, url }) => {
     const response = await fetch(apiUrl, { method: 'POST', body: JSON.stringify(request) });
     const obj = await response.json() as Response;
 
+    const client = new MetaServiceClient("http://localhost:9000")
+    const reqq = new MetaListRequest();
+    reqq.setItemPerPage(30)
+    const r = await client.list(reqq, null)
+
+    console.log(r)
     return {
         request: request,
         response: obj

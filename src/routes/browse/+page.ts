@@ -12,11 +12,12 @@ interface Request {
 }
 
 interface Item {
-    create_time: string;
-    favorite: boolean;
     id: number;
-    read: boolean;
     name: string;
+    favorite: boolean;
+    read: boolean;
+    page_count: number;
+    create_time: string;
 }
 
 interface Page {

@@ -10,6 +10,7 @@
 	export let favoriteTag = false;
 	export let id = '';
 	export let name = '';
+	export let page_count = 0;
 
 	let thumbnailURL = '';
 	let viewURL = '';
@@ -65,5 +66,8 @@
 				<span><Icon name="check" /> Read </span>
 			</Badge>
 		{/if}
+		<Badge class="bg-blue">
+			<span><Icon name="file-earmark-fill" /> {page_count}p </span>
+		</Badge>
 	</CardFooter>
 </Card>

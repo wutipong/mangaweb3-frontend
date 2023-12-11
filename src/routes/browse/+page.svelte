@@ -222,6 +222,7 @@
 						isRead={item.read}
 						id={item.id.toString()}
 						name={item.name}
+						page_count={item.page_count}
 					/>
 				</div>
 			{/each}

@@ -14,6 +14,8 @@
 	let thumbnailURL = '';
 	let viewURL = '';
 
+	let borderCls = '';
+
 	$: {
 		let u = new URL('/browse/thumbnail', variables.basePath);
 		u.searchParams.append('name', name);
@@ -24,18 +26,17 @@
 		viewURL = u.toString();
 
 		if (favorite || favoriteTag) {
-			classStr += 'border border-2 border-pink';
-		} 
-		
-		if (!isRead) {
-			classStr += 'border border-2 border-yellow';
+			borderCls = 'border border-2 border-pink';
+		} else if (!isRead) {
+			borderCls = 'border border-2 border-yellow';
+		} else {
+			borderCls = ''
 		}
 	}
 
-	let classStr = '';
 </script>
 
-<Card class="{classStr} h-100" {id}>
+<Card class="{borderCls} h-100" {id}>
 	<a href={viewURL}>
 		<CardImg top src={thumbnailURL} />
 	</a>

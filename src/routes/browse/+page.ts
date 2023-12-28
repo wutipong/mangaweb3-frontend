@@ -1,5 +1,6 @@
 import type { PageLoad } from './$types';
 import { variables } from '$lib/variables';
+import { page } from '$app/stores';
 
 interface Request {
     favorite_only: boolean;
@@ -101,7 +102,7 @@ export const load: PageLoad = async ({ fetch, url }) => {
         }
     }
 
-    const apiUrl = new URL('/browse', variables.basePath);
+    const apiUrl = '/api/browse';
     const response = await fetch(apiUrl, { method: 'POST', body: JSON.stringify(request) });
     const obj = await response.json() as Response;
 

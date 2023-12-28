@@ -104,7 +104,7 @@
 			tag: tag
 		};
 
-		const url = new URL('/tag/set_favorite', variables.basePath);
+		const url = new URL('/api/tag/set_favorite', $page.url.origin);
 
 		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
 		const json = await resp.json();

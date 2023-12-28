@@ -21,7 +21,7 @@
 	}
 
 	function createThumbnailUrl(name: string) {
-		const output = new URL('/tag/thumbnail', variables.basePath);
+		const output = new URL('/tag/thumbnail', $page.url.origin);
 		output.searchParams.append('tag', name);
 
 		return output;

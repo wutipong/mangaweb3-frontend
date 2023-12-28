@@ -15,7 +15,7 @@ interface listResponse {
 export const prerender = false;
 
 export const load: PageLoad = async ({ fetch, url }) => {
-    const tagListURL = new URL("/tag/list", variables.basePath);
+    const tagListURL = "/api/tag/list";
     const request: listRequest = {
         favorite_only: false,
         page: 0,

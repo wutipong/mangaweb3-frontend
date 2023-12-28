@@ -11,7 +11,7 @@ export const load: PageLoad = async ({ fetch, url }) => {
     const name = params.get('name')
 
     const resp = await fetch(
-        new URL('/view', variables.basePath),
+        new URL('/view', url.origin),
         {
             method: 'POST',
             body: JSON.stringify({

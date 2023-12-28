@@ -32,7 +32,7 @@
 	}
 
 	function createImageUrl(name: string, page: number): URL {
-		const url = new URL('/view/get_image', variables.basePath);
+		const url = new URL('/api/view/get_image', $page.url.origin);
 		if (name != null) {
 			url.searchParams.append('name', name);
 		}
@@ -72,7 +72,7 @@
 
 	let dialog: MessageDialog;
 	async function updateCover() {
-		const url = new URL('/view/update_cover', variables.basePath);
+		const url = new URL('/api/view/update_cover', $page.url.origin);
 		const req = {
 			index: index,
 			name: name,

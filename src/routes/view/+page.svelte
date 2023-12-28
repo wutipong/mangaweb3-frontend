@@ -35,7 +35,7 @@
 	$: tags = data.tags;
 
 	function createImageUrls(name: string, pageCount: number): string[] {
-		const url = new URL('/view/get_image', variables.basePath);
+		const url = new URL('/api/view/get_image', $page.url.origin);
 		const output = [];
 
 		url.searchParams.append('name', name);
@@ -48,14 +48,14 @@
 	}
 
 	function downloadManga() {
-		const url = new URL('/view/download', variables.basePath);
+		const url = new URL('/api/view/download', $page.url.origin);
 		url.searchParams.set('name', name);
 
 		download(url.toString());
 	}
 
 	function downloadPage() {
-		const url = new URL('/view/get_image', variables.basePath);
+		const url = new URL('/api/view/get_image', $page.url.origin);
 		url.searchParams.set('name', name);
 		url.searchParams.set('i', current.toString());
 
@@ -68,7 +68,7 @@
 			name: name
 		};
 
-		const url = new URL('/view/set_favorite', variables.basePath);
+		const url = new URL('/api/view/set_favorite', $page.url.origin);
 
 		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
 		const json = await resp.json();
@@ -83,7 +83,7 @@
 	}
 
 	async function fixMetaData() {
-		const url = new URL('/view/fix_meta', variables.basePath);
+		const url = new URL('/api/view/fix_meta', $page.url.origin);
 		const req = {
 			name: name
 		};

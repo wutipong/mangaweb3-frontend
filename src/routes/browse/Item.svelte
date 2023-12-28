@@ -18,7 +18,7 @@
 	let borderCls = '';
 
 	$: {
-		let u = new URL('/browse/thumbnail', variables.basePath);
+		let u = new URL('/api/browse/thumbnail', $page.url.origin);
 		u.searchParams.append('name', name);
 		thumbnailURL = u.toString();
 

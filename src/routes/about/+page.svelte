@@ -42,7 +42,7 @@
 	}
 
 	async function rescanLibrary() {
-		const url = new URL('/browse/rescan_library', variables.basePath);
+		const url = new URL('/api/browse/rescan_library', $page.url.origin);
 		await fetch(url);
 		toast.show(
 			'Re-scan Library',
@@ -59,7 +59,7 @@
 	}
 
 	async function recreateThumbnails() {
-		const url = new URL('/browse/recreate_thumbnails', variables.basePath);
+		const url = new URL('/api/browse/recreate_thumbnails', $page.url.origin);
 		await fetch(url);
 		toast.show(
 			'Re-create thumbnail',
@@ -76,7 +76,7 @@
 	}
 
 	async function recreateTagThumbnails() {
-		const url = new URL('/tag/recreate_thumbnails', variables.basePath);
+		const url = new URL('/api/tag/recreate_thumbnails', $page.url.origin);
 		await fetch(url);
 		toast.show(
 			'Re-create thumbnail',

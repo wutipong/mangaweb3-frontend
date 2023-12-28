@@ -7,7 +7,16 @@ export default defineConfig({
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
-	envPrefix:[
+	envPrefix: [
 		'VITE_',
-	]
+	],
+	server: {
+		proxy: {
+			'/api': {
+				target: process.env.PUBLIC_BACKEND_URL,
+				rewrite: (path) => path.replace(/^\/api/, ''),
+				changeOrigin: true,
+			}
+		}
+	}
 });

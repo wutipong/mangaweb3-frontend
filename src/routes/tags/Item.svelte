@@ -21,7 +21,7 @@
 	}
 
 	function createThumbnailUrl(name: string) {
-		const output = new URL('/tag/thumbnail', $page.url.origin);
+		const output = new URL('/api/tag/thumbnail', $page.url.origin);
 		output.searchParams.append('tag', name);
 
 		return output;

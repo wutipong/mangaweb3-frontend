@@ -63,6 +63,7 @@
 				<DropdownToggle nav caret>Filter</DropdownToggle>
 				<DropdownMenu>
 					<DropdownItem
+						active={favoriteOnly}
 						on:click={() => goto(tagURL($page.url, { favorite_only: !favoriteOnly }))}
 					>
 						<Icon name="star" class="me-3" />

@@ -2,13 +2,17 @@ export function aboutURL(base: URL | string): URL {
     return new URL("/about", base);
 }
 
-export function tagURL(base: URL | string, options?: { page?: number }): URL {
+export function tagURL(base: URL | string, options?: { page?: number, favorite_only?: boolean }): URL {
     const output = new URL("/tags", base);
     if (options != null) {
-        const { page } = options;
+        const { page, favorite_only } = options;
 
         if (page != null) {
             output.searchParams.set('page', `${page}`);
+        }
+
+        if (favorite_only != null) {
+            output.searchParams.set('favorite_only', `${favorite_only}`);
         }
     }
     return output;

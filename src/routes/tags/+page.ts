@@ -4,11 +4,12 @@ import type { Tag } from '$lib/tag';
 
 interface listRequest {
     favorite_only: boolean
-    page: number,
-    item_per_page: number,
+    page: number
+    item_per_page: number
 }
 
 interface listResponse {
+    request: listRequest
     tags: Tag[]
     total_page: number
 }
@@ -22,8 +23,8 @@ export const load: PageLoad = async ({ fetch, url }) => {
         item_per_page: 30
     }
 
-    if (url.searchParams.has('favorite')) {
-        request.favorite_only = url.searchParams.get('favorite') == "true"
+    if (url.searchParams.has('favorite_only')) {
+        request.favorite_only = url.searchParams.get('favorite_only') == "true"
     }
     if (url.searchParams.has('page')) {
         const v = url.searchParams.get('page')
@@ -40,6 +41,7 @@ export const load: PageLoad = async ({ fetch, url }) => {
     const obj = await response.json() as listResponse;
 
     return {
+        request: request,
         page: request.page,
         tags: obj?.tags as Tag[],
         total_page: obj?.total_page

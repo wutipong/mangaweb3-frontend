@@ -28,7 +28,7 @@
 	$: tags = data.tags;
 	$: total_page = data.total_page;
 
-	let favoriteOnly = false;
+	$: favoriteOnly = data.request.favorite_only;
 	let navbarToggleOpen = false;
 
 	function handleUpdate(event: CustomEvent<boolean>) {
@@ -62,7 +62,10 @@
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Filter</DropdownToggle>
 				<DropdownMenu>
-					<DropdownItem on:click={() => (favoriteOnly = !favoriteOnly)} active={favoriteOnly}>
+					<DropdownItem
+						active={favoriteOnly}
+						on:click={() => goto(tagURL($page.url, { favorite_only: !favoriteOnly }))}
+					>
 						<Icon name="star" class="me-3" />
 						Favorite
 					</DropdownItem>

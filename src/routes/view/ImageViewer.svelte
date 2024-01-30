@@ -49,7 +49,7 @@
                 <div class="w-100 h-100 d-flex flex-col">
                     <PageImage
                         alt="page {index}"
-                        src={url}
+                        src={new URL(url)}
                         bind:this={imgs[index]}
                     />
                 </div>

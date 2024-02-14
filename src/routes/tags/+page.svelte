@@ -92,6 +92,8 @@
 	</div>
 </Container>
 
+<div style="height: 100px;" />
+
 <div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
 	<Pagination bind:currentPage={current_page} bind:totalPage={total_page} />
 </div>

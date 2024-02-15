@@ -30,7 +30,7 @@
 	$: current_page = data.page;
 	$: tags = data.tags;
 	$: total_page = data.total_page;
-	let search = ""// data.request.search;
+	let search = data.request.search;
 
 	$: favoriteOnly = data.request.favorite_only;
 	let navbarToggleOpen = false;
@@ -83,7 +83,7 @@
 			<NavItem>
 				<InputGroup>
 					<Input type="text" bind:value={search} />
-					<Button on:click={() => goto(tagURL($page.url.origin, {/*search: search*/}))}>
+					<Button on:click={() => goto(tagURL($page.url.origin, {search: search}))}>
 						<Icon name="search" class="me-3" />Search
 					</Button>
 				</InputGroup>

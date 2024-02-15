@@ -4,6 +4,7 @@ import type { Tag } from '$lib/tag';
 
 interface listRequest {
     favorite_only: boolean
+    search: string
     page: number
     item_per_page: number
 }
@@ -18,6 +19,7 @@ export const prerender = false;
 export const load: PageLoad = async ({ fetch, url }) => {
     const tagListURL = "/api/tag/list";
     const request: listRequest = {
+        search: "",
         favorite_only: false,
         page: 0,
         item_per_page: 30
@@ -35,6 +37,11 @@ export const load: PageLoad = async ({ fetch, url }) => {
         const v = url.searchParams.get('item_per_page')
         if (v != null)
             request.item_per_page = parseInt(v)
+    }
+    if (url.searchParams.has('search')) {
+        const v = url.searchParams.get('search')
+        if (v != null)
+            request.search = v
     }
 
     const response = await fetch(tagListURL, { method: 'POST', body: JSON.stringify(request) });

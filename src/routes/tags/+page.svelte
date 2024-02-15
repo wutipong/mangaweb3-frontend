@@ -4,8 +4,11 @@
 	import type { PageData } from './$types';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import {
+		Button,
 		Container,
 		Icon,
+		Input,
+		InputGroup,
 		Collapse,
 		Navbar,
 		NavbarToggler,
@@ -27,6 +30,7 @@
 	$: current_page = data.page;
 	$: tags = data.tags;
 	$: total_page = data.total_page;
+	let search = data.request.search;
 
 	$: favoriteOnly = data.request.favorite_only;
 	let navbarToggleOpen = false;
@@ -73,6 +77,16 @@
 			</Dropdown>
 			<NavItem>
 				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+			</NavItem>
+		</Nav>
+		<Nav navbar class="ms-auto me-3">
+			<NavItem>
+				<InputGroup>
+					<Input type="text" bind:value={search} />
+					<Button on:click={() => goto(tagURL($page.url.origin, {search: search}))}>
+						<Icon name="search" class="me-3" />Search
+					</Button>
+				</InputGroup>
 			</NavItem>
 		</Nav>
 	</Collapse>

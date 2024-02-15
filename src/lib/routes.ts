@@ -2,10 +2,10 @@ export function aboutURL(base: URL | string): URL {
     return new URL("/about", base);
 }
 
-export function tagURL(base: URL | string, options?: { page?: number, favorite_only?: boolean }): URL {
+export function tagURL(base: URL | string, options?: { page?: number, favorite_only?: boolean, search?: string }): URL {
     const output = new URL("/tags", base);
     if (options != null) {
-        const { page, favorite_only } = options;
+        const { page, favorite_only, search } = options;
 
         if (page != null) {
             output.searchParams.set('page', `${page}`);
@@ -13,6 +13,10 @@ export function tagURL(base: URL | string, options?: { page?: number, favorite_o
 
         if (favorite_only != null) {
             output.searchParams.set('favorite_only', `${favorite_only}`);
+        }
+
+        if (search != null) {
+            output.searchParams.set('search', search);
         }
     }
     return output;

@@ -208,7 +208,15 @@
 		<Nav navbar>
 			<NavItem>
 				<InputGroup>
-					<Input type="text" bind:value={search} />
+					<Input
+						type="text"
+						bind:value={search}
+						on:keyup={(e) => {
+							if (e.key == 'Enter') {
+								goto(browseURL($page.url.origin, { search: search }));
+							}
+						}}
+					/>
 					<Button on:click={() => (search = '')}><Icon name="x" /></Button>
 					<Button on:click={() => goto(browseURL($page.url.origin, { search: search }))}>
 						<Icon name="search" class="me-3" />Search

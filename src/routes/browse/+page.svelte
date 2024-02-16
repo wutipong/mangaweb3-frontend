@@ -219,7 +219,8 @@
 					/>
 					<Button on:click={() => (search = '')}><Icon name="x" /></Button>
 					<Button on:click={() => goto(browseURL($page.url.origin, { search: search }))}>
-						<Icon name="search" class="me-3" />Search
+						<div class="d-lg-none"><Icon name="search" class="me-3" /></div>
+						<div class="d-none d-lg-block"><Icon name="search" class="me-3" />Search</div>
 					</Button>
 				</InputGroup>
 			</NavItem>

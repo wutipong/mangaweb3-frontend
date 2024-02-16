@@ -81,13 +81,16 @@
 		return browseURL($page.url.origin, callOptions);
 	}
 
-	function createSortBrowseURL(sort: 'name' | 'createTime'): URL {
-		let options: {
-			sort?: 'name' | 'createTime';
-			order?: 'ascending' | 'descending';
-		} = {};
-
-		options.sort = sort;
+	function createSortBrowseURL(options: {
+		favorite_only?: boolean;
+		item_per_page?: number;
+		order?: 'ascending' | 'descending';
+		page?: number;
+		search?: string;
+		sort?: 'name' | 'createTime';
+		tag?: string;
+	}): URL {
+		const sort = options.sort;
 		switch (sort) {
 			case 'name':
 				options.order = 'ascending';
@@ -95,7 +98,7 @@
 				options.order = 'descending';
 		}
 
-		return browseURL($page.url, options);
+		return createBrowseURL(options);
 	}
 
 	async function onTagFavorite() {
@@ -153,12 +156,15 @@
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Sort By</DropdownToggle>
 				<DropdownMenu>
-					<DropdownItem active={sort == 'name'} on:click={() => goto(createSortBrowseURL('name'))}>
+					<DropdownItem
+						active={sort == 'name'}
+						on:click={() => goto(createSortBrowseURL({ sort: 'name' }))}
+					>
 						<Icon name="type" class="me-3" /> Name
 					</DropdownItem>
 					<DropdownItem
 						active={sort == 'createTime'}
-						on:click={() => goto(createSortBrowseURL('createTime'))}
+						on:click={() => goto(createSortBrowseURL({ sort: 'createTime' }))}
 					>
 						<Icon name="clock" class="me-3" /> Create time
 					</DropdownItem>
@@ -182,7 +188,7 @@
 				<DropdownMenu>
 					<DropdownItem
 						active={favoriteOnly}
-						on:click={() => goto(browseURL($page.url, { favorite_only: !favoriteOnly }))}
+						on:click={() => goto(createBrowseURL({ favorite_only: !favoriteOnly }))}
 					>
 						<Icon name="star" class="me-3" /> Favorite
 					</DropdownItem>
@@ -202,8 +208,17 @@
 		<Nav navbar>
 			<NavItem>
 				<InputGroup>
-					<Input type="text" bind:value={search} />
-					<Button on:click={() => goto(browseURL($page.url.origin, {search: search}))}>
+					<Input
+						type="text"
+						bind:value={search}
+						on:keyup={(e) => {
+							if (e.key == 'Enter') {
+								goto(browseURL($page.url.origin, { search: search }));
+							}
+						}}
+					/>
+					<Button on:click={() => (search = '')}><Icon name="x" /></Button>
+					<Button on:click={() => goto(browseURL($page.url.origin, { search: search }))}>
 						<Icon name="search" class="me-3" />Search
 					</Button>
 				</InputGroup>

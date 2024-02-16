@@ -82,8 +82,17 @@
 		<Nav navbar class="ms-auto me-3">
 			<NavItem>
 				<InputGroup>
-					<Input type="text" bind:value={search} />
-					<Button on:click={() => goto(tagURL($page.url.origin, {search: search}))}>
+					<Input
+						type="text"
+						bind:value={search}
+						on:keyup={(e) => {
+							if (e.key == 'Enter') {
+								goto(tagURL($page.url.origin, { search: search }));
+							}
+						}}
+					/>
+					<Button on:click={() => (search = '')}><Icon name="x" /></Button>
+					<Button on:click={() => goto(tagURL($page.url.origin, { search: search }))}>
 						<Icon name="search" class="me-3" />Search
 					</Button>
 				</InputGroup>

@@ -6,7 +6,6 @@
 	import { variables } from '$lib/variables';
 	import {
 		Button,
-		Col,
 		Collapse,
 		Container,
 		Dropdown,
@@ -20,7 +19,7 @@
 		Navbar,
 		NavbarBrand,
 		NavbarToggler,
-		Row,
+		Table
 	} from 'sveltestrap';
 	import Toast from '$lib/Toast.svelte';
 
@@ -143,40 +142,58 @@
 	<h6>Using API server: {variables.basePath}</h6>
 
 	<hr />
-	<h2>Project Page</h2>
+	<h3>Project Page</h3>
 	<ul>
 		<li>
-			<a href="https://github.com/wutipong/mangaweb3-frontend"
-				><Icon name="github" />&nbsp; Frontend</a
-			>
+			<a class="icon-link" href="https://github.com/wutipong/mangaweb3-frontend">
+				<Icon name="github" />Frontend
+			</a>
 		</li>
 		<li>
-			<a href="https://github.com/wutipong/mangaweb3-backtend"
-				><Icon name="github" />&nbsp; Backend</a
-			>
+			<a class="icon-link" href="https://github.com/wutipong/mangaweb3-backtend">
+				<Icon name="github" />Backend
+			</a>
 		</li>
 	</ul>
 	<hr />
-	<h2>Tools</h2>
-	<p>These two perform maintenance tasks.</p>
-	<Container class="mb-auto me-auto">
-		<Row>
-			<Col>Rescan Library</Col>
-			<Col><Button color="danger" on:click={() => confirmRescanLibrary()}>Rescan</Button></Col>
-		</Row>
-		<Row>
-			<Col>Populate Thumbnail</Col>
-			<Col>
-				<Button color="danger" on:click={() => confirmRecreateThumbnails()}>Populate</Button>
-			</Col>
-		</Row>
-		<Row>
-			<Col>Populate Tag Thumbnail</Col>
-			<Col>
-				<Button color="danger" on:click={confirmRecreateTagThumbnails}>Populate</Button>
-			</Col>
-		</Row>
-	</Container>
+
+	<h3>Maintenance</h3>
+
+	<Table>
+		<thead>
+			<tr>
+				<th colspan="2">
+					Maintenance Operations
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="align-middle"> Rescan library. </td>
+				<td>
+					<Button color="danger" on:click={() => confirmRescanLibrary()}>
+						<Icon name="play-circle" class="me-3" />Run
+					</Button>
+				</td>
+			</tr>
+			<tr>
+				<td class="align-middle"> Populate thumbnails on every manga items. </td>
+				<td>
+					<Button color="danger" on:click={() => confirmRecreateThumbnails()}>
+						<Icon name="play-circle" class="me-3" />Run
+					</Button>
+				</td>
+			</tr>
+			<tr>
+				<td class="align-middle"> Populate thumbnails on every tag items. </td>
+				<td>
+					<Button color="danger" on:click={confirmRecreateTagThumbnails}>
+						<Icon name="play-circle" class="me-3" />Run
+					</Button>
+				</td>
+			</tr>
+		</tbody>
+	</Table>
 </Container>
 
 <ConfirmDialog bind:this={confirm} />

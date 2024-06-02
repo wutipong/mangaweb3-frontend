@@ -20,7 +20,7 @@
 		DropdownToggle,
 		DropdownMenu,
 		DropdownItem
-	} from 'sveltestrap';
+	} from '@sveltestrap/sveltestrap';
 	import Pagination from '$lib/Pagination.svelte';
 	import { goto } from '$app/navigation';
 	import { aboutURL, tagURL, browseURL } from '$lib/routes';

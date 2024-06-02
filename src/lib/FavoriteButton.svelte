@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Icon } from 'sveltestrap';
+	import { Button, Icon } from '@sveltestrap/sveltestrap';
 	import './custom.scss';
 
 	export let isFavorite = false;

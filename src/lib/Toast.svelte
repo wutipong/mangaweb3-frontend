@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Toast, ToastBody, ToastHeader } from 'sveltestrap';
+	import { Toast, ToastBody, ToastHeader } from '@sveltestrap/sveltestrap';
 
 	let message = '';
 	let header = '';

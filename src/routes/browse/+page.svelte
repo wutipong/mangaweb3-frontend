@@ -23,7 +23,7 @@
 		Navbar,
 		NavbarBrand,
 		NavbarToggler
-	} from 'sveltestrap';
+	} from '@sveltestrap/sveltestrap';
 	import type { PageData } from './$types';
 	import Item from './Item.svelte';
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { Pagination, PaginationItem, PaginationLink } from 'sveltestrap';
+	import { Pagination, PaginationItem, PaginationLink } from '@sveltestrap/sveltestrap';
 
 	export let currentPage = 0;
 	export let totalPage = 1;

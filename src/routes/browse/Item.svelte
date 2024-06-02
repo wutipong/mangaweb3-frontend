@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { variables } from '$lib/variables';
 	import { page } from '$app/stores';
-	import { Badge, Card, CardBody, CardFooter, CardImg, Icon } from 'sveltestrap';
+	import { Badge, Card, CardBody, CardFooter, CardImg, Icon } from '@sveltestrap/sveltestrap';
 
 	import '$lib/custom.scss';
 

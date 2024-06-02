@@ -20,7 +20,7 @@
 		NavbarBrand,
 		NavbarToggler,
 		Table
-	} from 'sveltestrap';
+	} from '@sveltestrap/sveltestrap';
 	import Toast from '$lib/Toast.svelte';
 
 	let navbarToggleOpen = false;

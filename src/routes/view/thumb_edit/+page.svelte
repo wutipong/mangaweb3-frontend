@@ -20,7 +20,7 @@
 		FormGroup,
 		Input,
 		Button
-	} from 'sveltestrap';
+	} from '@sveltestrap/sveltestrap';
 	import type { PageData } from './$types';
 	import { variables } from '$lib/variables';
 	import Cropper from 'svelte-easy-crop';

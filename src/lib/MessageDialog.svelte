@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Toast } from 'sveltestrap';
+	import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Toast } from '@sveltestrap/sveltestrap';
 
 	let open = false;
 	const toggle = () => (open = !open);

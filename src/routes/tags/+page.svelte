@@ -23,7 +23,7 @@
 	} from '@sveltestrap/sveltestrap';
 	import Pagination from '$lib/Pagination.svelte';
 	import { goto } from '$app/navigation';
-	import { aboutURL, tagURL, browseURL } from '$lib/routes';
+	import { aboutURL, tagURL, browseURL, historyURL } from '$lib/routes';
 
 	export let data: PageData;
 
@@ -75,6 +75,9 @@
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
+			<NavItem>
+				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
+			</NavItem>
 			<NavItem>
 				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>

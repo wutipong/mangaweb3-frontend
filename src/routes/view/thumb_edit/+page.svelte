@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { browseURL, aboutURL, tagURL } from '$lib/routes';
+	import { browseURL, aboutURL, tagURL, historyURL } from '$lib/routes';
 	import {
 		Navbar,
 		NavbarBrand,
@@ -107,7 +107,9 @@
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
-
+			<NavItem>
+				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
+			</NavItem>
 			<NavItem>
 				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>

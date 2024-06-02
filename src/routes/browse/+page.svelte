@@ -5,7 +5,7 @@
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
 	import Toast from '$lib/Toast.svelte';
-	import { aboutURL, browseURL, tagURL } from '$lib/routes';
+	import { aboutURL, browseURL, historyURL, tagURL } from '$lib/routes';
 
 	import {
 		Button,
@@ -194,6 +194,9 @@
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
+			<NavItem>
+				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
+			</NavItem>
 			<NavItem>
 				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>

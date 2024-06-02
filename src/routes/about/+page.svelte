@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import ConfirmDialog from '$lib/ConfirmDialog.svelte';
-	import { aboutURL, browseURL, tagURL } from '$lib/routes';
+	import { aboutURL, browseURL, historyURL, tagURL } from '$lib/routes';
 	import { variables } from '$lib/variables';
 	import {
 		Button,
@@ -106,7 +106,9 @@
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
-
+			<NavItem>
+				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
+			</NavItem>
 			<NavItem>
 				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
@@ -162,9 +164,7 @@
 	<Table>
 		<thead>
 			<tr>
-				<th colspan="2">
-					Maintenance Operations
-				</th>
+				<th colspan="2"> Maintenance Operations </th>
 			</tr>
 		</thead>
 		<tbody>

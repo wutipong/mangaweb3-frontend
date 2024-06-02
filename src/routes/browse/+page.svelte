@@ -6,7 +6,7 @@
 	import Pagination from '$lib/Pagination.svelte';
 	import Toast from '$lib/Toast.svelte';
 	import { aboutURL, browseURL, tagURL } from '$lib/routes';
-	import { variables } from '$lib/variables';
+
 	import {
 		Button,
 		Collapse,

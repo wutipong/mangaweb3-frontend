@@ -22,7 +22,7 @@
 		Button
 	} from '@sveltestrap/sveltestrap';
 	import type { PageData } from './$types';
-	import { variables } from '$lib/variables';
+
 	import Cropper from 'svelte-easy-crop';
 	import MessageDialog from '$lib/MessageDialog.svelte';
 

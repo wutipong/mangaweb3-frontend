@@ -4,7 +4,7 @@
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
 	import Toast from '$lib/Toast.svelte';
 	import { aboutURL, browseURL } from '$lib/routes';
-	import { variables } from '$lib/variables';
+
 	import {
 		Collapse,
 		Dropdown,

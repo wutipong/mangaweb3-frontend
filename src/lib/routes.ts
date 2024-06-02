@@ -2,6 +2,10 @@ export function aboutURL(base: URL | string): URL {
     return new URL("/about", base);
 }
 
+export function historyURL(base: URL | string): URL {
+    return new URL("/history", base);
+}
+
 export function tagURL(base: URL | string, options?: { page?: number, favorite_only?: boolean, search?: string }): URL {
     const output = new URL("/tags", base);
     if (options != null) {

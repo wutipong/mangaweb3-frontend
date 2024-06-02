@@ -1,6 +1,5 @@
 import type { PageLoad } from './$types';
 import { variables } from '$lib/variables';
-import { page } from '$app/stores';
 
 interface Request {
     favorite_only: boolean;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { Pagination, PaginationItem, PaginationLink } from 'sveltestrap';
+	import { Pagination, PaginationItem, PaginationLink } from '@sveltestrap/sveltestrap';
 
 	export let currentPage = 0;
 	export let totalPage = 1;
@@ -9,13 +9,13 @@
 	interface Page {
 		url: URL;
 		index: number;
-	};
+	}
 
-	let numberUrls:Page[] = [];
+	let numberUrls: Page[] = [];
 	let firstUrl: URL;
 	let lastUrl: URL;
 
-	$: if(totalPage != 0) {
+	$: if (totalPage != 0) {
 		firstUrl = new URL($page.url);
 		firstUrl.searchParams.set('page', '0');
 
@@ -27,7 +27,7 @@
 		const startPage = currentPage - halfCount;
 		const endPage = startPage + pageToShow;
 
-		let items: Page[] = []
+		let items: Page[] = [];
 		for (let i = startPage; i < endPage; i++) {
 			if (i < 0 || i >= totalPage) continue;
 
@@ -42,8 +42,8 @@
 				}
 			];
 		}
-		numberUrls = items
-	};
+		numberUrls = items;
+	}
 </script>
 
 <Pagination>

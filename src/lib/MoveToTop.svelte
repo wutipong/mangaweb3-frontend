@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Icon, Button } from 'sveltestrap';
+	import { Icon, Button } from '@sveltestrap/sveltestrap';
 	function moveToTop() {
 		location.hash = '#top';
 		location.hash = '';

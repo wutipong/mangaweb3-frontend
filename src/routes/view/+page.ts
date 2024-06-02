@@ -1,5 +1,4 @@
 import type { PageLoad } from './$types';
-import { variables } from '$lib/variables';
 import type { Tag } from '$lib/tag';
 
 interface Request {

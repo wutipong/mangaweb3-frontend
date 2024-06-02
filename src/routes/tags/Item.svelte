@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { Badge, Card, CardBody, CardFooter, CardImg, Icon } from 'sveltestrap';
+	import { Badge, Card, CardBody, CardFooter, CardImg, Icon } from '@sveltestrap/sveltestrap';
 	import type { Tag } from '$lib/tag';
 	import { page } from '$app/stores';
-	import { variables } from '$lib/variables';
 
 	export let tag: Tag;
 

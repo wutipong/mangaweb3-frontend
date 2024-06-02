@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { variables } from '$lib/variables';
 	import { page } from '$app/stores';
-	import { Badge, Card, CardBody, CardFooter, CardImg, Icon } from 'sveltestrap';
+	import { Badge, Card, CardBody, CardFooter, CardImg, Icon } from '@sveltestrap/sveltestrap';
 
 	import '$lib/custom.scss';
 
@@ -31,10 +30,9 @@
 		} else if (!isRead) {
 			borderCls = 'border border-2 border-yellow';
 		} else {
-			borderCls = ''
+			borderCls = '';
 		}
 	}
-
 </script>
 
 <Card class="{borderCls} h-100" {id}>

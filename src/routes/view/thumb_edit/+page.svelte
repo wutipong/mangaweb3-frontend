@@ -20,9 +20,9 @@
 		FormGroup,
 		Input,
 		Button
-	} from 'sveltestrap';
+	} from '@sveltestrap/sveltestrap';
 	import type { PageData } from './$types';
-	import { variables } from '$lib/variables';
+
 	import Cropper from 'svelte-easy-crop';
 	import MessageDialog from '$lib/MessageDialog.svelte';
 
@@ -76,7 +76,7 @@
 		const req = {
 			index: index,
 			name: name,
-			crop_details: cropDetails,
+			crop_details: cropDetails
 		};
 
 		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
@@ -141,7 +141,7 @@
 			max={pageCount}
 		/>
 	</FormGroup>
-	<Button on:click={()=>updateCover()}>Save</Button>
+	<Button on:click={() => updateCover()}>Save</Button>
 </Container>
 
 <MessageDialog bind:this={dialog}></MessageDialog>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Toast } from 'sveltestrap';
+	import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from '@sveltestrap/sveltestrap';
 
 	let open = false;
 	const toggle = () => (open = !open);
@@ -8,8 +8,8 @@
 	$: bodyStr = '';
 
 	export function show(header: string, body: string) {
-        headerStr = header;
-        bodyStr = body;
+		headerStr = header;
+		bodyStr = body;
 		open = true;
 	}
 </script>

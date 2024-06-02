@@ -12,6 +12,7 @@ interface Item {
     read: boolean;
     page_count: number;
     create_time: string;
+    access_time: string;
 }
 
 interface Page {

@@ -84,6 +84,7 @@
 						id={item.id.toString()}
 						name={item.name}
 						page_count={item.page_count}
+						access_time={item.access_time}
 					/>
 				</div>
 			{/each}

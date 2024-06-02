@@ -10,6 +10,7 @@
 	export let id = '';
 	export let name = '';
 	export let page_count = 0;
+	export let access_time = '';
 
 	let thumbnailURL = '';
 	let viewURL = '';
@@ -42,6 +43,17 @@
 	<CardBody>
 		<a href={viewURL}>{name}</a>
 	</CardBody>
+	<CardFooter>
+		{Intl.DateTimeFormat('en', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+			hour: 'numeric',
+			minute: 'numeric',
+			second: 'numeric',
+			timeZoneName: 'short'
+		}).format(new Date(access_time))}
+	</CardFooter>
 	<CardFooter>
 		{#if favorite}
 			<Badge class="bg-pink">

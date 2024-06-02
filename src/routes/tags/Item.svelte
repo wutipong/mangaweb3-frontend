@@ -3,7 +3,6 @@
 	import type { Tag } from '$lib/tag';
 	import { page } from '$app/stores';
 
-
 	export let tag: Tag;
 
 	function createClassStr(fav: boolean) {

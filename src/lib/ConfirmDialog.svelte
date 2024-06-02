@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Toast } from '@sveltestrap/sveltestrap';
+	import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from '@sveltestrap/sveltestrap';
 
 	let open = false;
 	const toggle = () => (open = !open);
@@ -13,10 +13,10 @@
 		toggle();
 	}
 
-	export function show(header: string, body: string, onOk: () =>void) {
-        headerStr = header;
-        bodyStr = body;
-        onOkFunc = onOk;
+	export function show(header: string, body: string, onOk: () => void) {
+		headerStr = header;
+		bodyStr = body;
+		onOkFunc = onOk;
 		open = true;
 	}
 </script>

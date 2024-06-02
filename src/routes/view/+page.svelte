@@ -19,6 +19,7 @@
 		NavbarBrand,
 		NavbarToggler
 	} from '@sveltestrap/sveltestrap';
+	
 	import type { PageData } from './$types';
 	import ImageViewer from './ImageViewer.svelte';
 	import PageScroll from './PageScroll.svelte';
@@ -100,10 +101,10 @@
 
 	async function updateCover() {
 		const url = new URL('/view/thumb_edit', $page.url.origin);
-		url.searchParams.set('index', `${current}`)
-		url.searchParams.set('name', name)
+		url.searchParams.set('index', `${current}`);
+		url.searchParams.set('name', name);
 
-		goto(url)
+		goto(url);
 	}
 
 	function download(url: string) {

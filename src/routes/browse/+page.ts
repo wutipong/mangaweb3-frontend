@@ -18,6 +18,7 @@ interface Item {
     read: boolean;
     page_count: number;
     create_time: string;
+    tag_favorite : boolean;
 }
 
 interface Page {

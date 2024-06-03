@@ -242,6 +242,7 @@
 						id={item.id.toString()}
 						name={item.name}
 						page_count={item.page_count}
+						favoriteTag={item.tag_favorite}
 					/>
 				</div>
 			{/each}

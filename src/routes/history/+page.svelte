@@ -80,6 +80,7 @@
 				<div class="col">
 					<Item
 						favorite={item.favorite}
+						favoriteTag={item.tag_favorite}
 						isRead={item.read}
 						id={item.id.toString()}
 						name={item.name}

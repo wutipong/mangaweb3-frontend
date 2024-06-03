@@ -26,8 +26,10 @@
 		u.searchParams.append('name', name);
 		viewURL = u.toString();
 
-		if (favorite || favoriteTag) {
+		if (favorite) {
 			borderCls = 'border border-2 border-pink';
+		} else if (favoriteTag) {
+			borderCls = 'border border-2 border-purple';
 		} else if (!isRead) {
 			borderCls = 'border border-2 border-yellow';
 		} else {
@@ -62,7 +64,7 @@
 		{/if}
 
 		{#if favoriteTag}
-			<Badge class="bg-pink">
+			<Badge class="bg-purple">
 				<span><Icon name="tag" /> Favorite Tag</span>
 			</Badge>
 		{/if}

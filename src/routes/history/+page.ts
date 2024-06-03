@@ -13,6 +13,7 @@ interface Item {
     page_count: number;
     create_time: string;
     access_time: string;
+    tag_favorite : boolean;
 }
 
 interface Page {

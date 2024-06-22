@@ -27,7 +27,7 @@
 	}
 </script>
 
-<Card class="{createClassStr(tag.favorite)} h-100" id={tag.id.toString()}>
+<Card class="{createClassStr(tag.favorite)} h-100">
 	<a href={createBrowseURL(tag.name).toString()}>
 		<CardImg top src={createThumbnailUrl(tag.name).toString()} />
 	</a>
@@ -44,5 +44,8 @@
 				<span><Icon name="tag" /> </span>
 			</Badge>
 		{/if}
+		<Badge>
+			<span><Icon name="journals"/> {tag.item_count}</span>
+		</Badge>
 	</CardFooter>
 </Card>

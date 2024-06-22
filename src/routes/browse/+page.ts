@@ -7,7 +7,7 @@ interface Request {
     order: 'ascending' | 'descending';
     page: number;
     search: string;
-    sort: 'name' | 'createTime';
+    sort: 'name' | 'createTime' | 'pageCount';
     tag: string;
 }
 
@@ -72,6 +72,8 @@ export const load: PageLoad = async ({ fetch, url }) => {
             request.sort = 'name';
         } else if (v == 'createTime') {
             request.sort = 'createTime';
+        } else if (v == 'pageCount') {
+            request.sort = 'pageCount';
         }
     }
 

@@ -32,7 +32,7 @@ export function browseURL(base: URL | string, options?: {
     order?: 'ascending' | 'descending';
     page?: number;
     search?: string;
-    sort?: 'name' | 'createTime';
+    sort?: 'name' | 'createTime' | 'pageCount';
     tag?: string;
 }): URL {
     const output = new URL("/browse", base);

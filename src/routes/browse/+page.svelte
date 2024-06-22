@@ -47,7 +47,7 @@
 		order?: 'ascending' | 'descending';
 		page?: number;
 		search?: string;
-		sort?: 'name' | 'createTime';
+		sort?: 'name' | 'createTime' | 'pageCount';
 		tag?: string;
 	}): URL {
 		let callOptions = data.request;
@@ -87,7 +87,7 @@
 		order?: 'ascending' | 'descending';
 		page?: number;
 		search?: string;
-		sort?: 'name' | 'createTime';
+		sort?: 'name' | 'createTime' | 'pageCount';
 		tag?: string;
 	}): URL {
 		const sort = options.sort;
@@ -96,6 +96,8 @@
 				options.order = 'ascending';
 			case 'createTime':
 				options.order = 'descending';
+			case 'pageCount':
+				options.order = 'descending'
 		}
 
 		return createBrowseURL(options);
@@ -167,6 +169,12 @@
 						on:click={() => goto(createSortBrowseURL({ sort: 'createTime' }))}
 					>
 						<Icon name="clock" class="me-3" /> Create time
+					</DropdownItem>
+					<DropdownItem
+						active={sort == 'pageCount'}
+						on:click={() => goto(createSortBrowseURL({ sort: 'pageCount' }))}
+					>
+						<Icon name="file-earmark" class="me-3" /> Page count
 					</DropdownItem>
 					<DropdownItem divider />
 					<DropdownItem

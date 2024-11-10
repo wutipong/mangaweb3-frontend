@@ -1,7 +1,9 @@
-import type { PageLoad } from './$types';
+import type { PageServerLoad } from './$types';
 import { variables } from '$lib/variables';
+import { getUser } from '$lib/user';
 
 interface Request {
+    user: string
     favorite_only: boolean;
     item_per_page: number;
     order: 'ascending' | 'descending';
@@ -48,6 +50,7 @@ function createDefaultRequest(): Request {
     }
 
     return {
+        user: '',
         favorite_only: false,
         item_per_page: 30,
         order: order,
@@ -58,58 +61,61 @@ function createDefaultRequest(): Request {
     };
 }
 
-export const load: PageLoad = async ({ fetch, url }) => {
-    const request = createDefaultRequest();
+export const load: PageServerLoad = async ({  request, fetch, url }) => {
+    const backendReq = createDefaultRequest();
+    backendReq.user = getUser(request);
 
     const params = url.searchParams;
     if (params.has('favorite_only')) {
-        request.favorite_only = params.get('favorite_only') == 'true';
+        backendReq.favorite_only = params.get('favorite_only') == 'true';
     }
 
     if (params.has('sort')) {
         const v = params.get('sort');
         if (v == 'name') {
-            request.sort = 'name';
+            backendReq.sort = 'name';
         } else if (v == 'createTime') {
-            request.sort = 'createTime';
+            backendReq.sort = 'createTime';
         } else if (v == 'pageCount') {
-            request.sort = 'pageCount';
+            backendReq.sort = 'pageCount';
         }
     }
 
     if (params.has('order')) {
         const v = params.get('order');
         if (v == 'ascending') {
-            request.order = 'ascending';
+            backendReq.order = 'ascending';
         } else if (v == 'descending') {
-            request.order = 'descending';
+            backendReq.order = 'descending';
         }
     }
 
     if (params.has('tag')) {
-        request.tag = params.get('tag') as string;
+        backendReq.tag = params.get('tag') as string;
     }
 
     if (params.has('page')) {
         let v = params.get('page');
         if (v != null) {
-            request.page = parseInt(v);
+            backendReq.page = parseInt(v);
         }
     }
 
     if (params.has('search')) {
         let v = params.get('search');
         if (v != null) {
-            request.search = v;
+            backendReq.search = v;
         }
     }
 
     const apiUrl = '/api/browse';
-    const response = await fetch(apiUrl, { method: 'POST', body: JSON.stringify(request) });
+    const response = await fetch(apiUrl, { method: 'POST', body: JSON.stringify(backendReq) });
     const obj = await response.json() as Response;
 
     return {
-        request: request,
+        request: backendReq,
         response: obj
     }
 };
+
+

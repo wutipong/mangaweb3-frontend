@@ -30,10 +30,10 @@
 
 	export let data: PageData;
 
-	$: name = data.name;
-	$: favorite = data.favorite;
-	$: pageCount = data.pageCount;
-	$: tags = data.tags;
+	$: name = data.request.name;
+	$: favorite = data.response.favorite;
+	$: pageCount = data.response.page_count;
+	$: tags = data.response.tags;
 
 	function createImageUrls(name: string, pageCount: number): string[] {
 		const url = new URL('/api/view/get_image', $page.url.origin);
@@ -66,13 +66,16 @@
 	async function toggleFavorite() {
 		const req = {
 			favorite: !favorite,
-			name: name
+			name: name,
+			user: data.request.user
 		};
 
 		const url = new URL('/api/view/set_favorite', $page.url.origin);
 
 		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
 		const json = await resp.json();
+
+		console.log(json)
 
 		if (json.favorite) {
 			toast.show('Favorite', 'The current manga is now your favorite.');

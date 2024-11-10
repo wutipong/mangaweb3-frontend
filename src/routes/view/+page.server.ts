@@ -1,8 +1,10 @@
-import type { PageLoad } from './$types';
+import type { PageServerLoad } from './$types';
 import type { Tag } from '$lib/tag';
+import { getUser } from '$lib/user';
 
 interface Request {
     name: string;
+    user: string;
 }
 
 interface Response {
@@ -12,9 +14,7 @@ interface Response {
     tags: Tag[];
 }
 
-let request: Request = {
-    name: ''
-};
+
 
 let response: Response = {
     browse_url: '',
@@ -25,25 +25,30 @@ let response: Response = {
 
 export const prerender = false;
 
-export const load: PageLoad = async ({ fetch, url }) => {
+export const load: PageServerLoad = async ({ request, fetch, url }) => {
     const params = url.searchParams;
+    let backendReq: Request = {
+        name: '',
+        user: ''
+    };
+
     if (params.has('name')) {
-        request.name = params.get('name') as string;
+        backendReq.name = params.get('name') as string;
     }
+
+    backendReq.user = getUser(request);
 
     const resp = await fetch(
         new URL('/api/view', url.origin),
         {
             method: 'POST',
-            body: JSON.stringify(request)
+            body: JSON.stringify(backendReq)
         }
     );
     response = await resp.json();
 
     return {
-        name: request.name,
-        favorite: response.favorite,
-        pageCount: response.page_count,
-        tags: response.tags,
+        request: backendReq,
+        response: response,
     };
 };

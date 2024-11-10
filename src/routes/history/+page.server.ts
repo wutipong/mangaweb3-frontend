@@ -1,6 +1,8 @@
-import type { PageLoad } from './$types';
+import { getUser } from '$lib/user';
+import type { PageServerLoad } from './$types';
 
 interface Request {
+    user: string
     item_per_page: number;
     page: number;
 }
@@ -33,28 +35,30 @@ interface Response {
 
 function createDefaultRequest(): Request {
     return {
+        user: '',
         item_per_page: 30,
         page: 0,
     };
 }
 
-export const load: PageLoad = async ({ fetch, url }) => {
-    const request = createDefaultRequest();
+export const load: PageServerLoad = async ({ request, fetch, url }) => {
+    const backendReq = createDefaultRequest();
+    backendReq.user = getUser(request);
     const params = url.searchParams;
 
     if (params.has('page')) {
         let v = params.get('page');
         if (v != null) {
-            request.page = parseInt(v);
+            backendReq.page = parseInt(v);
         }
     }
 
     const apiUrl = '/api/history';
-    const response = await fetch(apiUrl, { method: 'POST', body: JSON.stringify(request) });
+    const response = await fetch(apiUrl, { method: 'POST', body: JSON.stringify(backendReq) });
     const obj = await response.json() as Response;
 
     return {
-        request: request,
+        request: backendReq,
         response: obj
     }
 };

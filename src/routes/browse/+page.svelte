@@ -105,6 +105,7 @@
 
 	async function onTagFavorite() {
 		const req = {
+			user: data.request.user,
 			favorite: !tag_favorite,
 			tag: tag
 		};

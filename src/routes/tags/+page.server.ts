@@ -1,7 +1,9 @@
-import type { PageLoad } from './$types';
+import type { PageServerLoad } from './$types';
 import type { Tag } from '$lib/tag';
+import { getUser } from '$lib/user';
 
 interface listRequest {
+    user: string
     favorite_only: boolean
     search: string
     page: number
@@ -15,9 +17,10 @@ interface listResponse {
 }
 export const prerender = false;
 
-export const load: PageLoad = async ({ fetch, url }) => {
+export const load: PageServerLoad = async ({ request, fetch, url }) => {
     const tagListURL = "/api/tag/list";
-    const request: listRequest = {
+    const backendReq: listRequest = {
+        user: getUser(request),
         search: "",
         favorite_only: false,
         page: 0,
@@ -25,30 +28,30 @@ export const load: PageLoad = async ({ fetch, url }) => {
     }
 
     if (url.searchParams.has('favorite_only')) {
-        request.favorite_only = url.searchParams.get('favorite_only') == "true"
+        backendReq.favorite_only = url.searchParams.get('favorite_only') == "true"
     }
     if (url.searchParams.has('page')) {
         const v = url.searchParams.get('page')
         if (v != null)
-            request.page = parseInt(v)
+            backendReq.page = parseInt(v)
     }
     if (url.searchParams.has('item_per_page')) {
         const v = url.searchParams.get('item_per_page')
         if (v != null)
-            request.item_per_page = parseInt(v)
+            backendReq.item_per_page = parseInt(v)
     }
     if (url.searchParams.has('search')) {
         const v = url.searchParams.get('search')
         if (v != null)
-            request.search = v
+            backendReq.search = v
     }
 
-    const response = await fetch(tagListURL, { method: 'POST', body: JSON.stringify(request) });
+    const response = await fetch(tagListURL, { method: 'POST', body: JSON.stringify(backendReq) });
     const obj = await response.json() as listResponse;
 
     return {
-        request: request,
-        page: request.page,
+        request: backendReq,
+        page: backendReq.page,
         tags: obj?.tags as Tag[],
         total_page: obj?.total_page
     };

@@ -1,6 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { Pagination, PaginationItem, PaginationLink } from '@sveltestrap/sveltestrap';
+	import {
+		Button,
+		Icon, Input, InputGroup,
+		Modal, ModalBody, ModalFooter,
+		ModalHeader,
+		Pagination,
+		PaginationItem,
+		PaginationLink
+	} from '@sveltestrap/sveltestrap';
+	import { goto } from '$app/navigation';
 
 	export let currentPage = 0;
 	export let totalPage = 1;
@@ -14,6 +23,9 @@
 	let numberUrls: Page[] = [];
 	let firstUrl: URL;
 	let lastUrl: URL;
+
+	let customOpen = false;
+	let customPage = currentPage;
 
 	$: if (totalPage != 0) {
 		firstUrl = new URL($page.url);
@@ -44,6 +56,13 @@
 		}
 		numberUrls = items;
 	}
+
+	function gotoPage(i: number) {
+		let url = new URL($page.url);
+		url.searchParams.set('page', i.toString());
+
+		goto(url);
+	}
 </script>
 
 <Pagination>
@@ -52,7 +71,7 @@
 	</PaginationItem>
 
 	{#each numberUrls as u}
-		<PaginationItem active={u.index == currentPage}>
+		<PaginationItem active={u.index === currentPage}>
 			<PaginationLink href={u.url.toString()}>
 				{u.index}
 			</PaginationLink>
@@ -60,6 +79,28 @@
 	{/each}
 
 	<PaginationItem>
+		<PaginationLink on:click={()=>customOpen=true}>
+			<Icon name="hash"></Icon>
+		</PaginationLink>
+	</PaginationItem>
+
+	<PaginationItem>
 		<PaginationLink last href={lastUrl?.toString()} />
 	</PaginationItem>
 </Pagination>
+
+<Modal isOpen={customOpen} toggle={()=>customOpen = !customOpen}>
+	<ModalHeader>Go to page</ModalHeader>
+	<ModalBody>
+		<InputGroup>
+			<Button on:click={()=>customPage=0}>0</Button>
+			<Input type="number" bind:value={customPage} placeholder="page #" max={totalPage - 1} min="0"></Input>
+			<Button on:click={()=>customPage=(totalPage-1)}>{totalPage - 1}</Button>
+		</InputGroup>
+	</ModalBody>
+	<ModalFooter>
+		<Button on:click={()=>gotoPage(customPage)}>
+			<Icon name="box-arrow-right"></Icon>&nbsp;Go
+		</Button>
+	</ModalFooter>
+</Modal>

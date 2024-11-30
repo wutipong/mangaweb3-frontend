@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
-	import { page } from '$app/stores';
 	import { Badge, Card, CardBody, CardFooter, CardImg, Icon } from '@sveltestrap/sveltestrap';
 
 	import '$lib/custom.scss';
@@ -30,13 +27,9 @@
 	let borderCls = $state('');
 
 	$effect(() => {
-		let u = new URL('/api/browse/thumbnail');
-		u.searchParams.append('name', name);
-		thumbnailURL = u.toString();
-
-		u = new URL('/view');
-		u.searchParams.append('name', name);
-		viewURL = u.toString();
+		let search = new URLSearchParams({'name': name})
+		thumbnailURL = `/api/browse/thumbnail?${search}`
+		viewURL = `/view?${search}`
 
 		if (favorite) {
 			borderCls = 'border border-2 border-pink';
@@ -58,31 +51,29 @@
 		<a href={viewURL}>{name}</a>
 	</CardBody>
 	<CardFooter>
-		<!--
 		{#if favorite}
-			<Badge class="bg-pink">
+			<span class="badge bg-pink">
 				<span><Icon name="star-fill" /> Favorite </span>
-			</Badge>
+			</span>
 		{/if}
 
 		{#if favoriteTag}
-			<Badge class="bg-purple">
+			<span class="badge bg-purple">
 				<span><Icon name="tag" /> Favorite Tag</span>
-			</Badge>
+			</span>
 		{/if}
 
 		{#if !isRead}
-			<Badge class="bg-yellow">
+			<span class="badge bg-yellow">
 				<span><Icon name="lightning-fill" /> New </span>
-			</Badge>
+			</span>
 		{:else}
-			<Badge>
+			<span class="badge"> 
 				<span><Icon name="check" /> Read </span>
-			</Badge>
+			</span>
 		{/if}
-	-->
-		<Badge class="bg-blue">
+		<span class="badge bg-blue">
 			<span><Icon name="file-earmark-fill" /> {page_count}p </span>
-		</Badge>
+		</span>
 	</CardFooter>
 </Card>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { navigating, page } from '$app/stores';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
@@ -26,6 +26,7 @@
 	} from '@sveltestrap/sveltestrap';
 	import type { PageData } from './$types';
 	import ItemCard from '$lib/ItemCard.svelte';
+	import { ITEM_PER_PAGE } from '$lib/constants';
 
 	let toast: Toast;
 
@@ -258,20 +259,29 @@
 <div class="container-fluid" style="padding-top:30px;">
 	<div class="grid-container">
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-			{#each items as item}
-				<div class="col">
-					<ItemCard
-						favorite={item.favorite}
-						isRead={item.read}
-						id={item.id}
-						name={item.name}
-						pageCount={item.page_count}
-						favoriteTag={item.tag_favorite}
-						imageUrl={createThumbnailUrl(item.name)}
-						linkUrl={viewURL($page.url, item.name)}
-					/>
-				</div>
-			{/each}
+			{#if $navigating}Hello?{:else}
+				{#each items as item}
+					<div class="col">
+						<ItemCard
+							favorite={item.favorite}
+							isRead={item.read}
+							id={item.id}
+							name={item.name}
+							pageCount={item.page_count}
+							favoriteTag={item.tag_favorite}
+							imageUrl={createThumbnailUrl(item.name)}
+							linkUrl={viewURL($page.url, item.name)}
+						/>
+					</div>
+				{/each}
+				{#each {length: ITEM_PER_PAGE - items.length} as _, i}
+					<div class="col">
+						<ItemCard
+							placeholder={true}
+						/>
+					</div>
+				{/each}
+			{/if}
 		</div>
 	</div>
 </div>

@@ -22,6 +22,7 @@
 	} from '@sveltestrap/sveltestrap';
 	import type { PageData } from './$types';
 	import ItemCard from '$lib/ItemCard.svelte';
+	import { ITEM_PER_PAGE } from '$lib/constants';
 
 	interface Props {
 		data: PageData;
@@ -39,7 +40,7 @@
 		navbarToggleOpen = event.detail;
 	}
 
-	function createThumbnailUrl(name: string): URL{
+	function createThumbnailUrl(name: string): URL {
 		let u = new URL('/api/browse/thumbnail', $page.url.origin);
 		u.searchParams.append('name', name);
 		return u;
@@ -87,7 +88,6 @@
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
 			{#each items as item}
 				<div class="col">
-					
 					<ItemCard
 						favorite={item.favorite}
 						favoriteTag={item.tag_favorite}
@@ -99,6 +99,11 @@
 						linkUrl={viewURL($page.url, item.name)}
 						imageUrl={createThumbnailUrl(item.name)}
 					/>
+				</div>
+			{/each}
+			{#each { length: ITEM_PER_PAGE - items.length } as _, i}
+				<div class="col">
+					<ItemCard placeholder={true} />
 				</div>
 			{/each}
 		</div>

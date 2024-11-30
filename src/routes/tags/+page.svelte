@@ -24,6 +24,7 @@
 	import Pagination from '$lib/Pagination.svelte';
 	import { goto } from '$app/navigation';
 	import { aboutURL, tagURL, browseURL, historyURL } from '$lib/routes';
+	import { ITEM_PER_PAGE } from '$lib/constants';
 
 	interface Props {
 		data: PageData;
@@ -32,12 +33,12 @@
 	let { data }: Props = $props();
 
 	let current_page = $derived(data.page);
-	let tags = $derived(data.tags);
+	let favoriteOnly = $derived(data.request.favorite_only);
+	let tags = $derived(favoriteOnly ? data.tags.filter((t) => t.favorite) : data.tags);
 	let total_page = $derived(data.total_page);
 
 	let search = $state(data.request.search);
 
-	let favoriteOnly = $derived(data.request.favorite_only);
 	let navbarToggleOpen = $state(false);
 
 	function handleUpdate(event: CustomEvent<boolean>) {
@@ -121,17 +122,20 @@
 	<div class="grid-container">
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
 			{#each tags as tag}
-				{#if !favoriteOnly || (favoriteOnly && tag.favorite)}
-					<div class="col">
-						<ItemCard 
-							name={tag.name} 
-							linkUrl={browseURL($page.url, {tag: tag.name})}
-							imageUrl={createThumbnailUrl(tag.name)}
-							favoriteTag={tag.favorite}
-							itemCount={tag.item_count}
-						 />
-					</div>
-				{/if}
+				<div class="col">
+					<ItemCard
+						name={tag.name}
+						linkUrl={browseURL($page.url, { tag: tag.name })}
+						imageUrl={createThumbnailUrl(tag.name)}
+						favoriteTag={tag.favorite}
+						itemCount={tag.item_count}
+					/>
+				</div>
+			{/each}
+			{#each { length: ITEM_PER_PAGE - tags.length } as _, i}
+				<div class="col">
+					<ItemCard placeholder={true} />
+				</div>
 			{/each}
 		</div>
 	</div>

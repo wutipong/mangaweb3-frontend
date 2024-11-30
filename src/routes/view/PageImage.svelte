@@ -14,7 +14,7 @@
 		loading = 'eager';
 	}
 
-	function onImageEror() {
+	function onImageError() {
 		setTimeout(() => {
 			let url = new URL(src);
 			url.searchParams.append('retry', retry.toString());
@@ -31,6 +31,6 @@
 	{alt}
 	src={src.toString()}
 	style="object-fit:contain;max-width:100%;max-height:100%"
-	onerror={() => onImageEror()}
+	onerror={() => onImageError()}
 	bind:this={img}
 />

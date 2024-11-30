@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Badge, Card, CardBody, CardFooter, CardImg, Icon } from '@sveltestrap/sveltestrap';
+	import { Card, CardBody, CardFooter, CardImg, Icon, Image } from '@sveltestrap/sveltestrap';
 
 	import '$lib/custom.scss';
 
@@ -45,9 +45,14 @@
 
 <Card class="{borderCls} h-100" {id}>
 	<a href={viewURL}>
-		<CardImg top src={thumbnailURL} />
+		<Image
+			class="card-img-top"
+			loading="lazy"
+			src={thumbnailURL}
+			style="height: 300px; object-fit: cover;"
+		></Image>
 	</a>
-	<CardBody>
+	<CardBody style="height: 200px; overflow:hidden;">
 		<a href={viewURL}>{name}</a>
 	</CardBody>
 	<CardFooter>

@@ -1,7 +1,6 @@
 <!-- @migration-task Error while migrating Svelte code: Cannot subscribe to stores that are not declared at the top level of the component -->
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 	import { browseURL, aboutURL, tagURL, historyURL } from '$lib/routes';
 	import {
 		Navbar,
@@ -26,6 +25,7 @@
 
 	import Cropper from 'svelte-easy-crop';
 	import MessageDialog from '$lib/MessageDialog.svelte';
+	import { page } from '$app/stores';
 
 	let navbarToggleOpen = false;
 	function handleUpdate(event: CustomEvent<boolean>) {
@@ -33,7 +33,10 @@
 	}
 
 	function createImageUrl(name: string, page: number): URL {
-		const url = new URL('/api/view/get_image', $page.url.origin);
+		///TODO: remove this
+		//const url = new URL('/api/view/get_image', $page.url.origin);
+
+		const url = new URL('/api/view/get_image');
 		if (name != null) {
 			url.searchParams.append('name', name);
 		}

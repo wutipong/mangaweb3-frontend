@@ -6,7 +6,7 @@
 
 	let { alt, src }: Props = $props();
 
-	let img: HTMLImageElement = $state();
+	let img: HTMLImageElement;
 	let loading: 'lazy' | 'eager' = $state('lazy');
 	let retry = 0;
 

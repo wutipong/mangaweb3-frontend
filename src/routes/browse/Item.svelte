@@ -29,12 +29,12 @@
 
 	let borderCls = $state('');
 
-	run(() => {
-		let u = new URL('/api/browse/thumbnail', $page.url.origin);
+	$effect(() => {
+		let u = new URL('/api/browse/thumbnail');
 		u.searchParams.append('name', name);
 		thumbnailURL = u.toString();
 
-		u = new URL('/view', $page.url.origin);
+		u = new URL('/view');
 		u.searchParams.append('name', name);
 		viewURL = u.toString();
 
@@ -58,6 +58,7 @@
 		<a href={viewURL}>{name}</a>
 	</CardBody>
 	<CardFooter>
+		<!--
 		{#if favorite}
 			<Badge class="bg-pink">
 				<span><Icon name="star-fill" /> Favorite </span>
@@ -79,6 +80,7 @@
 				<span><Icon name="check" /> Read </span>
 			</Badge>
 		{/if}
+	-->
 		<Badge class="bg-blue">
 			<span><Icon name="file-earmark-fill" /> {page_count}p </span>
 		</Badge>

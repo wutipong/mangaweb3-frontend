@@ -19,6 +19,7 @@
 		data-bs-toggle="offcanvas"
 		data-bs-target="#offcanvasBottom"
 		aria-controls="offcanvasBottom"
+		aria-label="show pagescroll"
 	>
 		<i class="bi bi-chevron-double-up" style="opacity: 0.9; color:#fff;"></i>
 	</button>

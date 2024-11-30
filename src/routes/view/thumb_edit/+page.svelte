@@ -45,16 +45,16 @@
 		return url;
 	}
 
-	export let data: PageData;
+	let { data } = $props();
 
-	$: name = data.name;
-	$: index = 0;
-	$: image = name != null ? createImageUrl(name, index).toString() : '';
-	$: pageCount = data.page_count;
+	let name = $derived(data.name);
+	let index = $state(0);
+	const image = $derived(name != null ? createImageUrl(name, index).toString() : '');
+	let pageCount = $derived(data.page_count);
 
-	let crop = { x: 0, y: 0 };
-	let zoom = 1;
-	let aspect = 127 / 180;
+	let crop = $state({ x: 0, y: 0 });
+	let zoom = $state(1);
+	let aspect = $state(127 / 180);
 
 	interface CropDetails {
 		x: number;

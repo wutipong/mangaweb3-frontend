@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
@@ -27,8 +25,8 @@
 	import PageScroll from './PageScroll.svelte';
 
 	let current = $state(0);
-	let viewer: ImageViewer = $state();
-	let toast: Toast = $state();
+	let viewer: ImageViewer;
+	let toast: Toast;
 
 	interface Props {
 		data: PageData;
@@ -37,12 +35,9 @@
 	let { data }: Props = $props();
 
 	let name = $derived(data.request.name);
-	let favorite;
-	run(() => {
-		favorite = data.response.favorite;
-	});
 	let pageCount = $derived(data.response.page_count);
 	let tags = $derived(data.response.tags);
+	let favorite = $state(data.response.favorite);
 
 	function createImageUrls(name: string, pageCount: number): string[] {
 		const url = new URL('/api/view/get_image', $page.url.origin);
@@ -215,7 +210,7 @@
 				<NavLink>{name.length > 40 ? `${name.substring(0, 35)}...` : name}</NavLink>
 			</NavItem>
 			<NavItem class="me-3">
-				<FavoriteButton on:click={() => toggleFavorite()} isFavorite={favorite}>
+				<FavoriteButton onclick={() => toggleFavorite()} isFavorite={favorite}>
 					Favorite
 				</FavoriteButton>
 			</NavItem>

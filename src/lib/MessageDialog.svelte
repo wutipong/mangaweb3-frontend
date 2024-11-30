@@ -22,6 +22,6 @@
 		{bodyStr}
 	</ModalBody>
 	<ModalFooter>
-		<Button color="primary" on:click={toggle}>OK</Button>
+		<Button color="primary" onclick={toggle}>OK</Button>
 	</ModalFooter>
 </Modal>

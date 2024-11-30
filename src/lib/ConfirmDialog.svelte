@@ -25,12 +25,12 @@
 </script>
 
 <Modal isOpen={open} {toggle}>
-	<ModalHeader {toggle}>{headerStr}</ModalHeader>
+	<ModalHeader>{headerStr}</ModalHeader>
 	<ModalBody>
 		{bodyStr}
 	</ModalBody>
 	<ModalFooter>
-		<Button color="primary" on:click={doPerform}>OK</Button>
-		<Button color="secondary" on:click={toggle}>Cancel</Button>
+		<Button color="primary" onclick={doPerform}>OK</Button>
+		<Button color="secondary" onclick={toggle}>Cancel</Button>
 	</ModalFooter>
 </Modal>

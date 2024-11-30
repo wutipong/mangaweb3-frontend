@@ -33,15 +33,10 @@
 
 	let { data }: Props = $props();
 
-	let current_page;
-	run(() => {
-		current_page = data.page;
-	});
+	let current_page = $derived(data.page);
 	let tags = $derived(data.tags);
-	let total_page;
-	run(() => {
-		total_page = data.total_page;
-	});
+	let total_page = $derived(data.total_page);
+
 	let search = $state(data.request.search);
 
 	let favoriteOnly = $derived(data.request.favorite_only);
@@ -134,7 +129,7 @@
 <div style="height: 100px;"></div>
 
 <div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
-	<Pagination bind:currentPage={current_page} bind:totalPage={total_page} />
+	<Pagination currentPage={current_page} totalPage={total_page} />
 </div>
 
 <MoveToTop />

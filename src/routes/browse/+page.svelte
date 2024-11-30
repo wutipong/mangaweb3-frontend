@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
@@ -29,7 +27,7 @@
 	import type { PageData } from './$types';
 	import Item from './Item.svelte';
 
-	let toast: Toast = $state();
+	let toast: Toast;
 
 	interface Props {
 		data: PageData;
@@ -44,8 +42,9 @@
 	let search = $state(data.request.search);
 	let sort = $derived(data.request.sort);
 	let tag = $derived(data.request.tag);
-	let tag_favorite;
-	run(() => {
+	let tag_favorite = $state(data.response.tag_favorite);
+
+	$effect(() => {
 		tag_favorite = data.response.tag_favorite;
 	});
 	let totalPage = $derived(data.response.total_page);
@@ -106,7 +105,7 @@
 			case 'createTime':
 				options.order = 'descending';
 			case 'pageCount':
-				options.order = 'descending'
+				options.order = 'descending';
 		}
 
 		return createBrowseURL(options);
@@ -216,12 +215,12 @@
 				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
 			</NavItem>
 			<NavItem>
-				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 		<Nav class="ms-auto me-3" navbar>
 			<NavItem hidden={tag == '' ? true : undefined}>
-				<FavoriteButton on:click={() => onTagFavorite()} isFavorite={tag_favorite}>
+				<FavoriteButton onclick={() => onTagFavorite()} isFavorite={tag_favorite}>
 					Favorite tag
 				</FavoriteButton>
 			</NavItem>

@@ -2,11 +2,15 @@
 	import { onMount } from 'svelte';
 	import PageImage from './PageImage.svelte';
 
-	export let imageURLs: string[] = [];
-	export let onIndexChange: Function;
+	interface Props {
+		imageURLs?: string[];
+		onIndexChange: Function;
+	}
+
+	let { imageURLs = [], onIndexChange }: Props = $props();
 
 	let carousel: bootstrap.Carousel;
-	let imgs: PageImage[] = [];
+	let imgs: PageImage[] = $state([]);
 
 	onMount(async () => {
 		const bootstrap = await import('bootstrap');
@@ -49,11 +53,11 @@
 		{/each}
 	</div>
 	<button class="carousel-control-prev" data-bs-target="#carouselControl" data-bs-slide="prev">
-		<span class="carousel-control-prev-icon" aria-hidden="true" />
+		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 		<span class="visually-hidden">Previous</span>
 	</button>
 	<button class="carousel-control-next" data-bs-target="#carouselControl" data-bs-slide="next">
-		<span class="carousel-control-next-icon" aria-hidden="true" />
+		<span class="carousel-control-next-icon" aria-hidden="true"></span>
 		<span class="visually-hidden">Next</span>
 	</button>
 </div>

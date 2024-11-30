@@ -1,7 +1,11 @@
 <script lang="ts">
-	export let PageCount = 0;
-	export let onValueChange: (c: number) => void;
-	export let Current = 0;
+	interface Props {
+		PageCount?: number;
+		onValueChange: (c: number) => void;
+		Current?: number;
+	}
+
+	let { PageCount = 0, onValueChange, Current = $bindable(0) }: Props = $props();
 </script>
 
 <nav
@@ -16,7 +20,7 @@
 		data-bs-target="#offcanvasBottom"
 		aria-controls="offcanvasBottom"
 	>
-		<i class="bi bi-chevron-double-up" style="opacity: 0.9; color:#fff;" />
+		<i class="bi bi-chevron-double-up" style="opacity: 0.9; color:#fff;"></i>
 	</button>
 </nav>
 
@@ -34,7 +38,7 @@
 			min="0"
 			max={PageCount - 1}
 			bind:value={Current}
-			on:change={(e) => onValueChange(Current)}
+			onchange={(e) => onValueChange(Current)}
 		/>
 		{Current + 1} of {PageCount}
 	</div>

@@ -1,22 +1,35 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { page } from '$app/stores';
 	import { Badge, Card, CardBody, CardFooter, CardImg, Icon } from '@sveltestrap/sveltestrap';
 
 	import '$lib/custom.scss';
 
-	export let favorite = false;
-	export let isRead = false;
-	export let favoriteTag = false;
-	export let id = '';
-	export let name = '';
-	export let page_count = 0;
+	interface Props {
+		favorite?: boolean;
+		isRead?: boolean;
+		favoriteTag?: boolean;
+		id?: string;
+		name?: string;
+		page_count?: number;
+	}
 
-	let thumbnailURL = '';
-	let viewURL = '';
+	let {
+		favorite = false,
+		isRead = false,
+		favoriteTag = false,
+		id = '',
+		name = '',
+		page_count = 0
+	}: Props = $props();
 
-	let borderCls = '';
+	let thumbnailURL = $state('');
+	let viewURL = $state('');
 
-	$: {
+	let borderCls = $state('');
+
+	run(() => {
 		let u = new URL('/api/browse/thumbnail', $page.url.origin);
 		u.searchParams.append('name', name);
 		thumbnailURL = u.toString();
@@ -34,7 +47,7 @@
 		} else {
 			borderCls = '';
 		}
-	}
+	});
 </script>
 
 <Card class="{borderCls} h-100" {id}>

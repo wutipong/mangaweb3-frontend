@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Toast, ToastBody, ToastHeader } from '@sveltestrap/sveltestrap';
 
-	let message = '';
-	let header = '';
-	let isOpen = false;
+	let message = $state('');
+	let header = $state('');
+	let isOpen = $state(false);
 
 	export function show(h: string, m: string) {
 		message = m;
@@ -17,7 +17,7 @@
 	<div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="toast-header">
 			<strong class="me-auto" id="toast-header">{header}</strong>
-			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" />
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 		</div>
 		<div class="toast-body" id="toast-content">
 			{message}

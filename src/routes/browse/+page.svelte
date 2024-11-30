@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
@@ -27,19 +29,26 @@
 	import type { PageData } from './$types';
 	import Item from './Item.svelte';
 
-	let toast: Toast;
+	let toast: Toast = $state();
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: favoriteOnly = data.request.favorite_only;
-	$: items = data.response.items;
-	$: order = data.request.order;
-	$: pageIndex = data.request.page;
-	let search = data.request.search;
-	$: sort = data.request.sort;
-	$: tag = data.request.tag;
-	$: tag_favorite = data.response.tag_favorite;
-	$: totalPage = data.response.total_page;
+	let { data }: Props = $props();
+
+	let favoriteOnly = $derived(data.request.favorite_only);
+	let items = $derived(data.response.items);
+	let order = $derived(data.request.order);
+	let pageIndex = $derived(data.request.page);
+	let search = $state(data.request.search);
+	let sort = $derived(data.request.sort);
+	let tag = $derived(data.request.tag);
+	let tag_favorite;
+	run(() => {
+		tag_favorite = data.response.tag_favorite;
+	});
+	let totalPage = $derived(data.response.total_page);
 
 	function createBrowseURL(options?: {
 		favorite_only?: boolean;
@@ -124,7 +133,7 @@
 		tag_favorite = json.favorite;
 	}
 
-	let navbarToggleOpen = false;
+	let navbarToggleOpen = $state(false);
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
@@ -258,7 +267,7 @@
 		</div>
 	</div>
 </div>
-<div style="height: 100px;" />
+<div style="height: 100px;"></div>
 
 <div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
 	<Pagination currentPage={pageIndex} {totalPage} />

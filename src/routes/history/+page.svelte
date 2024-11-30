@@ -23,15 +23,19 @@
 	import type { PageData } from './$types';
 	import Item from './Item.svelte';
 
-	let toast: Toast;
+	let toast: Toast = $state();
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: items = data.response.items;
-	$: pageIndex = data.request.page;
-	$: totalPage = data.response.total_page;
+	let { data }: Props = $props();
 
-	let navbarToggleOpen = false;
+	let items = $derived(data.response.items);
+	let pageIndex = $derived(data.request.page);
+	let totalPage = $derived(data.response.total_page);
+
+	let navbarToggleOpen = $state(false);
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
@@ -92,7 +96,7 @@
 		</div>
 	</div>
 </div>
-<div style="height: 100px;" />
+<div style="height: 100px;"></div>
 
 <div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
 	<Pagination currentPage={pageIndex} {totalPage} />

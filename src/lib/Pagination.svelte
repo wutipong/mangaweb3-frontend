@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { page } from '$app/stores';
 	import {
 		Button,
@@ -11,51 +13,57 @@
 	} from '@sveltestrap/sveltestrap';
 	import { goto } from '$app/navigation';
 
-	export let currentPage = 0;
-	export let totalPage = 1;
-	export let pageToShow = 5;
+	interface Props {
+		currentPage?: number;
+		totalPage?: number;
+		pageToShow?: number;
+	}
+
+	let { currentPage = 0, totalPage = 1, pageToShow = 5 }: Props = $props();
 
 	interface Page {
 		url: URL;
 		index: number;
 	}
 
-	let numberUrls: Page[] = [];
-	let firstUrl: URL;
-	let lastUrl: URL;
+	let numberUrls: Page[] = $state([]);
+	let firstUrl: URL = $state();
+	let lastUrl: URL = $state();
 
-	let customOpen = false;
-	let customPage = currentPage;
+	let customOpen = $state(false);
+	let customPage = $state(currentPage);
 
-	$: if (totalPage != 0) {
-		firstUrl = new URL($page.url);
-		firstUrl.searchParams.set('page', '0');
+	run(() => {
+		if (totalPage != 0) {
+			firstUrl = new URL($page.url);
+			firstUrl.searchParams.set('page', '0');
 
-		lastUrl = new URL($page.url);
-		lastUrl.searchParams.set('page', (totalPage - 1).toString());
+			lastUrl = new URL($page.url);
+			lastUrl.searchParams.set('page', (totalPage - 1).toString());
 
-		let halfCount = Math.floor(pageToShow / 2);
+			let halfCount = Math.floor(pageToShow / 2);
 
-		const startPage = currentPage - halfCount;
-		const endPage = startPage + pageToShow;
+			const startPage = currentPage - halfCount;
+			const endPage = startPage + pageToShow;
 
-		let items: Page[] = [];
-		for (let i = startPage; i < endPage; i++) {
-			if (i < 0 || i >= totalPage) continue;
+			let items: Page[] = [];
+			for (let i = startPage; i < endPage; i++) {
+				if (i < 0 || i >= totalPage) continue;
 
-			const url = new URL($page.url);
-			url.searchParams.set('page', `${i}`);
+				const url = new URL($page.url);
+				url.searchParams.set('page', `${i}`);
 
-			items = [
-				...items,
-				{
-					url: url,
-					index: i
-				}
-			];
+				items = [
+					...items,
+					{
+						url: url,
+						index: i
+					}
+				];
+			}
+			numberUrls = items;
 		}
-		numberUrls = items;
-	}
+	});
 
 	function gotoPage(i: number) {
 		let url = new URL($page.url);

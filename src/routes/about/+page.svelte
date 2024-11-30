@@ -23,14 +23,18 @@
 	} from '@sveltestrap/sveltestrap';
 	import Toast from '$lib/Toast.svelte';
 
-	let navbarToggleOpen = false;
+	let navbarToggleOpen = $state(false);
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
 
-	export let version = '';
-	let toast: Toast;
-	let confirm: ConfirmDialog;
+	interface Props {
+		version?: string;
+	}
+
+	let { version = '' }: Props = $props();
+	let toast: Toast = $state();
+	let confirm: ConfirmDialog = $state();
 
 	function confirmRescanLibrary() {
 		confirm.show(

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
@@ -24,16 +26,23 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import PageScroll from './PageScroll.svelte';
 
-	let current = 0;
-	let viewer: ImageViewer;
-	let toast: Toast;
+	let current = $state(0);
+	let viewer: ImageViewer = $state();
+	let toast: Toast = $state();
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: name = data.request.name;
-	$: favorite = data.response.favorite;
-	$: pageCount = data.response.page_count;
-	$: tags = data.response.tags;
+	let { data }: Props = $props();
+
+	let name = $derived(data.request.name);
+	let favorite;
+	run(() => {
+		favorite = data.response.favorite;
+	});
+	let pageCount = $derived(data.response.page_count);
+	let tags = $derived(data.response.tags);
 
 	function createImageUrls(name: string, pageCount: number): string[] {
 		const url = new URL('/api/view/get_image', $page.url.origin);
@@ -128,7 +137,7 @@
 		viewer.advance(n);
 	}
 
-	let navbarToggleOpen = false;
+	let navbarToggleOpen = $state(false);
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}

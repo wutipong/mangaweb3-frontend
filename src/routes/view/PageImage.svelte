@@ -1,9 +1,13 @@
 <script lang="ts">
-	export let alt: string;
-	export let src: URL;
+	interface Props {
+		alt: string;
+		src: URL;
+	}
 
-	let img: HTMLImageElement;
-	let loading: 'lazy' | 'eager' = 'lazy';
+	let { alt, src }: Props = $props();
+
+	let img: HTMLImageElement = $state();
+	let loading: 'lazy' | 'eager' = $state('lazy');
 	let retry = 0;
 
 	export function forceLoad() {
@@ -27,6 +31,6 @@
 	{alt}
 	src={src.toString()}
 	style="object-fit:contain;max-width:100%;max-height:100%"
-	on:error={() => onImageEror()}
+	onerror={() => onImageEror()}
 	bind:this={img}
 />

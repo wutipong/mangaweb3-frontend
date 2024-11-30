@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { page } from '$app/stores';
 	import Item from './Item.svelte';
 	import type { PageData } from './$types';
@@ -25,15 +27,25 @@
 	import { goto } from '$app/navigation';
 	import { aboutURL, tagURL, browseURL, historyURL } from '$lib/routes';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: current_page = data.page;
-	$: tags = data.tags;
-	$: total_page = data.total_page;
-	let search = data.request.search;
+	let { data }: Props = $props();
 
-	$: favoriteOnly = data.request.favorite_only;
-	let navbarToggleOpen = false;
+	let current_page;
+	run(() => {
+		current_page = data.page;
+	});
+	let tags = $derived(data.tags);
+	let total_page;
+	run(() => {
+		total_page = data.total_page;
+	});
+	let search = $state(data.request.search);
+
+	let favoriteOnly = $derived(data.request.favorite_only);
+	let navbarToggleOpen = $state(false);
 
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
@@ -119,7 +131,7 @@
 	</div>
 </Container>
 
-<div style="height: 100px;" />
+<div style="height: 100px;"></div>
 
 <div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
 	<Pagination bind:currentPage={current_page} bind:totalPage={total_page} />

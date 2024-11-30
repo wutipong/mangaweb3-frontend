@@ -3,7 +3,11 @@
 	import type { Tag } from '$lib/tag';
 	import { page } from '$app/stores';
 
-	export let tag: Tag;
+	interface Props {
+		tag: Tag;
+	}
+
+	let { tag }: Props = $props();
 
 	function createClassStr(fav: boolean) {
 		if (fav) {

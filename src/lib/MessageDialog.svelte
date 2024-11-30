@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from '@sveltestrap/sveltestrap';
 
-	let open = false;
+	let open = $state(false);
 	const toggle = () => (open = !open);
 
-	$: headerStr = '';
-	$: bodyStr = '';
+	let headerStr = $state('');
+	
+	let bodyStr = $state('');
+	
 
 	export function show(header: string, body: string) {
 		headerStr = header;

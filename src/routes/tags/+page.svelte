@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { page } from '$app/stores';
-	import Item from './Item.svelte';
+	import ItemCard from '$lib/ItemCard.svelte';
 	import type { PageData } from './$types';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import {
@@ -44,6 +42,13 @@
 
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
+	}
+
+	function createThumbnailUrl(name: string) {
+		const output = new URL('/api/tag/thumbnail', $page.url.origin);
+		output.searchParams.append('tag', name);
+
+		return output;
 	}
 </script>
 
@@ -118,7 +123,13 @@
 			{#each tags as tag}
 				{#if !favoriteOnly || (favoriteOnly && tag.favorite)}
 					<div class="col">
-						<Item {tag} />
+						<ItemCard 
+							name={tag.name} 
+							linkUrl={browseURL($page.url, {tag: tag.name})}
+							imageUrl={createThumbnailUrl(tag.name)}
+							favoriteTag={tag.favorite}
+							itemCount={tag.item_count}
+						 />
 					</div>
 				{/if}
 			{/each}

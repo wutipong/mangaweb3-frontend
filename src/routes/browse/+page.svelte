@@ -5,7 +5,7 @@
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
 	import Toast from '$lib/Toast.svelte';
-	import { aboutURL, browseURL, historyURL, tagURL } from '$lib/routes';
+	import { aboutURL, browseURL, historyURL, tagURL, viewURL } from '$lib/routes';
 
 	import {
 		Button,
@@ -25,7 +25,7 @@
 		NavbarToggler
 	} from '@sveltestrap/sveltestrap';
 	import type { PageData } from './$types';
-	import Item from './Item.svelte';
+	import ItemCard from '$lib/ItemCard.svelte';
 
 	let toast: Toast;
 
@@ -135,6 +135,13 @@
 	let navbarToggleOpen = $state(false);
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
+	}
+
+	function createThumbnailUrl(name: string): URL {
+		const u = new URL('/api/browse/thumbnail', $page.url);
+		u.searchParams.set('name', name);
+
+		return u;
 	}
 </script>
 
@@ -253,13 +260,15 @@
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
 			{#each items as item}
 				<div class="col">
-					<Item
+					<ItemCard
 						favorite={item.favorite}
 						isRead={item.read}
-						id={item.id.toString()}
+						id={item.id}
 						name={item.name}
-						page_count={item.page_count}
+						pageCount={item.page_count}
 						favoriteTag={item.tag_favorite}
+						imageUrl={createThumbnailUrl(item.name)}
+						linkUrl={viewURL($page.url, item.name)}
 					/>
 				</div>
 			{/each}

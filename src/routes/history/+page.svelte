@@ -4,7 +4,7 @@
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
 	import Toast from '$lib/Toast.svelte';
-	import { aboutURL, browseURL, historyURL, tagURL } from '$lib/routes';
+	import { aboutURL, browseURL, historyURL, tagURL, viewURL } from '$lib/routes';
 
 	import {
 		Collapse,
@@ -21,9 +21,7 @@
 		NavbarToggler
 	} from '@sveltestrap/sveltestrap';
 	import type { PageData } from './$types';
-	import Item from './Item.svelte';
-
-	let toast: Toast = $state();
+	import ItemCard from '$lib/ItemCard.svelte';
 
 	interface Props {
 		data: PageData;
@@ -34,10 +32,17 @@
 	let items = $derived(data.response.items);
 	let pageIndex = $derived(data.request.page);
 	let totalPage = $derived(data.response.total_page);
-
 	let navbarToggleOpen = $state(false);
+	let toast: Toast;
+
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
+	}
+
+	function createThumbnailUrl(name: string): URL{
+		let u = new URL('/api/browse/thumbnail', $page.url.origin);
+		u.searchParams.append('name', name);
+		return u;
 	}
 </script>
 
@@ -82,14 +87,17 @@
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
 			{#each items as item}
 				<div class="col">
-					<Item
+					
+					<ItemCard
 						favorite={item.favorite}
 						favoriteTag={item.tag_favorite}
 						isRead={item.read}
-						id={item.id.toString()}
+						id={item.id}
 						name={item.name}
-						page_count={item.page_count}
-						access_time={item.access_time}
+						pageCount={item.page_count}
+						accessTime={item.access_time}
+						linkUrl={viewURL($page.url, item.name)}
+						imageUrl={createThumbnailUrl(item.name)}
 					/>
 				</div>
 			{/each}

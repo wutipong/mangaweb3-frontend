@@ -31,7 +31,6 @@
 	let customPage = $state(currentPage);
 
 	$effect(() => {
-		$inspect(totalPage)
 		pageNumbers = [];
 		last = totalPage -1;
 		if (totalPage != 0) {

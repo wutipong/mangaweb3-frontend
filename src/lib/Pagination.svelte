@@ -8,7 +8,6 @@
 		Modal,
 		ModalBody,
 		ModalFooter,
-		ModalHeader,
 		Pagination,
 		PaginationItem,
 		PaginationLink
@@ -81,19 +80,20 @@
 	</PaginationItem>
 </Pagination>
 
-<!--FIXME: custom is not working -->
 <Modal isOpen={customOpen} toggle={() => (customOpen = !customOpen)}>
-	<ModalHeader>Go to page</ModalHeader>
+	<div class="modal-header">
+		<h5 class="modal-title">Go to page</h5>
+	</div>
 	<ModalBody>
 		<InputGroup>
-			<Button on:click={() => (customPage = 0)}>0</Button>
-			<Input type="number" bind:value={customPage} placeholder="page #" max={totalPage - 1} min="0"
+			<Button onclick={() => (customPage = 0)}>0</Button>
+			<Input type="number" bind:value={customPage} placeholder="page #" max={totalPage - 1} min={0}
 			></Input>
-			<Button on:click={() => (customPage = totalPage - 1)}>{totalPage - 1}</Button>
+			<Button onclick={() => (customPage = totalPage - 1)}>{totalPage - 1}</Button>
 		</InputGroup>
 	</ModalBody>
 	<ModalFooter>
-		<Button on:click={() => gotoPage(customPage)}>
+		<Button onclick={() => gotoPage(customPage)}>
 			<Icon name="box-arrow-right"></Icon>&nbsp;Go
 		</Button>
 	</ModalFooter>

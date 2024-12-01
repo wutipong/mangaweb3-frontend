@@ -1,16 +1,20 @@
 <script lang="ts">
-	export let alt: string;
-	export let src: URL;
+	interface Props {
+		alt: string;
+		src: URL;
+	}
+
+	let { alt, src }: Props = $props();
 
 	let img: HTMLImageElement;
-	let loading: 'lazy' | 'eager' = 'lazy';
+	let loading: 'lazy' | 'eager' = $state('lazy');
 	let retry = 0;
 
 	export function forceLoad() {
 		loading = 'eager';
 	}
 
-	function onImageEror() {
+	function onImageError() {
 		setTimeout(() => {
 			let url = new URL(src);
 			url.searchParams.append('retry', retry.toString());
@@ -27,6 +31,6 @@
 	{alt}
 	src={src.toString()}
 	style="object-fit:contain;max-width:100%;max-height:100%"
-	on:error={() => onImageEror()}
+	onerror={() => onImageError()}
 	bind:this={img}
 />

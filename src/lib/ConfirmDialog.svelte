@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from '@sveltestrap/sveltestrap';
+	import { Modal, ModalBody, ModalFooter, Button } from '@sveltestrap/sveltestrap';
 
-	let open = false;
+	let open = $state(false);
 	const toggle = () => (open = !open);
 
-	$: headerStr = '';
-	$: bodyStr = '';
-	$: onOkFunc = (): void => {};
+	let headerStr = $state('');
+
+	let bodyStr = $state('');
+
+	let onOkFunc = $state((): void => {});
 
 	function doPerform() {
 		onOkFunc();
@@ -22,12 +24,14 @@
 </script>
 
 <Modal isOpen={open} {toggle}>
-	<ModalHeader {toggle}>{headerStr}</ModalHeader>
+	<div class="modal-header">
+		<h5 class="modal-title">{headerStr}</h5>
+	</div>
 	<ModalBody>
 		{bodyStr}
 	</ModalBody>
 	<ModalFooter>
-		<Button color="primary" on:click={doPerform}>OK</Button>
-		<Button color="secondary" on:click={toggle}>Cancel</Button>
+		<Button color="primary" onclick={doPerform}>OK</Button>
+		<Button color="secondary" onclick={toggle}>Cancel</Button>
 	</ModalFooter>
 </Modal>

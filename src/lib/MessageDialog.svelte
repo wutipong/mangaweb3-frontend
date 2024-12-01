@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from '@sveltestrap/sveltestrap';
+	import { Modal, ModalBody, ModalFooter, Button } from '@sveltestrap/sveltestrap';
 
-	let open = false;
+	let open = $state(false);
 	const toggle = () => (open = !open);
 
-	$: headerStr = '';
-	$: bodyStr = '';
+	let headerStr = $state('');
+
+	let bodyStr = $state('');
 
 	export function show(header: string, body: string) {
 		headerStr = header;
@@ -15,11 +16,13 @@
 </script>
 
 <Modal isOpen={open} {toggle}>
-	<ModalHeader {toggle}>{headerStr}</ModalHeader>
+	<div class="modal-header">
+		<h5 class="modal-title">{headerStr}</h5>
+	</div>
 	<ModalBody>
 		{bodyStr}
 	</ModalBody>
 	<ModalFooter>
-		<Button color="primary" on:click={toggle}>OK</Button>
+		<Button color="primary" onclick={toggle}>OK</Button>
 	</ModalFooter>
 </Modal>

@@ -1,6 +1,7 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot subscribe to stores that are not declared at the top level of the component -->
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import { browseURL, aboutURL, tagURL, historyURL } from '$lib/routes';
 	import {
 		Navbar,
@@ -26,13 +27,13 @@
 	import Cropper from 'svelte-easy-crop';
 	import MessageDialog from '$lib/MessageDialog.svelte';
 
-	let navbarToggleOpen = false;
+	let navbarToggleOpen = $state(false);
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
 
-	function createImageUrl(name: string, page: number): URL {
-		const url = new URL('/api/view/get_image', $page.url.origin);
+	function createImageUrl(name: string, page: number, base: string | URL): URL {
+		const url = new URL('/api/view/get_image', base);
 		if (name != null) {
 			url.searchParams.append('name', name);
 		}
@@ -41,16 +42,16 @@
 		return url;
 	}
 
-	export let data: PageData;
+	let { data } = $props();
 
-	$: name = data.name;
-	$: index = 0;
-	$: image = name != null ? createImageUrl(name, index).toString() : '';
-	$: pageCount = data.page_count;
+	let name = $derived(data.name);
+	let index = $state(0);
+	const image = $derived(name != null ? createImageUrl(name, index, $page.url).toString() : '');
+	let pageCount = $derived(data.page_count);
 
-	let crop = { x: 0, y: 0 };
-	let zoom = 1;
-	let aspect = 127 / 180;
+	let crop = $state({ x: 0, y: 0 });
+	let zoom = $state(1);
+	let aspect = $state(127 / 180);
 
 	interface CropDetails {
 		x: number;
@@ -91,27 +92,27 @@
 
 <Navbar color="dark" dark expand="md" sticky={'top'}>
 	<NavbarBrand href="/">Thumbnail Edit</NavbarBrand>
-	<NavbarToggler on:click={() => (navbarToggleOpen = !navbarToggleOpen)} />
+	<NavbarToggler onclick={() => (navbarToggleOpen = !navbarToggleOpen)} />
 	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
 		<Nav navbar>
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu>
-					<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(browseURL($page.url.origin))}>
 						<Icon name="list-ul" class="me-3" />
 						All items
 					</DropdownItem>
-					<DropdownItem on:click={() => goto(tagURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(tagURL($page.url.origin))}>
 						<Icon name="tags-fill" class="me-3" />
 						Tag list
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
 			</NavItem>
 			<NavItem>
-				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 		<Nav navbar class="ms-auto">
@@ -143,7 +144,7 @@
 			max={pageCount}
 		/>
 	</FormGroup>
-	<Button on:click={() => updateCover()}>Save</Button>
+	<Button onclick={() => updateCover()}>Save</Button>
 </Container>
 
 <MessageDialog bind:this={dialog}></MessageDialog>

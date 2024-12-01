@@ -2,104 +2,102 @@
 	import { page } from '$app/stores';
 	import {
 		Button,
-		Icon, Input, InputGroup,
-		Modal, ModalBody, ModalFooter,
-		ModalHeader,
+		Icon,
+		Input,
+		InputGroup,
+		Modal,
+		ModalBody,
+		ModalFooter,
 		Pagination,
 		PaginationItem,
 		PaginationLink
 	} from '@sveltestrap/sveltestrap';
 	import { goto } from '$app/navigation';
 
-	export let currentPage = 0;
-	export let totalPage = 1;
-	export let pageToShow = 5;
-
-	interface Page {
-		url: URL;
-		index: number;
+	interface Props {
+		currentPage?: number;
+		totalPage?: number;
+		pageToShow?: number;
 	}
 
-	let numberUrls: Page[] = [];
-	let firstUrl: URL;
-	let lastUrl: URL;
+	let { currentPage = 0, totalPage = 1, pageToShow = 5 }: Props = $props();
 
-	let customOpen = false;
-	let customPage = currentPage;
+	let first = $state(0);
+	let last = $state(totalPage - 1);
 
-	$: if (totalPage != 0) {
-		firstUrl = new URL($page.url);
-		firstUrl.searchParams.set('page', '0');
+	let customOpen = $state(false);
+	let customPage = $state(currentPage);
 
-		lastUrl = new URL($page.url);
-		lastUrl.searchParams.set('page', (totalPage - 1).toString());
+	
+	let pageNumbers: number[] = $state([]);
+	$effect(() => {
+		if (totalPage != 0) {
+			let pages: number[] = [];
 
-		let halfCount = Math.floor(pageToShow / 2);
+			const halfCount = Math.floor(pageToShow / 2);
 
-		const startPage = currentPage - halfCount;
-		const endPage = startPage + pageToShow;
+			const startPage = currentPage - halfCount;
+			const endPage = startPage + pageToShow;
 
-		let items: Page[] = [];
-		for (let i = startPage; i < endPage; i++) {
-			if (i < 0 || i >= totalPage) continue;
+			for (let i = startPage; i < endPage; i++) {
+				if (i < 0 || i >= totalPage) continue;
+				pages = [...pages, i];
+			}
 
-			const url = new URL($page.url);
-			url.searchParams.set('page', `${i}`);
-
-			items = [
-				...items,
-				{
-					url: url,
-					index: i
-				}
-			];
+			pageNumbers	 = pages;
 		}
-		numberUrls = items;
-	}
+	});
 
 	function gotoPage(i: number) {
+		goto(createLink(i));
+	}
+
+	function createLink(i: number): URL {
 		let url = new URL($page.url);
 		url.searchParams.set('page', i.toString());
 
-		goto(url);
+		return url;
 	}
 </script>
 
 <Pagination>
 	<PaginationItem>
-		<PaginationLink first href={firstUrl?.toString()} />
+		<PaginationLink first href={createLink(first).toString()} />
 	</PaginationItem>
 
-	{#each numberUrls as u}
-		<PaginationItem active={u.index === currentPage}>
-			<PaginationLink href={u.url.toString()}>
-				{u.index}
+	{#each pageNumbers as i}
+		<PaginationItem active={i === currentPage}>
+			<PaginationLink href={createLink(i).toString()}>
+				{i}
 			</PaginationLink>
 		</PaginationItem>
 	{/each}
 
 	<PaginationItem>
-		<PaginationLink on:click={()=>customOpen=true}>
+		<PaginationLink onclick={() => (customOpen = true)}>
 			<Icon name="hash"></Icon>
 		</PaginationLink>
 	</PaginationItem>
 
 	<PaginationItem>
-		<PaginationLink last href={lastUrl?.toString()} />
+		<PaginationLink last href={createLink(last).toString()} />
 	</PaginationItem>
 </Pagination>
 
-<Modal isOpen={customOpen} toggle={()=>customOpen = !customOpen}>
-	<ModalHeader>Go to page</ModalHeader>
+<Modal isOpen={customOpen} toggle={() => (customOpen = !customOpen)}>
+	<div class="modal-header">
+		<h5 class="modal-title">Go to page</h5>
+	</div>
 	<ModalBody>
 		<InputGroup>
-			<Button on:click={()=>customPage=0}>0</Button>
-			<Input type="number" bind:value={customPage} placeholder="page #" max={totalPage - 1} min="0"></Input>
-			<Button on:click={()=>customPage=(totalPage-1)}>{totalPage - 1}</Button>
+			<Button onclick={() => (customPage = 0)}>0</Button>
+			<Input type="number" bind:value={customPage} placeholder="page #" max={totalPage - 1} min={0}
+			></Input>
+			<Button onclick={() => (customPage = totalPage - 1)}>{totalPage - 1}</Button>
 		</InputGroup>
 	</ModalBody>
 	<ModalFooter>
-		<Button on:click={()=>gotoPage(customPage)}>
+		<Button onclick={() => gotoPage(customPage)}>
 			<Icon name="box-arrow-right"></Icon>&nbsp;Go
 		</Button>
 	</ModalFooter>

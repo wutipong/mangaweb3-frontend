@@ -24,16 +24,20 @@
 	import ImageViewer from './ImageViewer.svelte';
 	import PageScroll from './PageScroll.svelte';
 
-	let current = 0;
+	let current = $state(0);
 	let viewer: ImageViewer;
 	let toast: Toast;
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: name = data.request.name;
-	$: favorite = data.response.favorite;
-	$: pageCount = data.response.page_count;
-	$: tags = data.response.tags;
+	let { data }: Props = $props();
+
+	let name = $derived(data.request.name);
+	let pageCount = $derived(data.response.page_count);
+	let tags = $derived(data.response.tags);
+	let favorite = $state(data.response.favorite);
 
 	function createImageUrls(name: string, pageCount: number): string[] {
 		const url = new URL('/api/view/get_image', $page.url.origin);
@@ -128,7 +132,7 @@
 		viewer.advance(n);
 	}
 
-	let navbarToggleOpen = false;
+	let navbarToggleOpen = $state(false);
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
@@ -146,20 +150,20 @@
 
 <Navbar color="dark" dark expand="md" sticky={'top'}>
 	<NavbarBrand href="/">View</NavbarBrand>
-	<NavbarToggler on:click={() => (navbarToggleOpen = !navbarToggleOpen)} />
+	<NavbarToggler onclick={() => (navbarToggleOpen = !navbarToggleOpen)} />
 	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
 		<Nav navbar>
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu>
-					<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(browseURL($page.url.origin))}>
 						<Icon name="list-ul" class="me-3" />
 						All items
 					</DropdownItem>
 					<DropdownItem divider />
 					<DropdownItem header>Tags</DropdownItem>
 					{#each tags as tag}
-						<DropdownItem on:click={() => goto(browseURL($page.url.origin, { tag: tag.name }))}>
+						<DropdownItem onclick={() => goto(browseURL($page.url.origin, { tag: tag.name }))}>
 							{#if tag.favorite}
 								<Icon name="star-fill" class="me-3" />
 							{:else}
@@ -174,31 +178,31 @@
 				<DropdownToggle nav caret>Tools</DropdownToggle>
 				<DropdownMenu>
 					<DropdownItem header>Download</DropdownItem>
-					<DropdownItem on:click={() => downloadPage()}>
+					<DropdownItem onclick={() => downloadPage()}>
 						<Icon name="download" class="me-3" />
 						Download Current Page
 					</DropdownItem>
-					<DropdownItem on:click={() => downloadManga()}>
+					<DropdownItem onclick={() => downloadManga()}>
 						<Icon name="download" class="me-3" />
 						Download Manga
 					</DropdownItem>
 					<DropdownItem divider />
 					<DropdownItem header>Maintenance</DropdownItem>
-					<DropdownItem on:click={() => updateCover()}>
+					<DropdownItem onclick={() => updateCover()}>
 						<Icon name="journal-arrow-up" class="me-3" />
 						Replace Cover
 					</DropdownItem>
-					<DropdownItem on:click={() => fixMetaData()}>
+					<DropdownItem onclick={() => fixMetaData()}>
 						<Icon name="tools" class="me-3" />
 						Fix the manga
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
 			</NavItem>
 			<NavItem>
-				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 		<Nav navbar class="ms-auto">
@@ -206,7 +210,7 @@
 				<NavLink>{name.length > 40 ? `${name.substring(0, 35)}...` : name}</NavLink>
 			</NavItem>
 			<NavItem class="me-3">
-				<FavoriteButton on:click={() => toggleFavorite()} isFavorite={favorite}>
+				<FavoriteButton onclick={() => toggleFavorite()} isFavorite={favorite}>
 					Favorite
 				</FavoriteButton>
 			</NavItem>

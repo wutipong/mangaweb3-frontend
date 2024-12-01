@@ -6,6 +6,13 @@ export function historyURL(base: URL | string): URL {
     return new URL("/history", base);
 }
 
+export function viewURL(base: URL | string, name: string): URL {
+    var u = new URL("/view", base);
+    u.searchParams.set('name', name)
+
+    return u;
+}
+
 export function tagURL(base: URL | string, options?: { page?: number, favorite_only?: boolean, search?: string }): URL {
     const output = new URL("/tags", base);
     if (options != null) {
@@ -36,7 +43,7 @@ export function browseURL(base: URL | string, options?: {
     tag?: string;
 }): URL {
     const output = new URL("/browse", base);
-    
+
     if (options != null) {
         const { favorite_only, item_per_page, order, page, search, sort, tag } = options;
         if (favorite_only != null) {

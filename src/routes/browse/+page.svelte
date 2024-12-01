@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { navigating, page } from '$app/stores';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
 	import Toast from '$lib/Toast.svelte';
-	import { aboutURL, browseURL, historyURL, tagURL } from '$lib/routes';
+	import { aboutURL, browseURL, historyURL, tagURL, viewURL } from '$lib/routes';
 
 	import {
 		Button,
@@ -17,29 +17,40 @@
 		Icon,
 		Input,
 		InputGroup,
+		Modal,
+		ModalBody,
 		Nav,
 		NavItem,
 		NavLink,
 		Navbar,
 		NavbarBrand,
-		NavbarToggler
+		NavbarToggler,
+		Spinner
 	} from '@sveltestrap/sveltestrap';
 	import type { PageData } from './$types';
-	import Item from './Item.svelte';
+	import ItemCard from '$lib/ItemCard.svelte';
+	import { ITEM_PER_PAGE } from '$lib/constants';
+	import PlaceholderCard from '$lib/PlaceholderCard.svelte';
+	import LoadingDialog from '$lib/LoadingDialog.svelte';
 
 	let toast: Toast;
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: favoriteOnly = data.request.favorite_only;
-	$: items = data.response.items;
-	$: order = data.request.order;
-	$: pageIndex = data.request.page;
-	let search = data.request.search;
-	$: sort = data.request.sort;
-	$: tag = data.request.tag;
-	$: tag_favorite = data.response.tag_favorite;
-	$: totalPage = data.response.total_page;
+	let { data }: Props = $props();
+
+	let favoriteOnly = $derived(data.request.favorite_only);
+	let items = $derived(data.response.items);
+	let order = $derived(data.request.order);
+	let pageIndex = $derived(data.request.page);
+	let search = $state(data.request.search);
+	let sort = $derived(data.request.sort);
+	let tag = $derived(data.request.tag);
+	let tag_favorite = $state(data.response.tag_favorite);
+
+	let totalPage = $derived(data.response.total_page);
 
 	function createBrowseURL(options?: {
 		favorite_only?: boolean;
@@ -97,7 +108,7 @@
 			case 'createTime':
 				options.order = 'descending';
 			case 'pageCount':
-				options.order = 'descending'
+				options.order = 'descending';
 		}
 
 		return createBrowseURL(options);
@@ -124,9 +135,16 @@
 		tag_favorite = json.favorite;
 	}
 
-	let navbarToggleOpen = false;
+	let navbarToggleOpen = $state(false);
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
+	}
+
+	function createThumbnailUrl(name: string): URL {
+		const u = new URL('/api/browse/thumbnail', $page.url);
+		u.searchParams.set('name', name);
+
+		return u;
 	}
 </script>
 
@@ -139,18 +157,18 @@
 		{data.request.tag == '' ? 'Browse' : `Browse: ${data.request.tag}`}
 	</NavbarBrand>
 
-	<NavbarToggler on:click={() => (navbarToggleOpen = !navbarToggleOpen)} />
+	<NavbarToggler onclick={() => (navbarToggleOpen = !navbarToggleOpen)} />
 
 	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
 		<Nav navbar>
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu end>
-					<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(browseURL($page.url.origin))}>
 						<Icon name="list-ul" class="me-3" />
 						All items
 					</DropdownItem>
-					<DropdownItem on:click={() => goto(tagURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(tagURL($page.url.origin))}>
 						<Icon name="tags-fill" class="me-3" />
 						Tag list
 					</DropdownItem>
@@ -161,32 +179,32 @@
 				<DropdownMenu>
 					<DropdownItem
 						active={sort == 'name'}
-						on:click={() => goto(createSortBrowseURL({ sort: 'name' }))}
+						onclick={() => goto(createSortBrowseURL({ sort: 'name' }))}
 					>
 						<Icon name="type" class="me-3" /> Name
 					</DropdownItem>
 					<DropdownItem
 						active={sort == 'createTime'}
-						on:click={() => goto(createSortBrowseURL({ sort: 'createTime' }))}
+						onclick={() => goto(createSortBrowseURL({ sort: 'createTime' }))}
 					>
 						<Icon name="clock" class="me-3" /> Create time
 					</DropdownItem>
 					<DropdownItem
 						active={sort == 'pageCount'}
-						on:click={() => goto(createSortBrowseURL({ sort: 'pageCount' }))}
+						onclick={() => goto(createSortBrowseURL({ sort: 'pageCount' }))}
 					>
 						<Icon name="file-earmark" class="me-3" /> Page count
 					</DropdownItem>
 					<DropdownItem divider />
 					<DropdownItem
 						active={order == 'ascending'}
-						on:click={() => goto(createBrowseURL({ order: 'ascending' }))}
+						onclick={() => goto(createBrowseURL({ order: 'ascending' }))}
 					>
 						<Icon name="sort-down-alt" class="me-3" />Ascending
 					</DropdownItem>
 					<DropdownItem
 						active={order == 'descending'}
-						on:click={() => goto(createBrowseURL({ order: 'descending' }))}
+						onclick={() => goto(createBrowseURL({ order: 'descending' }))}
 					>
 						<Icon name="sort-up-alt" class="me-3" /> Descending
 					</DropdownItem>
@@ -197,22 +215,22 @@
 				<DropdownMenu>
 					<DropdownItem
 						active={favoriteOnly}
-						on:click={() => goto(createBrowseURL({ favorite_only: !favoriteOnly }))}
+						onclick={() => goto(createBrowseURL({ favorite_only: !favoriteOnly }))}
 					>
 						<Icon name="star" class="me-3" /> Favorite
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
 			</NavItem>
 			<NavItem>
-				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 		<Nav class="ms-auto me-3" navbar>
 			<NavItem hidden={tag == '' ? true : undefined}>
-				<FavoriteButton on:click={() => onTagFavorite()} isFavorite={tag_favorite}>
+				<FavoriteButton onclick={() => onTagFavorite()} isFavorite={tag_favorite}>
 					Favorite tag
 				</FavoriteButton>
 			</NavItem>
@@ -223,14 +241,14 @@
 					<Input
 						type="text"
 						bind:value={search}
-						on:keyup={(e) => {
+						onkeyup={(e) => {
 							if (e.key == 'Enter') {
 								goto(browseURL($page.url.origin, { search: search }));
 							}
 						}}
 					/>
-					<Button on:click={() => (search = '')}><Icon name="x" /></Button>
-					<Button on:click={() => goto(browseURL($page.url.origin, { search: search }))}>
+					<Button onclick={() => (search = '')}><Icon name="x" /></Button>
+					<Button onclick={() => goto(browseURL($page.url.origin, { search: search }))}>
 						<div class="d-lg-none"><Icon name="search" class="me-3" /></div>
 						<div class="d-none d-lg-block"><Icon name="search" class="me-3" />Search</div>
 					</Button>
@@ -243,22 +261,42 @@
 <div class="container-fluid" style="padding-top:30px;">
 	<div class="grid-container">
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-			{#each items as item}
-				<div class="col">
-					<Item
-						favorite={item.favorite}
-						isRead={item.read}
-						id={item.id.toString()}
-						name={item.name}
-						page_count={item.page_count}
-						favoriteTag={item.tag_favorite}
-					/>
-				</div>
-			{/each}
+			{#if $navigating}
+				{#each { length: ITEM_PER_PAGE } as _, i}
+					<div class="col">
+						<PlaceholderCard />
+					</div>
+				{/each}
+			{:else}
+				{#each items as item}
+					<div class="col">
+						<ItemCard
+							favorite={item.favorite}
+							isRead={item.read}
+							id={item.id}
+							name={item.name}
+							pageCount={item.page_count}
+							favoriteTag={item.tag_favorite}
+							imageUrl={createThumbnailUrl(item.name)}
+							linkUrl={viewURL($page.url, item.name)}
+						/>
+					</div>
+				{/each}
+				{#each { length: ITEM_PER_PAGE - items.length } as _, i}
+					<div class="col">
+						<ItemCard placeholder={true} />
+					</div>
+				{/each}
+			{/if}
 		</div>
 	</div>
 </div>
-<div style="height: 100px;" />
+
+{#if $navigating}
+	<LoadingDialog/>
+{/if}
+
+<div style="height: 100px;"></div>
 
 <div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
 	<Pagination currentPage={pageIndex} {totalPage} />

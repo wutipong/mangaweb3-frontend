@@ -17,16 +17,21 @@
 		Icon,
 		Input,
 		InputGroup,
+		Modal,
+		ModalBody,
 		Nav,
 		NavItem,
 		NavLink,
 		Navbar,
 		NavbarBrand,
-		NavbarToggler
+		NavbarToggler,
+		Spinner
 	} from '@sveltestrap/sveltestrap';
 	import type { PageData } from './$types';
 	import ItemCard from '$lib/ItemCard.svelte';
 	import { ITEM_PER_PAGE } from '$lib/constants';
+	import PlaceholderCard from '$lib/PlaceholderCard.svelte';
+	import LoadingDialog from '$lib/LoadingDialog.svelte';
 
 	let toast: Toast;
 
@@ -256,7 +261,13 @@
 <div class="container-fluid" style="padding-top:30px;">
 	<div class="grid-container">
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-			{#if $navigating}Hello?{:else}
+			{#if $navigating}
+				{#each { length: ITEM_PER_PAGE } as _, i}
+					<div class="col">
+						<PlaceholderCard />
+					</div>
+				{/each}
+			{:else}
 				{#each items as item}
 					<div class="col">
 						<ItemCard
@@ -280,6 +291,11 @@
 		</div>
 	</div>
 </div>
+
+{#if $navigating}
+	<LoadingDialog/>
+{/if}
+
 <div style="height: 100px;"></div>
 
 <div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">

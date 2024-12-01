@@ -45,26 +45,21 @@
 
 	let borderCls = $state('');
 
-	$effect(() => {
-		if (placeholder) {
-			borderCls = '';
-		} else if (favorite) {
-			borderCls = 'border border-2 border-pink';
-		} else if (!isRead) {
-			borderCls = 'border border-2 border-yellow';
-		} else if (favoriteTag) {
-			borderCls = 'border border-2 border-purple';
-		} else {
-			borderCls = '';
-		}
+	if (placeholder) {
+		borderCls = '';
+	} else if (favorite) {
+		borderCls = 'border border-2 border-pink';
+	} else if (!isRead) {
+		borderCls = 'border border-2 border-yellow';
+	} else if (favoriteTag) {
+		borderCls = 'border border-2 border-purple';
+	} else {
+		borderCls = '';
+	}
 
-		$inspect(imageUrl);
-	});
-
-	let img: HTMLImageElement|undefined = $state();
+	let img: HTMLImageElement | undefined = $state();
 	function onImageError() {
-        if(img)
-		    img.src = ERROR_IMAGE;
+		if (img) img.src = ERROR_IMAGE;
 	}
 </script>
 

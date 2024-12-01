@@ -45,9 +45,6 @@
 	let tag = $derived(data.request.tag);
 	let tag_favorite = $state(data.response.tag_favorite);
 
-	$effect(() => {
-		tag_favorite = data.response.tag_favorite;
-	});
 	let totalPage = $derived(data.response.total_page);
 
 	function createBrowseURL(options?: {
@@ -274,11 +271,9 @@
 						/>
 					</div>
 				{/each}
-				{#each {length: ITEM_PER_PAGE - items.length} as _, i}
+				{#each { length: ITEM_PER_PAGE - items.length } as _, i}
 					<div class="col">
-						<ItemCard
-							placeholder={true}
-						/>
+						<ItemCard placeholder={true} />
 					</div>
 				{/each}
 			{/if}

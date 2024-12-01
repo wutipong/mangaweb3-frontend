@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { navigating, page } from '$app/stores';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
 	import Toast from '$lib/Toast.svelte';
@@ -23,6 +23,8 @@
 	import type { PageData } from './$types';
 	import ItemCard from '$lib/ItemCard.svelte';
 	import { ITEM_PER_PAGE } from '$lib/constants';
+	import LoadingDialog from '$lib/LoadingDialog.svelte';
+	import PlaceholderCard from '$lib/PlaceholderCard.svelte';
 
 	interface Props {
 		data: PageData;
@@ -85,30 +87,42 @@
 <div class="container-fluid" style="padding-top:30px;">
 	<div class="grid-container">
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-			{#each items as item}
-				<div class="col">
-					<ItemCard
-						favorite={item.favorite}
-						favoriteTag={item.tag_favorite}
-						isRead={item.read}
-						id={item.id}
-						name={item.name}
-						pageCount={item.page_count}
-						accessTime={item.access_time}
-						linkUrl={viewURL($page.url, item.name)}
-						imageUrl={createThumbnailUrl(item.name)}
-					/>
-				</div>
-			{/each}
-			{#each { length: ITEM_PER_PAGE - items.length } as _, i}
-				<div class="col">
-					<ItemCard placeholder={true} />
-				</div>
-			{/each}
+			{#if $navigating}
+				{#each { length: ITEM_PER_PAGE } as _, i}
+					<div class="col">
+						<PlaceholderCard accessTime/>
+					</div>
+				{/each}
+			{:else}
+				{#each items as item}
+					<div class="col">
+						<ItemCard
+							favorite={item.favorite}
+							favoriteTag={item.tag_favorite}
+							isRead={item.read}
+							id={item.id}
+							name={item.name}
+							pageCount={item.page_count}
+							accessTime={item.access_time}
+							linkUrl={viewURL($page.url, item.name)}
+							imageUrl={createThumbnailUrl(item.name)}
+						/>
+					</div>
+				{/each}
+				{#each { length: ITEM_PER_PAGE - items.length } as _, i}
+					<div class="col">
+						<ItemCard placeholder={true} />
+					</div>
+				{/each}
+			{/if}
 		</div>
 	</div>
 </div>
 <div style="height: 100px;"></div>
+
+{#if $navigating}
+	<LoadingDialog />
+{/if}
 
 <div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
 	<Pagination currentPage={pageIndex} {totalPage} />

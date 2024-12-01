@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { navigating, page } from '$app/stores';
 	import ItemCard from '$lib/ItemCard.svelte';
 	import type { PageData } from './$types';
 	import MoveToTop from '$lib/MoveToTop.svelte';
@@ -25,6 +25,8 @@
 	import { goto } from '$app/navigation';
 	import { aboutURL, tagURL, browseURL, historyURL } from '$lib/routes';
 	import { ITEM_PER_PAGE } from '$lib/constants';
+	import LoadingDialog from '$lib/LoadingDialog.svelte';
+	import PlaceholderCard from '$lib/PlaceholderCard.svelte';
 
 	interface Props {
 		data: PageData;
@@ -121,25 +123,37 @@
 <Container fluid style="padding-top:30px;">
 	<div class="grid-container">
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-			{#each tags as tag}
-				<div class="col">
-					<ItemCard
-						name={tag.name}
-						linkUrl={browseURL($page.url, { tag: tag.name })}
-						imageUrl={createThumbnailUrl(tag.name)}
-						favoriteTag={tag.favorite}
-						itemCount={tag.item_count}
-					/>
-				</div>
-			{/each}
-			{#each { length: ITEM_PER_PAGE - tags.length } as _, i}
-				<div class="col">
-					<ItemCard placeholder={true} />
-				</div>
-			{/each}
+			{#if $navigating}
+				{#each { length: ITEM_PER_PAGE } as _, i}
+					<div class="col">
+						<PlaceholderCard />
+					</div>
+				{/each}
+			{:else}
+				{#each tags as tag}
+					<div class="col">
+						<ItemCard
+							name={tag.name}
+							linkUrl={browseURL($page.url, { tag: tag.name })}
+							imageUrl={createThumbnailUrl(tag.name)}
+							favoriteTag={tag.favorite}
+							itemCount={tag.item_count}
+						/>
+					</div>
+				{/each}
+				{#each { length: ITEM_PER_PAGE - tags.length } as _, i}
+					<div class="col">
+						<ItemCard placeholder={true} />
+					</div>
+				{/each}
+			{/if}
 		</div>
 	</div>
 </Container>
+
+{#if $navigating}
+	<LoadingDialog />
+{/if}
 
 <div style="height: 100px;"></div>
 

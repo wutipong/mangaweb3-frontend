@@ -23,28 +23,27 @@
 
 	let { currentPage = 0, totalPage = 1, pageToShow = 5 }: Props = $props();
 
-	let pageNumbers: number[] = $state([]);
 	let first = $state(0);
 	let last = $state(0);
 
 	let customOpen = $state(false);
 	let customPage = $state(currentPage);
 
-	$effect(() => {
-		pageNumbers = [];
-		last = totalPage -1;
-		if (totalPage != 0) {
-			const halfCount = Math.floor(pageToShow / 2);
+	let pages: number[] = [];
+	last = totalPage - 1;
+	if (totalPage != 0) {
+		const halfCount = Math.floor(pageToShow / 2);
 
-			const startPage = currentPage - halfCount;
-			const endPage = startPage + pageToShow;
+		const startPage = currentPage - halfCount;
+		const endPage = startPage + pageToShow;
 
-			for (let i = startPage; i < endPage; i++) {
-				if (i < 0 || i >= totalPage) continue;
-				pageNumbers = [...pageNumbers, i];
-			}
+		for (let i = startPage; i < endPage; i++) {
+			if (i < 0 || i >= totalPage) continue;
+			pages = [...pages, i];
 		}
-	});
+	}
+
+	let pageNumbers = $derived(pages);
 
 	function gotoPage(i: number) {
 		goto(createLink(i));
@@ -88,11 +87,7 @@
 	<ModalBody>
 		<InputGroup>
 			<Button on:click={() => (customPage = 0)}>0</Button>
-			<Input 
-				type="number" 
-				bind:value={customPage} 
-				placeholder="page #" 
-				max={totalPage - 1} min="0"
+			<Input type="number" bind:value={customPage} placeholder="page #" max={totalPage - 1} min="0"
 			></Input>
 			<Button on:click={() => (customPage = totalPage - 1)}>{totalPage - 1}</Button>
 		</InputGroup>

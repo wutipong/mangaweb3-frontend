@@ -1,5 +1,6 @@
 <!-- @migration-task Error while migrating Svelte code: Cannot subscribe to stores that are not declared at the top level of the component -->
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { browseURL, aboutURL, tagURL, historyURL } from '$lib/routes';
 	import {
@@ -25,18 +26,14 @@
 
 	import Cropper from 'svelte-easy-crop';
 	import MessageDialog from '$lib/MessageDialog.svelte';
-	import { page } from '$app/stores';
 
-	let navbarToggleOpen = false;
+	let navbarToggleOpen = $state(false);
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
 
-	function createImageUrl(name: string, page: number): URL {
-		///TODO: remove this
-		//const url = new URL('/api/view/get_image', $page.url.origin);
-
-		const url = new URL('/api/view/get_image');
+	function createImageUrl(name: string, page: number, base: string | URL): URL {
+		const url = new URL('/api/view/get_image', base);
 		if (name != null) {
 			url.searchParams.append('name', name);
 		}
@@ -49,7 +46,7 @@
 
 	let name = $derived(data.name);
 	let index = $state(0);
-	const image = $derived(name != null ? createImageUrl(name, index).toString() : '');
+	const image = $derived(name != null ? createImageUrl(name, index, $page.url).toString() : '');
 	let pageCount = $derived(data.page_count);
 
 	let crop = $state({ x: 0, y: 0 });
@@ -112,10 +109,10 @@
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
 			</NavItem>
 			<NavItem>
-				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 		<Nav navbar class="ms-auto">

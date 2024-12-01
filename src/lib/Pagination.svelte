@@ -23,26 +23,30 @@
 	let { currentPage = 0, totalPage = 1, pageToShow = 5 }: Props = $props();
 
 	let first = $state(0);
-	let last = $state(0);
+	let last = $state(totalPage - 1);
 
 	let customOpen = $state(false);
 	let customPage = $state(currentPage);
 
-	let pages: number[] = [];
-	last = totalPage - 1;
-	if (totalPage != 0) {
-		const halfCount = Math.floor(pageToShow / 2);
+	
+	let pageNumbers: number[] = $state([]);
+	$effect(() => {
+		if (totalPage != 0) {
+			let pages: number[] = [];
 
-		const startPage = currentPage - halfCount;
-		const endPage = startPage + pageToShow;
+			const halfCount = Math.floor(pageToShow / 2);
 
-		for (let i = startPage; i < endPage; i++) {
-			if (i < 0 || i >= totalPage) continue;
-			pages = [...pages, i];
+			const startPage = currentPage - halfCount;
+			const endPage = startPage + pageToShow;
+
+			for (let i = startPage; i < endPage; i++) {
+				if (i < 0 || i >= totalPage) continue;
+				pages = [...pages, i];
+			}
+
+			pageNumbers	 = pages;
 		}
-	}
-
-	let pageNumbers = $derived(pages);
+	});
 
 	function gotoPage(i: number) {
 		goto(createLink(i));

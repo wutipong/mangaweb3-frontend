@@ -94,27 +94,27 @@
 
 <Navbar color="dark" dark expand="md" sticky={'top'}>
 	<NavbarBrand href="/">About</NavbarBrand>
-	<NavbarToggler on:click={() => (navbarToggleOpen = !navbarToggleOpen)} />
-	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
+	<NavbarToggler onclick={() => (navbarToggleOpen = !navbarToggleOpen)} />
+	<Collapse isOpen={navbarToggleOpen} navbar expand="md" onupdate={handleUpdate}>
 		<Nav navbar>
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu>
-					<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(browseURL($page.url.origin))}>
 						<Icon name="list-ul" class="me-3" />
 						All items
 					</DropdownItem>
-					<DropdownItem on:click={() => goto(tagURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(tagURL($page.url.origin))}>
 						<Icon name="tags-fill" class="me-3" />
 						Tag list
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
 			</NavItem>
 			<NavItem>
-				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 	</Collapse>
@@ -175,7 +175,7 @@
 			<tr>
 				<td class="align-middle"> Rescan library. </td>
 				<td>
-					<Button color="danger" on:click={() => confirmRescanLibrary()}>
+					<Button color="danger" onclick={() => confirmRescanLibrary()}>
 						<Icon name="play-circle" class="me-3" />Run
 					</Button>
 				</td>
@@ -183,7 +183,7 @@
 			<tr>
 				<td class="align-middle"> Populate thumbnails on every manga items. </td>
 				<td>
-					<Button color="danger" on:click={() => confirmRecreateThumbnails()}>
+					<Button color="danger" onclick={() => confirmRecreateThumbnails()}>
 						<Icon name="play-circle" class="me-3" />Run
 					</Button>
 				</td>
@@ -191,7 +191,7 @@
 			<tr>
 				<td class="align-middle"> Populate thumbnails on every tag items. </td>
 				<td>
-					<Button color="danger" on:click={confirmRecreateTagThumbnails}>
+					<Button color="danger" onclick={confirmRecreateTagThumbnails}>
 						<Icon name="play-circle" class="me-3" />Run
 					</Button>
 				</td>

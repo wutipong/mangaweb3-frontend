@@ -7,7 +7,7 @@
 </script>
 
 <nav aria-label="Move to top navigation" class="position-fixed bottom-0 end-0 p-3">
-	<Button color="secondary" on:click={moveToTop}>
+	<Button color="secondary" onclick={moveToTop}>
 		<Icon name="chevron-double-up" />
 		<span class="d-none d-sm-block">Top</span>
 	</Button>

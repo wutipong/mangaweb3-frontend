@@ -59,18 +59,18 @@
 
 <Navbar color="dark" dark expand="md" sticky={'top'}>
 	<NavbarBrand href="/">{`Tag list`}</NavbarBrand>
-	<NavbarToggler on:click={() => (navbarToggleOpen = !navbarToggleOpen)} />
+	<NavbarToggler onclick={() => (navbarToggleOpen = !navbarToggleOpen)} />
 	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
 		<Nav navbar>
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 
 				<DropdownMenu end>
-					<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(browseURL($page.url.origin))}>
 						<Icon name="list-ul" class="me-3" />
 						All items
 					</DropdownItem>
-					<DropdownItem on:click={() => goto(tagURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(tagURL($page.url.origin))}>
 						<Icon name="tags-fill" class="me-3" />
 						Tag list
 					</DropdownItem>
@@ -81,7 +81,7 @@
 				<DropdownMenu>
 					<DropdownItem
 						active={favoriteOnly}
-						on:click={() => goto(tagURL($page.url, { favorite_only: !favoriteOnly }))}
+						onclick={() => goto(tagURL($page.url, { favorite_only: !favoriteOnly }))}
 					>
 						<Icon name="star" class="me-3" />
 						Favorite
@@ -89,10 +89,10 @@
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
 			</NavItem>
 			<NavItem>
-				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 		<Nav navbar class="ms-auto me-3">
@@ -101,14 +101,14 @@
 					<Input
 						type="text"
 						bind:value={search}
-						on:keyup={(e) => {
+						onkeyup={(e) => {
 							if (e.key == 'Enter') {
 								goto(tagURL($page.url.origin, { search: search }));
 							}
 						}}
 					/>
-					<Button on:click={() => (search = '')}><Icon name="x" /></Button>
-					<Button on:click={() => goto(tagURL($page.url.origin, { search: search }))}>
+					<Button onclick={() => (search = '')}><Icon name="x" /></Button>
+					<Button onclick={() => goto(tagURL($page.url.origin, { search: search }))}>
 						<div class="d-lg-none"><Icon name="search" class="me-3" /></div>
 						<div class="d-none d-lg-block"><Icon name="search" class="me-3" />Search</div>
 					</Button>

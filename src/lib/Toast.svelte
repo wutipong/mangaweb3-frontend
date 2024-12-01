@@ -24,7 +24,7 @@
 		</div>
 	</div>
 
-	<Toast autohide {isOpen} on:close={() => (isOpen = false)}>
+	<Toast autohide {isOpen} onclose={() => (isOpen = false)}>
 		<ToastHeader>{header}</ToastHeader>
 		<ToastBody>{message}</ToastBody>
 	</Toast>

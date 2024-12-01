@@ -34,7 +34,6 @@
 	let pageIndex = $derived(data.request.page);
 	let totalPage = $derived(data.response.total_page);
 	let navbarToggleOpen = $state(false);
-	let toast: Toast;
 
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
@@ -54,18 +53,18 @@
 <Navbar color="dark" dark expand="md" sticky={'top'}>
 	<NavbarBrand href="/">History</NavbarBrand>
 
-	<NavbarToggler on:click={() => (navbarToggleOpen = !navbarToggleOpen)} />
+	<NavbarToggler onclick={() => (navbarToggleOpen = !navbarToggleOpen)} />
 
 	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
 		<Nav navbar>
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu end>
-					<DropdownItem on:click={() => goto(browseURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(browseURL($page.url.origin))}>
 						<Icon name="list-ul" class="me-3" />
 						All items
 					</DropdownItem>
-					<DropdownItem on:click={() => goto(tagURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(tagURL($page.url.origin))}>
 						<Icon name="tags-fill" class="me-3" />
 						Tag list
 					</DropdownItem>
@@ -73,11 +72,11 @@
 			</Dropdown>
 
 			<NavItem>
-				<NavLink on:click={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
 			</NavItem>
 
 			<NavItem>
-				<NavLink on:click={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 	</Collapse>
@@ -114,7 +113,5 @@
 <div aria-label="Page navigation" class="position-fixed bottom-0 start-50 p-3 translate-middle-x">
 	<Pagination currentPage={pageIndex} {totalPage} />
 </div>
-
-<Toast bind:this={toast} />
 
 <MoveToTop />

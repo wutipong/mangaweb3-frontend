@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 import type { Tag } from '$lib/tag';
 import { getUser } from '$lib/user';
+import { variables } from '$lib/variables';
 
 interface Request {
     name: string;
@@ -39,7 +40,7 @@ export const load: PageServerLoad = async ({ request, fetch, url }) => {
     backendReq.user = getUser(request);
 
     const resp = await fetch(
-        new URL('/api/view', url.origin),
+        new URL('/view', variables.apiBasePath),
         {
             method: 'POST',
             body: JSON.stringify(backendReq)

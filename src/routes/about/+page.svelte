@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import ConfirmDialog from '$lib/ConfirmDialog.svelte';
 	import { aboutURL, browseURL, historyURL, tagURL } from '$lib/routes';
-	import { variables } from '$lib/variables';
+	import type { PageData } from './$types';
 	import {
 		Button,
 		Collapse,
@@ -22,6 +21,7 @@
 		Table
 	} from '@sveltestrap/sveltestrap';
 	import Toast from '$lib/Toast.svelte';
+	import ConfirmDialog from '$lib/ConfirmDialog.svelte';
 
 	let navbarToggleOpen = $state(false);
 	function handleUpdate(event: CustomEvent<boolean>) {
@@ -30,11 +30,13 @@
 
 	interface Props {
 		version?: string;
+		data: PageData;
 	}
 
-	let { version = '' }: Props = $props();
-	let toast: Toast = $state();
-	let confirm: ConfirmDialog = $state();
+	let { version = '', data }: Props = $props();
+
+	let toast: Toast;
+	let confirm: ConfirmDialog;
 
 	function confirmRescanLibrary() {
 		confirm.show(
@@ -95,7 +97,7 @@
 <Navbar color="dark" dark expand="md" sticky={'top'}>
 	<NavbarBrand href="/">About</NavbarBrand>
 	<NavbarToggler onclick={() => (navbarToggleOpen = !navbarToggleOpen)} />
-	<Collapse isOpen={navbarToggleOpen} navbar expand="md" onupdate={handleUpdate}>
+	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
 		<Nav navbar>
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
@@ -145,7 +147,7 @@
 		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	</p>
 
-	<h6>Using API server: {variables.basePath}</h6>
+	<h6>Using API server: {data.basePath}</h6>
 
 	<hr />
 	<h3>Project Page</h3>

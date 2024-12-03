@@ -1,7 +1,7 @@
-import { env } from '$env/dynamic/public';
+import { env } from '$env/dynamic/private';
 
 export const variables = {
-    basePath: env.PUBLIC_BACKEND_URL,
-    defaultSortField: env.PUBLIC_DEFAULT_SORT_FIELD,
-    defaultOrder: env.PUBLIC_DEFAULT_ORDER,
+    basePath: env.BACKEND_URL,
+    defaultSortField: env.DEFAULT_SORT_FIELD,
+    defaultOrder: env.DEFAULT_ORDER,
 };

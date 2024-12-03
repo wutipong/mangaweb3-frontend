@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 import type { Tag } from '$lib/tag';
 import { getUser } from '$lib/user';
+import { variables } from '$lib/variables';
 
 interface listRequest {
     user: string
@@ -18,7 +19,7 @@ interface listResponse {
 export const prerender = false;
 
 export const load: PageServerLoad = async ({ request, fetch, url }) => {
-    const tagListURL = "/api/tag/list";
+    const tagListURL = new URL("/tag/list", variables.apiBasePath);
     const backendReq: listRequest = {
         user: getUser(request),
         search: "",

@@ -108,13 +108,13 @@ export const load: PageServerLoad = async ({  request, fetch, url }) => {
         }
     }
 
-    const apiUrl = '/api/browse';
+    const apiUrl = new URL('/browse', variables.apiBasePath);
     const response = await fetch(apiUrl, { method: 'POST', body: JSON.stringify(backendReq) });
     const obj = await response.json() as Response;
 
     return {
         request: backendReq,
-        response: obj
+        response: obj,
     }
 };
 

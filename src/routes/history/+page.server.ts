@@ -1,4 +1,5 @@
 import { getUser } from '$lib/user';
+import { variables } from '$lib/variables';
 import type { PageServerLoad } from './$types';
 
 interface Request {
@@ -53,7 +54,7 @@ export const load: PageServerLoad = async ({ request, fetch, url }) => {
         }
     }
 
-    const apiUrl = '/api/history';
+    const apiUrl = new URL('/history', variables.apiBasePath);
     const response = await fetch(apiUrl, { method: 'POST', body: JSON.stringify(backendReq) });
     const obj = await response.json() as Response;
 

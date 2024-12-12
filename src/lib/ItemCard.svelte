@@ -65,24 +65,26 @@
 
 <Card class="{borderCls} h-100" id={id.toString()}>
 	{#if placeholder}
-		<img
-			bind:this={img}
-			class="card-img-top"
-			alt={name}
-			loading="lazy"
-			src={imageUrl.toString()}
-			style="height: 300px; object-fit: cover;"
-			onerror={() => onImageError()}
-		/>
-	{:else}
-		<a href={linkUrl?.toString()} aria-label={name}>
+		<div aria-label={name} style="display:block; aspect-ratio: 1/1.414">
 			<img
 				bind:this={img}
-				class="card-img-top"
+				class="card-img-top h-100"
 				alt={name}
 				loading="lazy"
 				src={imageUrl.toString()}
-				style="height: 300px; object-fit: cover;"
+				style="object-fit: cover;"
+				onerror={() => onImageError()}
+			/>
+		</div>
+	{:else}
+		<a href={linkUrl?.toString()} aria-label={name} style="display:block; aspect-ratio: 1/1.414">
+			<img
+				bind:this={img}
+				class="card-img-top h-100"
+				alt={name}
+				loading="lazy"
+				src={imageUrl.toString()}
+				style="object-fit: cover;"
 				onerror={() => onImageError()}
 			/>
 		</a>

@@ -84,7 +84,7 @@
 				alt={name}
 				loading="lazy"
 				src={imageUrl.toString()}
-				style="object-fit: cover;"
+				style="object-fit: cover; object-position: 25% top"
 				onerror={() => onImageError()}
 			/>
 		</a>

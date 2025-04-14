@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import {
 		Button,
 		Icon,
@@ -53,7 +53,7 @@
 	}
 
 	function createLink(i: number): URL {
-		let url = new URL($page.url);
+		let url = new URL(page.url);
 		url.searchParams.set('page', i.toString());
 
 		return url;

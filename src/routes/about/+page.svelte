@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { aboutURL, browseURL, historyURL, tagURL } from '$lib/routes';
 	import type { PageData } from './$types';
 	import {
@@ -47,7 +47,7 @@
 	}
 
 	async function rescanLibrary() {
-		const url = new URL('/api/browse/rescan_library', $page.url.origin);
+		const url = new URL('/api/browse/rescan_library', page.url.origin);
 		await fetch(url);
 		toast.show(
 			'Re-scan Library',
@@ -64,7 +64,7 @@
 	}
 
 	async function recreateThumbnails() {
-		const url = new URL('/api/browse/recreate_thumbnails', $page.url.origin);
+		const url = new URL('/api/browse/recreate_thumbnails', page.url.origin);
 		await fetch(url);
 		toast.show(
 			'Re-create thumbnail',
@@ -81,7 +81,7 @@
 	}
 
 	async function recreateTagThumbnails() {
-		const url = new URL('/api/tag/recreate_thumbnails', $page.url.origin);
+		const url = new URL('/api/tag/recreate_thumbnails', page.url.origin);
 		await fetch(url);
 		toast.show(
 			'Re-create thumbnail',
@@ -102,21 +102,21 @@
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu>
-					<DropdownItem onclick={() => goto(browseURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(browseURL(page.url.origin))}>
 						<Icon name="list-ul" class="me-3" />
 						All items
 					</DropdownItem>
-					<DropdownItem onclick={() => goto(tagURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(tagURL(page.url.origin))}>
 						<Icon name="tags-fill" class="me-3" />
 						Tag list
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL(page.url.origin))}>History</NavLink>
 			</NavItem>
 			<NavItem>
-				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL(page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 	</Collapse>

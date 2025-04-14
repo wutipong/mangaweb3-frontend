@@ -20,7 +20,7 @@ const manifest = `{
 }`
 
 export const GET: RequestHandler = async () => {
-    return new Response(JSON.stringify(manifest), {
+    return new Response(manifest, {
         headers: {
             'content-type': 'application/manifest+json',
         },

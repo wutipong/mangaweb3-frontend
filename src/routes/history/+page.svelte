@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { navigating, page } from '$app/stores';
+	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
-	import Toast from '$lib/Toast.svelte';
 	import { aboutURL, browseURL, historyURL, tagURL, viewURL } from '$lib/routes';
 
 	import {
@@ -37,12 +36,17 @@
 	let totalPage = $derived(data.response.total_page);
 	let navbarToggleOpen = $state(false);
 
+	let updated = $state(false);
+
+	beforeNavigate(() => (updated = false));
+	afterNavigate(() => (updated = true));
+
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
 
 	function createThumbnailUrl(name: string): URL {
-		let u = new URL('/api/browse/thumbnail', $page.url.origin);
+		let u = new URL('/api/browse/thumbnail', page.url.origin);
 		u.searchParams.append('name', name);
 		return u;
 	}
@@ -62,11 +66,11 @@
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu end>
-					<DropdownItem onclick={() => goto(browseURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(browseURL(page.url.origin))}>
 						<Icon name="list-ul" class="me-3" />
 						All items
 					</DropdownItem>
-					<DropdownItem onclick={() => goto(tagURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(tagURL(page.url.origin))}>
 						<Icon name="tags-fill" class="me-3" />
 						Tag list
 					</DropdownItem>
@@ -74,11 +78,11 @@
 			</Dropdown>
 
 			<NavItem>
-				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL(page.url.origin))}>History</NavLink>
 			</NavItem>
 
 			<NavItem>
-				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL(page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 	</Collapse>
@@ -87,10 +91,10 @@
 <div class="container-fluid" style="padding-top:30px;">
 	<div class="grid-container">
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-			{#if $navigating}
+			{#if !updated}
 				{#each { length: ITEM_PER_PAGE } as _, i}
 					<div class="col">
-						<PlaceholderCard accessTime/>
+						<PlaceholderCard accessTime />
 					</div>
 				{/each}
 			{:else}
@@ -104,7 +108,7 @@
 							name={item.name}
 							pageCount={item.page_count}
 							accessTime={item.access_time}
-							linkUrl={viewURL($page.url, item.name)}
+							linkUrl={viewURL(page.url, item.name)}
 							imageUrl={createThumbnailUrl(item.name)}
 						/>
 					</div>
@@ -120,7 +124,7 @@
 </div>
 <div style="height: 100px;"></div>
 
-{#if $navigating}
+{#if !updated}
 	<LoadingDialog />
 {/if}
 

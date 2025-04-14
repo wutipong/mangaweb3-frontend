@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { navigating, page } from '$app/stores';
+	import { navigating, page } from '$app/state';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
@@ -89,7 +89,7 @@
 			}
 		}
 
-		return browseURL($page.url.origin, callOptions);
+		return browseURL(page.url.origin, callOptions);
 	}
 
 	function createSortBrowseURL(options: {
@@ -121,7 +121,7 @@
 			tag: tag
 		};
 
-		const url = new URL('/api/tag/set_favorite', $page.url.origin);
+		const url = new URL('/api/tag/set_favorite', page.url.origin);
 
 		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
 		const json = await resp.json();
@@ -141,7 +141,7 @@
 	}
 
 	function createThumbnailUrl(name: string): URL {
-		const u = new URL('/api/browse/thumbnail', $page.url);
+		const u = new URL('/api/browse/thumbnail', page.url);
 		u.searchParams.set('name', name);
 
 		return u;
@@ -164,11 +164,11 @@
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu end>
-					<DropdownItem onclick={() => goto(browseURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(browseURL(page.url.origin))}>
 						<Icon name="list-ul" class="me-3" />
 						All items
 					</DropdownItem>
-					<DropdownItem onclick={() => goto(tagURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(tagURL(page.url.origin))}>
 						<Icon name="tags-fill" class="me-3" />
 						Tag list
 					</DropdownItem>
@@ -222,10 +222,10 @@
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL(page.url.origin))}>History</NavLink>
 			</NavItem>
 			<NavItem>
-				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL(page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 		<Nav class="ms-auto me-3" navbar>
@@ -243,12 +243,12 @@
 						bind:value={search}
 						onkeyup={(e) => {
 							if (e.key == 'Enter') {
-								goto(browseURL($page.url.origin, { search: search }));
+								goto(browseURL(page.url.origin, { search: search }));
 							}
 						}}
 					/>
 					<Button onclick={() => (search = '')}><Icon name="x" /></Button>
-					<Button onclick={() => goto(browseURL($page.url.origin, { search: search }))}>
+					<Button onclick={() => goto(browseURL(page.url.origin, { search: search }))}>
 						<div class="d-lg-none"><Icon name="search" class="me-3" /></div>
 						<div class="d-none d-lg-block"><Icon name="search" class="me-3" />Search</div>
 					</Button>
@@ -261,7 +261,7 @@
 <div class="container-fluid" style="padding-top:30px;">
 	<div class="grid-container">
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-			{#if $navigating}
+			{#if navigating}
 				{#each { length: ITEM_PER_PAGE } as _, i}
 					<div class="col">
 						<PlaceholderCard />
@@ -278,7 +278,7 @@
 							pageCount={item.page_count}
 							favoriteTag={item.tag_favorite}
 							imageUrl={createThumbnailUrl(item.name)}
-							linkUrl={viewURL($page.url, item.name)}
+							linkUrl={viewURL(page.url, item.name)}
 						/>
 					</div>
 				{/each}
@@ -292,7 +292,7 @@
 	</div>
 </div>
 
-{#if $navigating}
+{#if navigating}
 	<LoadingDialog/>
 {/if}
 

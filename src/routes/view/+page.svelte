@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
 	import Toast from '$lib/Toast.svelte';
 	import { aboutURL, browseURL, historyURL } from '$lib/routes';
@@ -40,7 +40,7 @@
 	let favorite = $state(data.response.favorite);
 
 	function createImageUrls(name: string, pageCount: number): string[] {
-		const url = new URL('/api/view/get_image', $page.url.origin);
+		const url = new URL('/api/view/get_image', page.url.origin);
 		const output = [];
 
 		url.searchParams.append('name', name);
@@ -53,14 +53,14 @@
 	}
 
 	function downloadManga() {
-		const url = new URL('/api/view/download', $page.url.origin);
+		const url = new URL('/api/view/download', page.url.origin);
 		url.searchParams.set('name', name);
 
 		download(url.toString());
 	}
 
 	function downloadPage() {
-		const url = new URL('/api/view/get_image', $page.url.origin);
+		const url = new URL('/api/view/get_image', page.url.origin);
 		url.searchParams.set('name', name);
 		url.searchParams.set('i', current.toString());
 
@@ -74,7 +74,7 @@
 			user: data.request.user
 		};
 
-		const url = new URL('/api/view/set_favorite', $page.url.origin);
+		const url = new URL('/api/view/set_favorite', page.url.origin);
 
 		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
 		const json = await resp.json();
@@ -91,7 +91,7 @@
 	}
 
 	async function fixMetaData() {
-		const url = new URL('/api/view/fix_meta', $page.url.origin);
+		const url = new URL('/api/view/fix_meta', page.url.origin);
 		const req = {
 			name: name
 		};
@@ -107,7 +107,7 @@
 	}
 
 	async function updateCover() {
-		const url = new URL('/view/thumb_edit', $page.url.origin);
+		const url = new URL('/view/thumb_edit', page.url.origin);
 		url.searchParams.set('index', `${current}`);
 		url.searchParams.set('name', name);
 
@@ -156,14 +156,14 @@
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu>
-					<DropdownItem onclick={() => goto(browseURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(browseURL(page.url.origin))}>
 						<Icon name="list-ul" class="me-3" />
 						All items
 					</DropdownItem>
 					<DropdownItem divider />
 					<DropdownItem header>Tags</DropdownItem>
 					{#each tags as tag}
-						<DropdownItem onclick={() => goto(browseURL($page.url.origin, { tag: tag.name }))}>
+						<DropdownItem onclick={() => goto(browseURL(page.url.origin, { tag: tag.name }))}>
 							{#if tag.favorite}
 								<Icon name="star-fill" class="me-3" />
 							{:else}
@@ -199,10 +199,10 @@
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL(page.url.origin))}>History</NavLink>
 			</NavItem>
 			<NavItem>
-				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL(page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 		<Nav navbar class="ms-auto">

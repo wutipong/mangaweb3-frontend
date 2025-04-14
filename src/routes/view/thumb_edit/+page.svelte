@@ -1,30 +1,28 @@
-<!-- @migration-task Error while migrating Svelte code: Cannot subscribe to stores that are not declared at the top level of the component -->
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { browseURL, aboutURL, tagURL, historyURL } from '$lib/routes';
 	import {
+		Button,
+		Collapse,
+		Container,
+		Dropdown,
+		DropdownItem,
+		DropdownMenu,
+		DropdownToggle,
+		FormGroup,
+		Icon,
+		Input,
+		Label,
+		Nav,
 		Navbar,
 		NavbarBrand,
 		NavbarToggler,
-		Collapse,
-		Nav,
-		Dropdown,
-		DropdownToggle,
-		DropdownMenu,
-		DropdownItem,
-		Icon,
 		NavItem,
 		NavLink,
-		Container,
-		Label,
-		FormGroup,
-		Input,
-		Button
 	} from '@sveltestrap/sveltestrap';
-	import type { PageData } from './$types';
 
-	import Cropper from 'svelte-easy-crop';
+	import Cropper, { type CropArea, type OnCropCompleteEvent } from 'svelte-easy-crop';
 	import MessageDialog from '$lib/MessageDialog.svelte';
 
 	let navbarToggleOpen = $state(false);
@@ -46,34 +44,22 @@
 
 	let name = $derived(data.name);
 	let index = $state(0);
-	const image = $derived(name != null ? createImageUrl(name, index, $page.url).toString() : '');
+	const image = $derived(name != null ? createImageUrl(name, index, page.url).toString() : '');
 	let pageCount = $derived(data.page_count);
 
 	let crop = $state({ x: 0, y: 0 });
 	let zoom = $state(1);
 	let aspect = $state(127 / 180);
 
-	interface CropDetails {
-		x: number;
-		y: number;
-		width: number;
-		height: number;
-	}
+	let cropDetails: CropArea ;
 
-	interface CropperEvent {
-		pixels: CropDetails;
-	}
-
-	let cropDetails: CropDetails;
-
-	function onCropComplete(e: CustomEvent<CropperEvent>) {
-		cropDetails = e.detail.pixels;
-		console.log(cropDetails);
+	function onCropComplete(e: OnCropCompleteEvent) {
+		cropDetails = e.pixels;
 	}
 
 	let dialog: MessageDialog;
 	async function updateCover() {
-		const url = new URL('/api/view/update_cover', $page.url.origin);
+		const url = new URL('/api/view/update_cover', page.url.origin);
 		const req = {
 			index: index,
 			name: name,
@@ -98,21 +84,21 @@
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>Browse</DropdownToggle>
 				<DropdownMenu>
-					<DropdownItem onclick={() => goto(browseURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(browseURL(page.url.origin))}>
 						<Icon name="list-ul" class="me-3" />
 						All items
 					</DropdownItem>
-					<DropdownItem onclick={() => goto(tagURL($page.url.origin))}>
+					<DropdownItem onclick={() => goto(tagURL(page.url.origin))}>
 						<Icon name="tags-fill" class="me-3" />
 						Tag list
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
-				<NavLink onclick={() => goto(historyURL($page.url.origin))}>History</NavLink>
+				<NavLink onclick={() => goto(historyURL(page.url.origin))}>History</NavLink>
 			</NavItem>
 			<NavItem>
-				<NavLink onclick={() => goto(aboutURL($page.url.origin))}>About</NavLink>
+				<NavLink onclick={() => goto(aboutURL(page.url.origin))}>About</NavLink>
 			</NavItem>
 		</Nav>
 		<Nav navbar class="ms-auto">
@@ -129,7 +115,7 @@
 
 <Container>
 	<div class="my-5" style="position: relative; width:100%; height:500px;">
-		<Cropper {image} bind:crop bind:zoom bind:aspect on:cropcomplete={onCropComplete} />
+		<Cropper {image} bind:crop bind:zoom {aspect} oncropcomplete={onCropComplete} />
 	</div>
 
 	<FormGroup>

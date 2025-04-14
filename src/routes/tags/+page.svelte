@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { navigating, page } from '$app/state';
+	import { page } from '$app/state';
 	import ItemCard from '$lib/ItemCard.svelte';
 	import type { PageData } from './$types';
 	import MoveToTop from '$lib/MoveToTop.svelte';
@@ -22,7 +22,7 @@
 		DropdownItem
 	} from '@sveltestrap/sveltestrap';
 	import Pagination from '$lib/Pagination.svelte';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { aboutURL, tagURL, browseURL, historyURL } from '$lib/routes';
 	import { ITEM_PER_PAGE } from '$lib/constants';
 	import LoadingDialog from '$lib/LoadingDialog.svelte';
@@ -42,6 +42,11 @@
 	let search = $state(data.request.search);
 
 	let navbarToggleOpen = $state(false);
+
+	let updated = $state(false);
+
+	beforeNavigate(() => (updated = false));
+	afterNavigate(() => (updated = true));
 
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
@@ -123,7 +128,7 @@
 <Container fluid style="padding-top:30px;">
 	<div class="grid-container">
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-			{#if navigating}
+			{#if !updated}
 				{#each { length: ITEM_PER_PAGE } as _, i}
 					<div class="col">
 						<PlaceholderCard />
@@ -151,7 +156,7 @@
 	</div>
 </Container>
 
-{#if navigating}
+{#if !updated}
 	<LoadingDialog />
 {/if}
 

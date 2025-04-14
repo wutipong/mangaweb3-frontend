@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { navigating, page } from '$app/state';
+	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
-	import Toast from '$lib/Toast.svelte';
 	import { aboutURL, browseURL, historyURL, tagURL, viewURL } from '$lib/routes';
 
 	import {
@@ -36,6 +35,11 @@
 	let pageIndex = $derived(data.request.page);
 	let totalPage = $derived(data.response.total_page);
 	let navbarToggleOpen = $state(false);
+
+	let updated = $state(false);
+
+	beforeNavigate(() => (updated = false));
+	afterNavigate(() => (updated = true));
 
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
@@ -87,10 +91,10 @@
 <div class="container-fluid" style="padding-top:30px;">
 	<div class="grid-container">
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-			{#if navigating}
+			{#if !updated}
 				{#each { length: ITEM_PER_PAGE } as _, i}
 					<div class="col">
-						<PlaceholderCard accessTime/>
+						<PlaceholderCard accessTime />
 					</div>
 				{/each}
 			{:else}
@@ -120,7 +124,7 @@
 </div>
 <div style="height: 100px;"></div>
 
-{#if navigating}
+{#if !updated}
 	<LoadingDialog />
 {/if}
 

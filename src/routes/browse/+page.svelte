@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { navigating, page } from '$app/state';
+	import { afterNavigate, beforeNavigate, goto, onNavigate } from '$app/navigation';
+	import { page } from '$app/state';
 	import FavoriteButton from '$lib/FavoriteButton.svelte';
 	import MoveToTop from '$lib/MoveToTop.svelte';
 	import Pagination from '$lib/Pagination.svelte';
@@ -17,15 +17,12 @@
 		Icon,
 		Input,
 		InputGroup,
-		Modal,
-		ModalBody,
 		Nav,
 		NavItem,
 		NavLink,
 		Navbar,
 		NavbarBrand,
-		NavbarToggler,
-		Spinner
+		NavbarToggler
 	} from '@sveltestrap/sveltestrap';
 	import type { PageData } from './$types';
 	import ItemCard from '$lib/ItemCard.svelte';
@@ -51,6 +48,11 @@
 	let tag_favorite = $state(data.response.tag_favorite);
 
 	let totalPage = $derived(data.response.total_page);
+
+	let updated = $state(false);
+
+	beforeNavigate(() => updated = false);
+	afterNavigate(() => updated = true);
 
 	function createBrowseURL(options?: {
 		favorite_only?: boolean;
@@ -261,8 +263,8 @@
 <div class="container-fluid" style="padding-top:30px;">
 	<div class="grid-container">
 		<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-			{#if navigating}
-				{#each { length: ITEM_PER_PAGE } as _, i}
+			{#if !updated}
+				{#each { length: ITEM_PER_PAGE } as _}
 					<div class="col">
 						<PlaceholderCard />
 					</div>
@@ -292,8 +294,8 @@
 	</div>
 </div>
 
-{#if navigating}
-	<LoadingDialog/>
+{#if !updated}
+	<LoadingDialog />
 {/if}
 
 <div style="height: 100px;"></div>

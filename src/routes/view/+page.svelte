@@ -12,14 +12,16 @@
 		DropdownMenu,
 		DropdownToggle,
 		Icon,
+		Modal,
 		Nav,
 		NavItem,
 		NavLink,
 		Navbar,
 		NavbarBrand,
-		NavbarToggler
+		NavbarToggler,
+		Table
 	} from '@sveltestrap/sveltestrap';
-	
+
 	import type { PageData } from './$types';
 	import ImageViewer from './ImageViewer.svelte';
 	import PageScroll from './PageScroll.svelte';
@@ -79,7 +81,7 @@
 		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
 		const json = await resp.json();
 
-		console.log(json)
+		console.log(json);
 
 		if (json.favorite) {
 			toast.show('Favorite', 'The current manga is now your favorite.');
@@ -136,6 +138,11 @@
 	function handleUpdate(event: CustomEvent<boolean>) {
 		navbarToggleOpen = event.detail;
 	}
+
+	let aboutOpen = $state(false);
+	const aboutToggle = () => {
+		aboutOpen = !aboutOpen;
+	};
 </script>
 
 <svelte:head>
@@ -207,7 +214,10 @@
 		</Nav>
 		<Nav navbar class="ms-auto">
 			<NavItem class="me-3 d-none d-md-block">
-				<NavLink>{name.length > 40 ? `${name.substring(0, 35)}...` : name}</NavLink>
+				<NavLink onclick={aboutToggle}>
+					{name.length > 40 ? `${name.substring(0, 35)}...` : name}
+					<Icon name="info-circle" />
+				</NavLink>
 			</NavItem>
 			<NavItem class="me-3">
 				<FavoriteButton onclick={() => toggleFavorite()} isFavorite={favorite}>
@@ -217,5 +227,26 @@
 		</Nav>
 	</Collapse>
 </Navbar>
+
+<Modal body header="Information" isOpen={aboutOpen} toggle={aboutToggle}>
+	<Table>
+		<tr>
+			<th>Title</th>
+			<td>{name}</td>
+		</tr>
+		<tr>
+			<th>Tags</th>
+			<td>{tags.map((t) => t.name).join(', ')}</td>
+		</tr>
+		<tr>
+			<th>Page Count</th>
+			<td>{pageCount}</td>
+		</tr>
+		<tr>
+			<th>Favorite ?</th>
+			<td>{favorite? "Yes": "No"}</td>
+		</tr>
+	</Table>
+</Modal>
 
 <Toast bind:this={toast} />

@@ -38,54 +38,37 @@
 	let toast: Toast;
 	let confirm: ConfirmDialog;
 
-	function confirmRescanLibrary() {
+	function confirmUpdateLibrary() {
 		confirm.show(
-			'Rescan Library',
-			'The library will be Rescanned. This will take sometime. Do you still wants to perform?',
-			rescanLibrary
+			'Update library',
+			'The library will be updated. This will take sometime. Do you still wants to perform?',
+			updateLibrary
 		);
 	}
 
-	async function rescanLibrary() {
-		const url = new URL('/api/browse/rescan_library', page.url.origin);
+	async function updateLibrary() {
+		const url = new URL('/api/maintenance/update_library', page.url.origin);
 		await fetch(url);
 		toast.show(
-			'Re-scan Library',
-			'Library re-scanning in progress. Please refresh after a few minutes.'
+			'Updating library',
+			'Updating the library in progress. Please refresh after a few minutes.'
 		);
 	}
 
-	function confirmRecreateThumbnails() {
+	function confirmPurgeCache() {
 		confirm.show(
-			'Recreate Thumbnails',
-			'Thumbnails of every items will be recreated. This will take sometime. Do you still wants to perform?',
-			recreateThumbnails
+			'Purge cache',
+			'Cache will be purged. This will take sometime. Do you still wants to perform?',
+			purgeCache
 		);
 	}
 
-	async function recreateThumbnails() {
-		const url = new URL('/api/browse/recreate_thumbnails', page.url.origin);
+	async function purgeCache() {
+		const url = new URL('/api/maintenance/purge_cache', page.url.origin);
 		await fetch(url);
 		toast.show(
-			'Re-create thumbnail',
-			'Thumbnails recreating in progress. Please refresh after a few minutes.'
-		);
-	}
-
-	function confirmRecreateTagThumbnails() {
-		confirm.show(
-			'Recreate Tag Thumbnails',
-			'Thumbnails of every tags will be recreated. This will take sometime. Do you still wants to perform?',
-			recreateTagThumbnails
-		);
-	}
-
-	async function recreateTagThumbnails() {
-		const url = new URL('/api/tag/recreate_thumbnails', page.url.origin);
-		await fetch(url);
-		toast.show(
-			'Re-create thumbnail',
-			'Thumbnails recreating in progress. Please refresh after a few minutes.'
+			'Purging cache',
+			'Purging cache in progress. Please refresh after a few minutes.'
 		);
 	}
 </script>
@@ -175,25 +158,17 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td class="align-middle"> Rescan library. </td>
+				<td class="align-middle"> Update library. </td>
 				<td>
-					<Button color="danger" onclick={() => confirmRescanLibrary()}>
+					<Button color="danger" onclick={() => confirmUpdateLibrary()}>
 						<Icon name="play-circle" class="me-3" />Run
 					</Button>
 				</td>
 			</tr>
 			<tr>
-				<td class="align-middle"> Populate thumbnails on every manga items. </td>
+				<td class="align-middle"> Purge caches. </td>
 				<td>
-					<Button color="danger" onclick={() => confirmRecreateThumbnails()}>
-						<Icon name="play-circle" class="me-3" />Run
-					</Button>
-				</td>
-			</tr>
-			<tr>
-				<td class="align-middle"> Populate thumbnails on every tag items. </td>
-				<td>
-					<Button color="danger" onclick={confirmRecreateTagThumbnails}>
+					<Button color="danger" onclick={() => confirmPurgeCache()}>
 						<Icon name="play-circle" class="me-3" />Run
 					</Button>
 				</td>

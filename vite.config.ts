@@ -1,8 +1,5 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig, loadEnv } from 'vite';
-import { config } from 'dotenv';
-
-config()
 
 export default defineConfig(({ command, mode }) => {
 	const env = loadEnv(mode, process.cwd(), '');
@@ -16,7 +13,7 @@ export default defineConfig(({ command, mode }) => {
 		server: {
 			proxy: {
 				'/api': {
-					target: env.BACKEND_URL,
+					target: env.BACKEND_URL? env.BACKEND_URL : 'http://localhost:8972',
 					rewrite: (path) => path.replace(/^\/api/, ''),
 					changeOrigin: true,
 				}

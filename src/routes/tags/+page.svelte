@@ -70,7 +70,7 @@
 		page?: number;
 		item_per_page?: number;
 	}) {
-		let callOptions = data.request;
+		let callOptions = { ...data.request };
 		if (options != null) {
 			const { item_per_page, order, page, search, sort } = options;
 
@@ -90,13 +90,15 @@
 
 			if (sort != null) {
 				callOptions.sort = sort;
+				// If 'sort' is provided, override the 'order' value based on the sort selection.
+				// Preserve the custom 'order' if one was explicitly provided in the options.
 				switch(sort) {
 					case 'name': {
-						callOptions.order = 'ascending';
+						callOptions.order = callOptions.order ?? 'ascending';
 						break;
 					}
 					case 'itemCount': {
-						callOptions.order = 'descending';
+						callOptions.order = callOptions.order ?? 'descending';
 						break;
 					}
 				}

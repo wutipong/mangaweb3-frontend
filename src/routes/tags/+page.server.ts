@@ -40,9 +40,9 @@ export const load: PageServerLoad = async ({ request, fetch, url }) => {
     if (params.has('sort')) {
         const v = params.get('sort');
 
-        if (v == 'name') {
+        if (v === 'name') {
             backendReq.sort = 'name';
-        } else if (v == 'itemCount') {
+        } else if (v === 'itemCount') {
             backendReq.sort = 'itemCount';
         } 
     }
@@ -67,7 +67,7 @@ export const load: PageServerLoad = async ({ request, fetch, url }) => {
     if (url.searchParams.has('item_per_page')) {
         const v = url.searchParams.get('item_per_page')
         if (v != null)
-            backendReq.item_per_page = parseInt(v)
+            backendReq.item_per_page = parseInt(v, 10)
     }
     if (url.searchParams.has('search')) {
         const v = url.searchParams.get('search')

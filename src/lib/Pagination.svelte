@@ -23,12 +23,11 @@
 	let { currentPage = 0, totalPage = 1, pageToShow = 5 }: Props = $props();
 
 	let first = $state(0);
-	let last = $state(totalPage - 1);
+	let last = $derived(totalPage - 1);
 
 	let customOpen = $state(false);
 	let customPage = $state(currentPage);
 
-	
 	let pageNumbers: number[] = $state([]);
 	$effect(() => {
 		if (totalPage != 0) {
@@ -44,7 +43,7 @@
 				pages = [...pages, i];
 			}
 
-			pageNumbers	 = pages;
+			pageNumbers = pages;
 		}
 	});
 

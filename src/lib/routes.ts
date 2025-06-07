@@ -34,7 +34,7 @@ export function tagURL(base: URL | string, options?: { page?: number, favorite_o
 }
 
 export function browseURL(base: URL | string, options?: {
-    favorite_only?: boolean;
+    filter?: '' | 'favorite' | 'tag';
     item_per_page?: number;
     order?: 'ascending' | 'descending';
     page?: number;
@@ -45,9 +45,9 @@ export function browseURL(base: URL | string, options?: {
     const output = new URL("/browse", base);
 
     if (options != null) {
-        const { favorite_only, item_per_page, order, page, search, sort, tag } = options;
-        if (favorite_only != null) {
-            output.searchParams.set('favorite_only', `${favorite_only}`);
+        const { filter, item_per_page, order, page, search, sort, tag } = options;
+        if (filter != null) {
+            output.searchParams.set('filter', `${filter}`);
         }
         if (item_per_page != null) {
             output.searchParams.set('item_per_page', `${item_per_page}`);

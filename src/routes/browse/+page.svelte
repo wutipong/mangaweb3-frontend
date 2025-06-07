@@ -38,7 +38,7 @@
 
 	let { data }: Props = $props();
 
-	let favoriteOnly = $derived(data.request.favorite_only);
+	let filter = $derived(data.request.filter);
 	let items = $derived(data.response.items);
 	let order = $derived(data.request.order);
 	let pageIndex = $derived(data.request.page);
@@ -51,11 +51,11 @@
 
 	let updated = $state(false);
 
-	beforeNavigate(() => updated = false);
-	afterNavigate(() => updated = true);
+	beforeNavigate(() => (updated = false));
+	afterNavigate(() => (updated = true));
 
 	function createBrowseURL(options?: {
-		favorite_only?: boolean;
+		filter?: '' | 'favorite' | 'tag';
 		item_per_page?: number;
 		order?: 'ascending' | 'descending';
 		page?: number;
@@ -65,9 +65,9 @@
 	}): URL {
 		let callOptions = data.request;
 		if (options != null) {
-			const { favorite_only, item_per_page, order, page, search, sort, tag } = options;
-			if (favorite_only != null) {
-				callOptions.favorite_only = favorite_only;
+			const { filter, item_per_page, order, page, search, sort, tag } = options;
+			if (filter != null) {
+				callOptions.filter = filter;
 			}
 			if (item_per_page != null) {
 				callOptions.item_per_page = item_per_page;
@@ -213,14 +213,31 @@
 				</DropdownMenu>
 			</Dropdown>
 			<Dropdown nav inNavbar>
-				<DropdownToggle nav caret>Filter</DropdownToggle>
+				<DropdownToggle nav caret>
+					{#if filter != ''}
+						<Icon name="check" class="me-1" />
+					{:else}
+						<Icon name="funnel" class="me-1" />
+					{/if} Filter
+				</DropdownToggle>
 				<DropdownMenu>
 					<DropdownItem
-						active={favoriteOnly}
-						onclick={() => goto(createBrowseURL({ favorite_only: !favoriteOnly }))}
+						active={filter == 'favorite'}
+						onclick={() => goto(createBrowseURL({ filter: 'favorite' }))}
 					>
-						<Icon name="star" class="me-3" /> Favorite
+						<Icon name="star" class="me-3" /> Favorite items
 					</DropdownItem>
+					<DropdownItem
+						active={filter == 'tag'}
+						disabled={tag != ''}
+						onclick={() => goto(createBrowseURL({ filter: 'tag' }))}
+					>
+						<Icon name="tag-fill" class="me-3" /> Items with favorite Tags
+					</DropdownItem>
+					<DropdownItem divider />
+					<DropdownItem onclick={() => goto(createBrowseURL({ filter: '' }))}
+						><Icon name="x-circle-fill" class="me-3" /> Clear</DropdownItem
+					>
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>

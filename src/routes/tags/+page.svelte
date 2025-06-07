@@ -39,6 +39,9 @@
 	let tags = $derived(favoriteOnly ? data.tags.filter((t) => t.favorite) : data.tags);
 	let total_page = $derived(data.total_page);
 
+	let order = $derived(data.request.order);
+	let sort = $derived(data.request.sort);
+
 	let search = $state(data.request.search);
 
 	let navbarToggleOpen = $state(false);
@@ -57,6 +60,50 @@
 		output.searchParams.append('tag', name);
 
 		return output;
+	}
+
+	function createTagListUrl(options?: {
+		favorite_only?: boolean;
+		order?: 'ascending' | 'descending';
+		sort?: 'name' | 'itemCount';
+		search?: string;
+		page?: number;
+		item_per_page?: number;
+	}) {
+		let callOptions = data.request;
+		if (options != null) {
+			const { item_per_page, order, page, search, sort } = options;
+
+			if (item_per_page != null) {
+				callOptions.item_per_page = item_per_page;
+			}
+			if (order != null) {
+				callOptions.order = order;
+			}
+			if (page != null) {
+				callOptions.page = page;
+			}
+
+			if (search != null) {
+				callOptions.search = search;
+			}
+
+			if (sort != null) {
+				callOptions.sort = sort;
+				switch(sort) {
+					case 'name': {
+						callOptions.order = 'ascending';
+						break;
+					}
+					case 'itemCount': {
+						callOptions.order = 'descending';
+						break;
+					}
+				}
+			}
+		}
+
+		return tagURL(page.url.origin, callOptions);
 	}
 </script>
 
@@ -92,6 +139,37 @@
 					>
 						<Icon name="star" class="me-3" />
 						Favorite
+					</DropdownItem>
+				</DropdownMenu>
+			</Dropdown>
+			<Dropdown nav inNavbar>
+				<DropdownToggle nav caret>Sort By</DropdownToggle>
+				<DropdownMenu>
+					<DropdownItem
+						active={sort == 'name'}
+						onclick={() => goto(createTagListUrl({ sort: 'name' }))}
+					>
+						<Icon name="type" class="me-3" /> Name
+					</DropdownItem>
+					<DropdownItem
+						active={sort == 'itemCount'}
+						onclick={() => goto(createTagListUrl({ sort: 'itemCount' }))}
+					>
+						<Icon name="journals" class="me-3" /> Item counts
+					</DropdownItem>
+
+					<DropdownItem divider />
+					<DropdownItem
+						active={order == 'ascending'}
+						onclick={() => goto(createTagListUrl({ order: 'ascending' }))}
+					>
+						<Icon name="sort-down-alt" class="me-3" />Ascending
+					</DropdownItem>
+					<DropdownItem
+						active={order == 'descending'}
+						onclick={() => goto(createTagListUrl({ order: 'descending' }))}
+					>
+						<Icon name="sort-up-alt" class="me-3" /> Descending
 					</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>

@@ -13,10 +13,16 @@ export function viewURL(base: URL | string, name: string): URL {
     return u;
 }
 
-export function tagURL(base: URL | string, options?: { page?: number, favorite_only?: boolean, search?: string }): URL {
+export function tagURL(base: URL | string, options?: {
+    page?: number;
+    favorite_only?: boolean;
+    search?: string;
+    order?: 'ascending' | 'descending';
+    sort?: 'name' | 'itemCount';
+}): URL {
     const output = new URL("/tags", base);
     if (options != null) {
-        const { page, favorite_only, search } = options;
+        const { page, favorite_only, search, order, sort } = options;
 
         if (page != null) {
             output.searchParams.set('page', `${page}`);
@@ -29,6 +35,15 @@ export function tagURL(base: URL | string, options?: { page?: number, favorite_o
         if (search != null) {
             output.searchParams.set('search', search);
         }
+
+        if (order != null) {
+            output.searchParams.set('order', `${order}`);
+        }
+
+        if (sort != null) {
+            output.searchParams.set('sort', `${sort}`);
+        }
+
     }
     return output;
 }

@@ -3,8 +3,8 @@ import { variables } from '$lib/variables';
 import { getUser } from '$lib/user';
 
 interface Request {
-    user: string
-    favorite_only: boolean;
+    user: string;
+    filter: '' | '' | 'favorite' | 'tag';
     item_per_page: number;
     order: 'ascending' | 'descending';
     page: number;
@@ -20,7 +20,7 @@ interface Item {
     read: boolean;
     page_count: number;
     create_time: string;
-    tag_favorite : boolean;
+    tag_favorite: boolean;
 }
 
 interface Page {
@@ -51,7 +51,7 @@ function createDefaultRequest(): Request {
 
     return {
         user: '',
-        favorite_only: false,
+        filter: '',
         item_per_page: 30,
         order: order,
         page: 0,
@@ -61,17 +61,22 @@ function createDefaultRequest(): Request {
     };
 }
 
-export const load: PageServerLoad = async ({  request, fetch, url }) => {
+export const load: PageServerLoad = async ({ request, fetch, url }) => {
     const backendReq = createDefaultRequest();
     backendReq.user = getUser(request);
 
     const params = url.searchParams;
-    if (params.has('favorite_only')) {
-        backendReq.favorite_only = params.get('favorite_only') == 'true';
+    if (params.has('filter')) {
+        const v = params.get('filter');
+
+        if (v == 'favorite' || v == 'tag') {
+            backendReq.filter = v
+        }
     }
 
     if (params.has('sort')) {
         const v = params.get('sort');
+
         if (v == 'name') {
             backendReq.sort = 'name';
         } else if (v == 'createTime') {

@@ -11,7 +11,7 @@ export default defineConfig({
   preset: {
     ...minimal2023Preset,
     appleSplashScreens: createAppleSplashScreens({
-      //padding: 0.3,
+      padding: 0.3,
       resizeOptions: { fit: 'contain', background: '#222222' },
       linkMediaOptions: {
         log: true,
@@ -20,5 +20,5 @@ export default defineConfig({
       },
     }, ['iPad Air 9.7"']),
   },
-  images: 'public/favicon.svg',
+  images: 'static/favicon.svg',
 })

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1.89456,0,0,2.33054,-99.7007,-257.071)">
+        <path d="M322.873,154.243L322.873,286.058C322.873,310.308 298.654,329.996 268.823,329.996L106.674,329.996C76.844,329.996 52.625,310.308 52.625,286.058L52.625,154.243C52.625,129.993 76.844,110.305 106.674,110.305L268.823,110.305C298.654,110.305 322.873,129.993 322.873,154.243Z" style="fill:rgb(34,34,34);"/>
+    </g>
+    <g transform="matrix(1,0,0,1,-353.563,-89.7745)">
+        <g transform="matrix(0.71,0,0,1,102.43,0)">
+            <g transform="matrix(266.667,0,0,266.667,1053.47,448.575)">
+            </g>
+            <text x="353.206px" y="448.575px" style="font-family:'MPLUS1-Regular', 'M PLUS 1';font-size:266.667px;fill:white;">ま<tspan x="570.006px 786.806px " y="448.575px 448.575px ">んか</tspan></text>
+        </g>
+    </g>
+</svg>

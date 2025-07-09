@@ -44,8 +44,9 @@
 	function createImageUrls(name: string, pageCount: number): string[] {
 		const url = new URL('/api/view/get_image', page.url.origin);
 		const output = [];
-
+		const user = data.request.user
 		url.searchParams.append('name', name);
+		url.searchParams.append('user', user)
 		for (let i = 0; i < pageCount; i++) {
 			url.searchParams.set('i', i.toString());
 			output.push(url.toString());

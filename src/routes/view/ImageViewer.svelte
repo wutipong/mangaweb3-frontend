@@ -5,9 +5,10 @@
 	interface Props {
 		imageURLs?: string[];
 		onIndexChange: Function;
+		startIndex?: number;
 	}
 
-	let { imageURLs = [], onIndexChange }: Props = $props();
+	let { imageURLs = [], onIndexChange, startIndex }: Props = $props();
 
 	let carousel: bootstrap.Carousel;
 	let imgs: PageImage[] = $state([]);
@@ -45,7 +46,7 @@
 <div class="carousel slide w-100 h-100" id="carouselControl">
 	<div class="carousel-inner w-100 h-100" id="carousel" style="width:100%; height:100%;">
 		{#each imageURLs as url, index}
-			<div class="carousel-item w-100 h-100" class:active={index === 0}>
+			<div class="carousel-item w-100 h-100" class:active={index === (startIndex ?? 0)}>
 				<div class="w-100 h-100 d-flex flex-col">
 					<PageImage alt="page {index}" src={new URL(url)} bind:this={imgs[index]} />
 				</div>

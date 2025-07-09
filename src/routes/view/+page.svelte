@@ -152,7 +152,7 @@
 <PageScroll PageCount={pageCount} {onValueChange} Current={current} />
 
 <div class="fullscreen" style="padding-top:80px;">
-	<ImageViewer imageURLs={createImageUrls(name, pageCount)} {onIndexChange} bind:this={viewer} />
+	<ImageViewer imageURLs={createImageUrls(name, pageCount)} {onIndexChange} bind:this={viewer} startIndex={data.response.current_page}/>
 </div>
 
 <Navbar color="dark" dark expand="md" sticky={'top'}>

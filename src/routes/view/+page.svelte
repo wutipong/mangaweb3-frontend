@@ -82,8 +82,6 @@
 		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
 		const json = await resp.json();
 
-		console.log(json);
-
 		if (json.favorite) {
 			toast.show('Favorite', 'The current manga is now your favorite.');
 		} else {

@@ -10,14 +10,17 @@ export const GET: RequestHandler = async ({ request }) => {
     let transport = new GrpcTransport({
         host: variables.apiBasePath,
         channelCredentials: ChannelCredentials.createInsecure(),
+        clientOptions: {
+            "grpc.max_receive_message_length": 2 * 1024 * 1024 * 1024
+        }
     })
 
     let client = new MangaClient(transport)
     const url = new URL(request.url)
 
     let name = url.searchParams.get('name') ?? ""
-    let iStr = url.searchParams.get('i') 
-    let index = iStr ? parseInt(iStr): 0
+    let iStr = url.searchParams.get('i')
+    let index = iStr ? parseInt(iStr) : 0
     let user = getUser(request)
     let { response } = await client.pageImage({ name, user, index, width: 0, height: 0 })
 

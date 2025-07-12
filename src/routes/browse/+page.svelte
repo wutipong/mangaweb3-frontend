@@ -125,8 +125,6 @@
 		const resp = await fetch(url, { method: 'GET' });
 		const json = await resp.json();
 
-		console.log(json)
-
 		if (json.favorite) {
 			toast.show('Favorite', `The tag "${tag}" is now your favorite.`);
 		} else {

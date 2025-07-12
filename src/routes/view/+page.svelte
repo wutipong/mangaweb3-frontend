@@ -71,15 +71,11 @@
 	}
 
 	async function toggleFavorite() {
-		const req = {
-			favorite: !favorite,
-			name: name,
-			user: data.request.user
-		};
+		const url = new URL('/browse/set_favorite', page.url.origin);
+		url.searchParams.set("name", name)
+		url.searchParams.set("favorite", (!favorite)? "true": "false")
 
-		const url = new URL('/api/view/set_favorite', page.url.origin);
-
-		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
+		const resp = await fetch(url, { method: 'GET'});
 		const json = await resp.json();
 
 		if (json.favorite) {

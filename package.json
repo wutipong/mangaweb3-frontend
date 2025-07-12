@@ -12,10 +12,12 @@
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-		"generate-pwa-assets": "pwa-assets-generator --preset minimal-2023 static/favicon.svg"
+		"generate-pwa-assets": "pwa-assets-generator --preset minimal-2023 static/favicon.svg",
+		"generate-grpc": "protoc --ts_out=src/lib/grpc --proto_path=./schema history.proto maintenance.proto manga.proto tag.proto types.proto"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.51.1",
+		"@protobuf-ts/plugin": "^2.11.1",
 		"@sveltejs/adapter-auto": "^6.0.0",
 		"@sveltejs/adapter-node": "^5.2.12",
 		"@sveltejs/kit": "^2.20.7",
@@ -41,6 +43,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@grpc/grpc-js": "^1.13.4",
+		"@protobuf-ts/grpc-transport": "^2.11.1",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
 		"@sveltestrap/sveltestrap": "^7.1.0",
 		"bootstrap": "^5.3.5",

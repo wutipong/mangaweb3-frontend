@@ -143,7 +143,7 @@
 	}
 
 	function createThumbnailUrl(name: string): URL {
-		const u = new URL('/api/browse/thumbnail', page.url);
+		const u = new URL('/browse/thumbnail', page.url);
 		u.searchParams.set('name', name);
 
 		return u;

@@ -24,11 +24,13 @@
 		NavbarBrand,
 		NavbarToggler
 	} from '@sveltestrap/sveltestrap';
+
 	import type { PageData } from './$types';
 	import ItemCard from '$lib/ItemCard.svelte';
 	import { ITEM_PER_PAGE } from '$lib/constants';
 	import PlaceholderCard from '$lib/PlaceholderCard.svelte';
 	import LoadingDialog from '$lib/LoadingDialog.svelte';
+	import { Filter, SortField, SortOrder } from '$lib/grpc/types';
 
 	let toast: Toast;
 
@@ -45,9 +47,9 @@
 	let search = $state(data.request.search);
 	let sort = $derived(data.request.sort);
 	let tag = $derived(data.request.tag);
-	let tag_favorite = $state(data.response.tag_favorite);
+	let tag_favorite = $state(data.response.tagFavorite);
 
-	let totalPage = $derived(data.response.total_page);
+	let totalPage = $derived(data.response.totalPage);
 
 	let updated = $state(false);
 
@@ -55,15 +57,24 @@
 	afterNavigate(() => (updated = true));
 
 	function createBrowseURL(options?: {
-		filter?: '' | 'favorite' | 'tag';
+		filter?: Filter;
 		item_per_page?: number;
-		order?: 'ascending' | 'descending';
+		order?: SortOrder;
 		page?: number;
 		search?: string;
-		sort?: 'name' | 'createTime' | 'pageCount';
+		sort?: SortField;
 		tag?: string;
 	}): URL {
-		let callOptions = data.request;
+		let callOptions = {
+			user: data.request.user,
+			filter: data.request.filter,
+			item_per_page: data.request.itemPerPage,
+			order: data.request.order,
+			page: data.request.page,
+			search: data.request.search,
+			sort: data.request.sort,
+			tag: data.request.tag
+		} 
 		if (options != null) {
 			const { filter, item_per_page, order, page, search, sort, tag } = options;
 			if (filter != null) {
@@ -97,20 +108,23 @@
 	function createSortBrowseURL(options: {
 		favorite_only?: boolean;
 		item_per_page?: number;
-		order?: 'ascending' | 'descending';
+		order?: SortOrder;
 		page?: number;
 		search?: string;
-		sort?: 'name' | 'createTime' | 'pageCount';
+		sort?: SortField;
 		tag?: string;
 	}): URL {
 		const sort = options.sort;
 		switch (sort) {
-			case 'name':
-				options.order = 'ascending';
-			case 'createTime':
-				options.order = 'descending';
-			case 'pageCount':
-				options.order = 'descending';
+			case SortField.NAME:
+				options.order = SortOrder.ASCENDING;
+				break;
+			case SortField.CREATION_TIME:
+				options.order = SortOrder.DESCENDING;
+				break;
+			case SortField.PAGECOUNT:
+				options.order = SortOrder.DESCENDING;
+				break;
 		}
 
 		return createBrowseURL(options);
@@ -118,9 +132,9 @@
 
 	async function onTagFavorite() {
 		const url = new URL('/api/tag/set_favorite', page.url.origin);
-		
-		url.searchParams.set("name", tag)
-		url.searchParams.set("favorite", (!tag_favorite)? "true": "false")
+
+		url.searchParams.set('name', tag);
+		url.searchParams.set('favorite', !tag_favorite ? 'true' : 'false');
 
 		const resp = await fetch(url, { method: 'GET' });
 		const json = await resp.json();
@@ -177,33 +191,33 @@
 				<DropdownToggle nav caret>Sort By</DropdownToggle>
 				<DropdownMenu>
 					<DropdownItem
-						active={sort == 'name'}
-						onclick={() => goto(createSortBrowseURL({ sort: 'name' }))}
+						active={sort == SortField.NAME}
+						onclick={() => goto(createSortBrowseURL({ sort: SortField.NAME }))}
 					>
 						<Icon name="type" class="me-3" /> Name
 					</DropdownItem>
 					<DropdownItem
-						active={sort == 'createTime'}
-						onclick={() => goto(createSortBrowseURL({ sort: 'createTime' }))}
+						active={sort == SortField.CREATION_TIME}
+						onclick={() => goto(createSortBrowseURL({ sort: SortField.CREATION_TIME }))}
 					>
 						<Icon name="clock" class="me-3" /> Create time
 					</DropdownItem>
 					<DropdownItem
-						active={sort == 'pageCount'}
-						onclick={() => goto(createSortBrowseURL({ sort: 'pageCount' }))}
+						active={sort == SortField.PAGECOUNT}
+						onclick={() => goto(createSortBrowseURL({ sort: SortField.PAGECOUNT }))}
 					>
 						<Icon name="file-earmark" class="me-3" /> Page count
 					</DropdownItem>
 					<DropdownItem divider />
 					<DropdownItem
-						active={order == 'ascending'}
-						onclick={() => goto(createBrowseURL({ order: 'ascending' }))}
+						active={order == SortOrder.ASCENDING}
+						onclick={() => goto(createBrowseURL({ order: SortOrder.ASCENDING }))}
 					>
 						<Icon name="sort-down-alt" class="me-3" />Ascending
 					</DropdownItem>
 					<DropdownItem
-						active={order == 'descending'}
-						onclick={() => goto(createBrowseURL({ order: 'descending' }))}
+						active={order == SortOrder.DESCENDING}
+						onclick={() => goto(createBrowseURL({ order: SortOrder.DESCENDING }))}
 					>
 						<Icon name="sort-up-alt" class="me-3" /> Descending
 					</DropdownItem>
@@ -211,28 +225,28 @@
 			</Dropdown>
 			<Dropdown nav inNavbar>
 				<DropdownToggle nav caret>
-					{#if filter != ''}
-						<Icon name="check" class="me-1" />
-					{:else}
+					{#if filter == Filter.UNKNOWN}
 						<Icon name="funnel" class="me-1" />
-					{/if} Filter
+					{:else}
+						<Icon name="check" class="me-1" />
+					{/if}&nbsp;Filter
 				</DropdownToggle>
 				<DropdownMenu>
 					<DropdownItem
-						active={filter == 'favorite'}
-						onclick={() => goto(createBrowseURL({ filter: 'favorite' }))}
+						active={filter == Filter.FAVORITE_ITEMS}
+						onclick={() => goto(createBrowseURL({ filter: Filter.FAVORITE_ITEMS }))}
 					>
 						<Icon name="star" class="me-3" /> Favorite items
 					</DropdownItem>
 					<DropdownItem
-						active={filter == 'tag'}
+						active={filter == Filter.FAVORITE_TAGS}
 						disabled={tag != ''}
-						onclick={() => goto(createBrowseURL({ filter: 'tag' }))}
+						onclick={() => goto(createBrowseURL({ filter: Filter.FAVORITE_TAGS }))}
 					>
 						<Icon name="tag-fill" class="me-3" /> Items with favorite Tags
 					</DropdownItem>
 					<DropdownItem divider />
-					<DropdownItem onclick={() => goto(createBrowseURL({ filter: '' }))}
+					<DropdownItem onclick={() => goto(createBrowseURL({ filter: Filter.UNKNOWN }))}
 						><Icon name="x-circle-fill" class="me-3" /> Clear</DropdownItem
 					>
 				</DropdownMenu>
@@ -287,12 +301,12 @@
 				{#each items as item}
 					<div class="col">
 						<ItemCard
-							favorite={item.favorite}
-							isRead={item.read}
+							favorite={item.isFavorite}
+							isRead={item.isRead}
 							id={item.id}
 							name={item.name}
-							pageCount={item.page_count}
-							favoriteTag={item.tag_favorite}
+							pageCount={item.pageCount}
+							favoriteTag={item.hasFavoriteTag}
 							imageUrl={createThumbnailUrl(item.name)}
 							linkUrl={viewURL(page.url, item.name)}
 						/>

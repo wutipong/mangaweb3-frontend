@@ -1,3 +1,5 @@
+import { Filter, SortField, SortOrder } from "./grpc/types";
+
 export function aboutURL(base: URL | string): URL {
     return new URL("/about", base);
 }
@@ -49,12 +51,13 @@ export function tagURL(base: URL | string, options?: {
 }
 
 export function browseURL(base: URL | string, options?: {
-    filter?: '' | 'favorite' | 'tag';
+    user?: string;
+    filter?: Filter;
     item_per_page?: number;
-    order?: 'ascending' | 'descending';
+    order?: SortOrder;
     page?: number;
     search?: string;
-    sort?: 'name' | 'createTime' | 'pageCount';
+    sort?: SortField;
     tag?: string;
 }): URL {
     const output = new URL("/browse", base);
@@ -62,13 +65,27 @@ export function browseURL(base: URL | string, options?: {
     if (options != null) {
         const { filter, item_per_page, order, page, search, sort, tag } = options;
         if (filter != null) {
-            output.searchParams.set('filter', `${filter}`);
+            switch (filter) {          
+                case Filter.FAVORITE_ITEMS:
+                    output.searchParams.set('filter', 'favorite_items');
+                    break;
+                case Filter.FAVORITE_TAGS:
+                    output.searchParams.set('filter', 'favorite_tags');
+                    break;
+            }
         }
         if (item_per_page != null) {
             output.searchParams.set('item_per_page', `${item_per_page}`);
         }
         if (order != null) {
-            output.searchParams.set('order', `${order}`);
+            switch (order) {
+                case SortOrder.ASCENDING:
+                    output.searchParams.set('order', 'ascending');
+                    break;
+                case SortOrder.DESCENDING:
+                    output.searchParams.set('order', 'descending');
+                    break;
+            }
         }
         if (page != null) {
             output.searchParams.set('page', `${page}`);
@@ -79,7 +96,17 @@ export function browseURL(base: URL | string, options?: {
         }
 
         if (sort != null) {
-            output.searchParams.set('sort', `${sort}`);
+            switch (sort) {
+                case SortField.NAME:
+                    output.searchParams.set('sort', 'name');
+                    break;
+                case SortField.CREATION_TIME:
+                    output.searchParams.set('sort', 'creation_time');
+                    break;
+                case SortField.PAGECOUNT:
+                    output.searchParams.set('sort', 'pagecount');
+                    break;
+            }
         }
 
         if (tag != null) {

@@ -67,11 +67,11 @@ export const load: PageServerLoad = async ({ request, fetch, url }) => {
         const v = params.get('filter');
 
         switch (v) {
-            case 'favorite':
+            case 'favorite_items':
                 filter = Filter.FAVORITE_ITEMS;
                 break;
 
-            case 'tag':
+            case 'favorite_tags':
                 filter = Filter.FAVORITE_TAGS
                 break;
         }
@@ -84,10 +84,10 @@ export const load: PageServerLoad = async ({ request, fetch, url }) => {
             case 'name':
                 sort = SortField.NAME;
                 break;
-            case 'createTime':
+            case 'creation_time':
                 sort = SortField.CREATION_TIME;
                 break;
-            case 'pageCount':
+            case 'pagecount':
                 sort = SortField.PAGECOUNT;
         }
     }

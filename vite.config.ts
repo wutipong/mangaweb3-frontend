@@ -22,8 +22,8 @@ export default defineConfig(({ command, mode }) => {
 					config: true,
 				},
 				manifest: {
-					short_name: 'MangaWeb 3',
-					name: 'MangaWeb 3',
+					short_name: 'MangaWeb 4',
+					name: 'MangaWeb 4',
 					start_url: '/',
 					scope: '/',
 					display: 'standalone',
@@ -52,14 +52,6 @@ export default defineConfig(({ command, mode }) => {
 		test: {
 			include: ['src/**/*.{test,spec}.{js,ts}']
 		},
-		server: {
-			proxy: {
-				'/api': {
-					target: env.BACKEND_URL ? env.BACKEND_URL : 'http://localhost:8972',
-					rewrite: (path) => path.replace(/^\/api/, ''),
-					changeOrigin: true,
-				}
-			}
-		}
+		
 	}
 });

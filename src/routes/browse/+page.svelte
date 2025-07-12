@@ -117,16 +117,15 @@
 	}
 
 	async function onTagFavorite() {
-		const req = {
-			user: data.request.user,
-			favorite: !tag_favorite,
-			tag: tag
-		};
+		const url = new URL('/tags/set_favorite', page.url.origin);
+		
+		url.searchParams.set("name", tag)
+		url.searchParams.set("favorite", (!tag_favorite)? "true": "false")
 
-		const url = new URL('/api/tag/set_favorite', page.url.origin);
-
-		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
+		const resp = await fetch(url, { method: 'GET' });
 		const json = await resp.json();
+
+		console.log(json)
 
 		if (json.favorite) {
 			toast.show('Favorite', `The tag "${tag}" is now your favorite.`);

@@ -11,7 +11,7 @@ export const GET: RequestHandler = async ({ request }) => {
         host: variables.apiBasePath,
         channelCredentials: ChannelCredentials.createInsecure(),
         clientOptions: {
-            "grpc.max_receive_message_length": 2 * 1024 * 1024 * 1024
+            "grpc.max_receive_message_length": 2*1024 * 1024
         }
     })
 
@@ -19,12 +19,19 @@ export const GET: RequestHandler = async ({ request }) => {
     const url = new URL(request.url)
 
     let name = url.searchParams.get('name') ?? ""
-    let user = getUser(request)
-    let { response } = await client.({ name, user, index, width: 0, height: 0 })
+    
+    let stream = client.download({ name })
 
-    return new Response(response.data, {
-        headers: {
-            'content-type': response.contentType,
-        },
-    });
+    let output = []
+    let filename = ""
+    let contentType = ""
+    for await (let message of stream.responses) {
+        console.log(message.data.length)
+
+        console.log(output.push(...message.data))
+        filename = message.filename
+        contentType = message.contentType
+    }
+
+    return new Response(new Uint8Array(output))
 };

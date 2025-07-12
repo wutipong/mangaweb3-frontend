@@ -54,14 +54,14 @@
 
 		return output;
 	}
-	/** TODO: Imeplement download
+	
 	function downloadManga() {
 		const url = new URL('/view/download', page.url.origin);
 		url.searchParams.set('name', name);
 
 		download(url.toString());
 	}
-	*/
+	
 	function downloadPage() {
 		const url = new URL('/view/page_image', page.url.origin);
 		url.searchParams.set('name', name);
@@ -188,12 +188,10 @@
 						<Icon name="download" class="me-3" />
 						Download Current Page
 					</DropdownItem>
-					<!--TODO: Implement Download
 					<DropdownItem onclick={() => downloadManga()}>
 						<Icon name="download" class="me-3" />
 						Download Manga
 					</DropdownItem>
-					-->
 					<DropdownItem divider />
 					<DropdownItem header>Maintenance</DropdownItem>
 					<DropdownItem onclick={() => updateCover()}>

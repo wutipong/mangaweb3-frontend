@@ -117,7 +117,7 @@
 	}
 
 	async function onTagFavorite() {
-		const url = new URL('/tags/set_favorite', page.url.origin);
+		const url = new URL('/api/tag/set_favorite', page.url.origin);
 		
 		url.searchParams.set("name", tag)
 		url.searchParams.set("favorite", (!tag_favorite)? "true": "false")
@@ -140,7 +140,7 @@
 	}
 
 	function createThumbnailUrl(name: string): URL {
-		const u = new URL('/browse/thumbnail', page.url);
+		const u = new URL('/api/manga/thumbnail', page.url);
 		u.searchParams.set('name', name);
 
 		return u;

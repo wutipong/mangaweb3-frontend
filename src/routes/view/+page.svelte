@@ -42,7 +42,7 @@
 	let favorite = $state(data.response.favorite);
 
 	function createImageUrls(name: string, pageCount: number): string[] {
-		const url = new URL('/view/page_image', page.url.origin);
+		const url = new URL('/api/manga/page_image', page.url.origin);
 		const output = [];
 		const user = data.request.user;
 		url.searchParams.append('name', name);
@@ -56,14 +56,14 @@
 	}
 	
 	function downloadManga() {
-		const url = new URL('/view/download', page.url.origin);
+		const url = new URL('/api/manga/download', page.url.origin);
 		url.searchParams.set('name', name);
 
 		download(url.toString());
 	}
 	
 	function downloadPage() {
-		const url = new URL('/view/page_image', page.url.origin);
+		const url = new URL('/api/manga/page_image', page.url.origin);
 		url.searchParams.set('name', name);
 		url.searchParams.set('i', current.toString());
 
@@ -71,7 +71,7 @@
 	}
 
 	async function toggleFavorite() {
-		const url = new URL('/browse/set_favorite', page.url.origin);
+		const url = new URL('/api/manga/set_favorite', page.url.origin);
 		url.searchParams.set('name', name);
 		url.searchParams.set('favorite', !favorite ? 'true' : 'false');
 
@@ -88,7 +88,7 @@
 	}
 	
 	async function fixMetaData() {
-		const url = new URL('/view/repair', page.url.origin);
+		const url = new URL('/api/manga/repair', page.url.origin);
 		url.searchParams.set("name", name)
 
 		const resp = await fetch(url);

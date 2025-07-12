@@ -20,7 +20,7 @@ export function tagURL(base: URL | string, options?: {
     order?: 'ascending' | 'descending';
     sort?: 'name' | 'itemCount';
 }): URL {
-    const output = new URL("/tags", base);
+    const output = new URL("/tag", base);
     if (options != null) {
         const { page, favorite_only, search, order, sort } = options;
 

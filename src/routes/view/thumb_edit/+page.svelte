@@ -31,7 +31,7 @@
 	}
 
 	function createImageUrl(name: string, page: number, base: string | URL): URL {
-		const url = new URL('/view/page_image', base);
+		const url = new URL('/api/manga/page_image', base);
 		if (name != null) {
 			url.searchParams.append('name', name);
 		}
@@ -42,10 +42,10 @@
 
 	let { data } = $props();
 
-	let name = $derived(data.name);
+	let name = $derived(data.request.name);
 	let index = $state(0);
 	const image = $derived(name != null ? createImageUrl(name, index, page.url).toString() : '');
-	let pageCount = $derived(data.page_count);
+	let pageCount = $derived(data.response.pageCount);
 
 	let crop = $state({ x: 0, y: 0 });
 	let zoom = $state(1);
@@ -59,7 +59,7 @@
 
 	let dialog: MessageDialog;
 	async function updateCover() {
-		const url = new URL('/view/update_cover', page.url.origin);
+		const url = new URL('/api/manga/update_cover', page.url.origin);
 
 		url.searchParams.set('i', index.toString());
 		url.searchParams.set('x', cropDetails.x.toString());

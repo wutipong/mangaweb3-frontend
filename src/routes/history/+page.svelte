@@ -47,7 +47,7 @@
 	}
 
 	function createThumbnailUrl(name: string): URL {
-		let u = new URL('/browse/thumbnail', page.url.origin);
+		let u = new URL('/api/manga/thumbnail', page.url.origin);
 		u.searchParams.append('name', name);
 		return u;
 	}

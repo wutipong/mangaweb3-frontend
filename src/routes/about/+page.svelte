@@ -47,7 +47,7 @@
 	}
 
 	async function updateLibrary() {
-		const url = new URL('/maintenance/update_library', page.url.origin);
+		const url = new URL('/api/maintenance/update_library', page.url.origin);
 		await fetch(url);
 		toast.show(
 			'Updating library',
@@ -64,7 +64,7 @@
 	}
 
 	async function purgeCache() {
-		const url = new URL('/maintenance/purge_cache', page.url.origin);
+		const url = new URL('/api/maintenance/purge_cache', page.url.origin);
 		await fetch(url);
 		toast.show(
 			'Purging cache',

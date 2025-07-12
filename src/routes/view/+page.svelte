@@ -86,23 +86,22 @@
 
 		favorite = json.favorite;
 	}
-	/** TODO: Implement FixMetadata
+	
 	async function fixMetaData() {
-		const url = new URL('/view/fix_meta', page.url.origin);
-		const req = {
-			name: name
-		};
+		const url = new URL('/view/repair', page.url.origin);
+		url.searchParams.set("name", name)
 
-		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
+		const resp = await fetch(url);
 		const json = await resp.json();
-		if (json.success) {
+
+		if (json.isSuccess) {
 			toast.show('Fix metadata', 'The metadata has been updated.');
 			invalidateAll();
 		} else {
 			toast.show('Fix metadata', 'The metadata updates fails.');
 		}
 	}
-*/
+
 	async function updateCover() {
 		const url = new URL('/view/thumb_edit', page.url.origin);
 		url.searchParams.set('index', `${current}`);
@@ -201,12 +200,12 @@
 						<Icon name="journal-arrow-up" class="me-3" />
 						Replace Cover
 					</DropdownItem>
-					<!--TODO: Add fix Metadata
+					
 					<DropdownItem onclick={() => fixMetaData()}>
 						<Icon name="tools" class="me-3" />
 						Fix the manga
 					</DropdownItem>
-					-->
+					
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>

@@ -284,6 +284,58 @@ export interface MangaPageImageResponse {
      */
     data: Uint8Array;
 }
+/**
+ * @generated from protobuf message MangaRepairRequest
+ */
+export interface MangaRepairRequest {
+    /**
+     * @generated from protobuf field: string Name = 1
+     */
+    name: string;
+}
+/**
+ * @generated from protobuf message MangaRepairResponse
+ */
+export interface MangaRepairResponse {
+    /**
+     * @generated from protobuf field: string Name = 1
+     */
+    name: string;
+    /**
+     * @generated from protobuf field: bool IsSuccess = 2
+     */
+    isSuccess: boolean;
+}
+/**
+ * @generated from protobuf message MangaDownloadRequest
+ */
+export interface MangaDownloadRequest {
+    /**
+     * @generated from protobuf field: string Name = 1
+     */
+    name: string;
+}
+/**
+ * @generated from protobuf message MangaDownloadResponse
+ */
+export interface MangaDownloadResponse {
+    /**
+     * @generated from protobuf field: string Filename = 1
+     */
+    filename: string;
+    /**
+     * @generated from protobuf field: string ContentType = 2
+     */
+    contentType: string;
+    /**
+     * @generated from protobuf field: bytes Data = 3
+     */
+    data: Uint8Array;
+    /**
+     * @generated from protobuf field: int32 Size = 4
+     */
+    size: number;
+}
 // @generated message type with reflection information, may provide speed optimized methods
 class MangaListRequest$Type extends MessageType<MangaListRequest> {
     constructor() {
@@ -1230,6 +1282,226 @@ class MangaPageImageResponse$Type extends MessageType<MangaPageImageResponse> {
  * @generated MessageType for protobuf message MangaPageImageResponse
  */
 export const MangaPageImageResponse = new MangaPageImageResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class MangaRepairRequest$Type extends MessageType<MangaRepairRequest> {
+    constructor() {
+        super("MangaRepairRequest", [
+            { no: 1, name: "Name", kind: "scalar", jsonName: "Name", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<MangaRepairRequest>): MangaRepairRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.name = "";
+        if (value !== undefined)
+            reflectionMergePartial<MangaRepairRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: MangaRepairRequest): MangaRepairRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string Name */ 1:
+                    message.name = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: MangaRepairRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string Name = 1; */
+        if (message.name !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.name);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message MangaRepairRequest
+ */
+export const MangaRepairRequest = new MangaRepairRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class MangaRepairResponse$Type extends MessageType<MangaRepairResponse> {
+    constructor() {
+        super("MangaRepairResponse", [
+            { no: 1, name: "Name", kind: "scalar", jsonName: "Name", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "IsSuccess", kind: "scalar", jsonName: "IsSuccess", T: 8 /*ScalarType.BOOL*/ }
+        ]);
+    }
+    create(value?: PartialMessage<MangaRepairResponse>): MangaRepairResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.name = "";
+        message.isSuccess = false;
+        if (value !== undefined)
+            reflectionMergePartial<MangaRepairResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: MangaRepairResponse): MangaRepairResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string Name */ 1:
+                    message.name = reader.string();
+                    break;
+                case /* bool IsSuccess */ 2:
+                    message.isSuccess = reader.bool();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: MangaRepairResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string Name = 1; */
+        if (message.name !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.name);
+        /* bool IsSuccess = 2; */
+        if (message.isSuccess !== false)
+            writer.tag(2, WireType.Varint).bool(message.isSuccess);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message MangaRepairResponse
+ */
+export const MangaRepairResponse = new MangaRepairResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class MangaDownloadRequest$Type extends MessageType<MangaDownloadRequest> {
+    constructor() {
+        super("MangaDownloadRequest", [
+            { no: 1, name: "Name", kind: "scalar", jsonName: "Name", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<MangaDownloadRequest>): MangaDownloadRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.name = "";
+        if (value !== undefined)
+            reflectionMergePartial<MangaDownloadRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: MangaDownloadRequest): MangaDownloadRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string Name */ 1:
+                    message.name = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: MangaDownloadRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string Name = 1; */
+        if (message.name !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.name);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message MangaDownloadRequest
+ */
+export const MangaDownloadRequest = new MangaDownloadRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class MangaDownloadResponse$Type extends MessageType<MangaDownloadResponse> {
+    constructor() {
+        super("MangaDownloadResponse", [
+            { no: 1, name: "Filename", kind: "scalar", jsonName: "Filename", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "ContentType", kind: "scalar", jsonName: "ContentType", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "Data", kind: "scalar", jsonName: "Data", T: 12 /*ScalarType.BYTES*/ },
+            { no: 4, name: "Size", kind: "scalar", jsonName: "Size", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<MangaDownloadResponse>): MangaDownloadResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.filename = "";
+        message.contentType = "";
+        message.data = new Uint8Array(0);
+        message.size = 0;
+        if (value !== undefined)
+            reflectionMergePartial<MangaDownloadResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: MangaDownloadResponse): MangaDownloadResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string Filename */ 1:
+                    message.filename = reader.string();
+                    break;
+                case /* string ContentType */ 2:
+                    message.contentType = reader.string();
+                    break;
+                case /* bytes Data */ 3:
+                    message.data = reader.bytes();
+                    break;
+                case /* int32 Size */ 4:
+                    message.size = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: MangaDownloadResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string Filename = 1; */
+        if (message.filename !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.filename);
+        /* string ContentType = 2; */
+        if (message.contentType !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.contentType);
+        /* bytes Data = 3; */
+        if (message.data.length)
+            writer.tag(3, WireType.LengthDelimited).bytes(message.data);
+        /* int32 Size = 4; */
+        if (message.size !== 0)
+            writer.tag(4, WireType.Varint).int32(message.size);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message MangaDownloadResponse
+ */
+export const MangaDownloadResponse = new MangaDownloadResponse$Type();
 /**
  * @generated ServiceType for protobuf service Manga
  */
@@ -1239,5 +1511,7 @@ export const Manga = new ServiceType("Manga", [
     { name: "Thumbnail", options: {}, I: MangaThumbnailRequest, O: MangaThumbnailResponse },
     { name: "SetFavorite", options: {}, I: MangaSetFavoriteRequest, O: MangaSetFavoriteResponse },
     { name: "UpdateCover", options: {}, I: MangaUpdateCoverRequest, O: MangaUpdateCoverResponse },
-    { name: "PageImage", options: {}, I: MangaPageImageRequest, O: MangaPageImageResponse }
+    { name: "PageImage", options: {}, I: MangaPageImageRequest, O: MangaPageImageResponse },
+    { name: "Repair", options: {}, I: MangaRepairRequest, O: MangaRepairResponse },
+    { name: "Download", serverStreaming: true, options: {}, I: MangaDownloadRequest, O: MangaDownloadResponse }
 ]);

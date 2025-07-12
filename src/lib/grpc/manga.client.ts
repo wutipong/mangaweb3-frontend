@@ -4,6 +4,11 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { Manga } from "./manga";
+import type { MangaDownloadResponse } from "./manga";
+import type { MangaDownloadRequest } from "./manga";
+import type { ServerStreamingCall } from "@protobuf-ts/runtime-rpc";
+import type { MangaRepairResponse } from "./manga";
+import type { MangaRepairRequest } from "./manga";
 import type { MangaPageImageResponse } from "./manga";
 import type { MangaPageImageRequest } from "./manga";
 import type { MangaUpdateCoverResponse } from "./manga";
@@ -47,6 +52,14 @@ export interface IMangaClient {
      * @generated from protobuf rpc: PageImage
      */
     pageImage(input: MangaPageImageRequest, options?: RpcOptions): UnaryCall<MangaPageImageRequest, MangaPageImageResponse>;
+    /**
+     * @generated from protobuf rpc: Repair
+     */
+    repair(input: MangaRepairRequest, options?: RpcOptions): UnaryCall<MangaRepairRequest, MangaRepairResponse>;
+    /**
+     * @generated from protobuf rpc: Download
+     */
+    download(input: MangaDownloadRequest, options?: RpcOptions): ServerStreamingCall<MangaDownloadRequest, MangaDownloadResponse>;
 }
 /**
  * @generated from protobuf service Manga
@@ -98,5 +111,19 @@ export class MangaClient implements IMangaClient, ServiceInfo {
     pageImage(input: MangaPageImageRequest, options?: RpcOptions): UnaryCall<MangaPageImageRequest, MangaPageImageResponse> {
         const method = this.methods[5], opt = this._transport.mergeOptions(options);
         return stackIntercept<MangaPageImageRequest, MangaPageImageResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: Repair
+     */
+    repair(input: MangaRepairRequest, options?: RpcOptions): UnaryCall<MangaRepairRequest, MangaRepairResponse> {
+        const method = this.methods[6], opt = this._transport.mergeOptions(options);
+        return stackIntercept<MangaRepairRequest, MangaRepairResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: Download
+     */
+    download(input: MangaDownloadRequest, options?: RpcOptions): ServerStreamingCall<MangaDownloadRequest, MangaDownloadResponse> {
+        const method = this.methods[7], opt = this._transport.mergeOptions(options);
+        return stackIntercept<MangaDownloadRequest, MangaDownloadResponse>("serverStreaming", this._transport, method, opt, input);
     }
 }

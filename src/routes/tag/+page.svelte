@@ -27,7 +27,7 @@
 	import { ITEM_PER_PAGE } from '$lib/constants';
 	import LoadingDialog from '$lib/LoadingDialog.svelte';
 	import PlaceholderCard from '$lib/PlaceholderCard.svelte';
-	import { Filter } from '$lib/grpc/types';
+	import { Filter, SortField, SortOrder } from '$lib/grpc/types';
 
 	interface Props {
 		data: PageData;
@@ -36,7 +36,7 @@
 	let { data }: Props = $props();
 
 	let current_page = $derived(data.request.page);
-	let favoriteOnly = $derived(data.request.filter==Filter.FAVORITE_TAGS);
+	let favoriteOnly = $derived(data.request.filter == Filter.FAVORITE_TAGS);
 	let tags = $derived(data.response.items);
 	let total_page = $derived(data.response.totalPage);
 
@@ -64,9 +64,9 @@
 	}
 
 	function createTagListUrl(options?: {
-		favorite_only?: boolean;
-		order?: 'ascending' | 'descending';
-		sort?: 'name' | 'itemCount';
+		filter?: Filter.UNKNOWN | Filter.FAVORITE_TAGS;
+		order?: SortOrder;
+		sort?: SortField;
 		search?: string;
 		page?: number;
 		item_per_page?: number;
@@ -76,7 +76,7 @@
 			const { item_per_page, order, page, search, sort } = options;
 
 			if (item_per_page != null) {
-				callOptions.item_per_page = item_per_page;
+				callOptions.itemPerPage = item_per_page;
 			}
 			if (order != null) {
 				callOptions.order = order;
@@ -93,15 +93,14 @@
 				callOptions.sort = sort;
 				// If 'sort' is provided, override the 'order' value based on the sort selection.
 				// Preserve the custom 'order' if one was explicitly provided in the options.
-				switch(sort) {
-					case 'name': {
+				switch (sort) {
+					case SortField.NAME:
 						callOptions.order = callOptions.order ?? 'ascending';
 						break;
-					}
-					case 'itemCount': {
+
+					case SortField.PAGECOUNT:
 						callOptions.order = callOptions.order ?? 'descending';
 						break;
-					}
 				}
 			}
 		}
@@ -138,7 +137,7 @@
 				<DropdownMenu>
 					<DropdownItem
 						active={favoriteOnly}
-						onclick={() => goto(tagURL(page.url, { favorite_only: !favoriteOnly }))}
+						onclick={() => goto(tagURL(page.url, { filter: (!favoriteOnly) ? Filter.FAVORITE_TAGS : Filter.UNKNOWN }))}
 					>
 						<Icon name="star" class="me-3" />
 						Favorite
@@ -149,28 +148,28 @@
 				<DropdownToggle nav caret>Sort By</DropdownToggle>
 				<DropdownMenu>
 					<DropdownItem
-						active={sort == 'name'}
-						onclick={() => goto(createTagListUrl({ sort: 'name' }))}
+						active={sort == SortField.NAME}
+						onclick={() => goto(createTagListUrl({ sort: SortField.NAME }))}
 					>
 						<Icon name="type" class="me-3" /> Name
 					</DropdownItem>
 					<DropdownItem
-						active={sort == 'itemCount'}
-						onclick={() => goto(createTagListUrl({ sort: 'itemCount' }))}
+						active={sort == SortField.PAGECOUNT}
+						onclick={() => goto(createTagListUrl({ sort: SortField.PAGECOUNT }))}
 					>
 						<Icon name="journals" class="me-3" /> Item counts
 					</DropdownItem>
 
 					<DropdownItem divider />
 					<DropdownItem
-						active={order == 'ascending'}
-						onclick={() => goto(createTagListUrl({ order: 'ascending' }))}
+						active={order == SortOrder.ASCENDING}
+						onclick={() => goto(createTagListUrl({ order: SortOrder.ASCENDING }))}
 					>
 						<Icon name="sort-down-alt" class="me-3" />Ascending
 					</DropdownItem>
 					<DropdownItem
-						active={order == 'descending'}
-						onclick={() => goto(createTagListUrl({ order: 'descending' }))}
+						active={order == SortOrder.DESCENDING}
+						onclick={() => goto(createTagListUrl({ order: SortOrder.DESCENDING }))}
 					>
 						<Icon name="sort-up-alt" class="me-3" /> Descending
 					</DropdownItem>
@@ -222,8 +221,8 @@
 							name={tag.name}
 							linkUrl={browseURL(page.url, { tag: tag.name })}
 							imageUrl={createThumbnailUrl(tag.name)}
-							favoriteTag={tag.favorite}
-							itemCount={tag.item_count}
+							favoriteTag={tag.isFavorite}
+							itemCount={tag.pageCount}
 						/>
 					</div>
 				{/each}

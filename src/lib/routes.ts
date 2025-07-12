@@ -16,22 +16,25 @@ export function viewURL(base: URL | string, name: string): URL {
 }
 
 export function tagURL(base: URL | string, options?: {
+    user?: string;
+    tag?: string;
+    filter?: Filter;
     page?: number;
-    favorite_only?: boolean;
+    itemPerPage?: number;
     search?: string;
-    order?: 'ascending' | 'descending';
-    sort?: 'name' | 'itemCount';
+    sort?: SortField;
+    order?: SortOrder;
 }): URL {
     const output = new URL("/tag", base);
     if (options != null) {
-        const { page, favorite_only, search, order, sort } = options;
+        const { page, filter, search, order, sort } = options;
 
         if (page != null) {
             output.searchParams.set('page', `${page}`);
         }
 
-        if (favorite_only != null) {
-            output.searchParams.set('favorite_only', `${favorite_only}`);
+        if (filter == Filter.FAVORITE_TAGS) {
+            output.searchParams.set('favorite_only', "true");
         }
 
         if (search != null) {
@@ -39,11 +42,26 @@ export function tagURL(base: URL | string, options?: {
         }
 
         if (order != null) {
-            output.searchParams.set('order', `${order}`);
+            switch (order) {
+                case SortOrder.ASCENDING:
+                    output.searchParams.set('order', 'ascending');
+                    break;
+                case SortOrder.DESCENDING:
+                    output.searchParams.set('order', 'descending');
+                    break;
+            }
         }
 
         if (sort != null) {
-            output.searchParams.set('sort', `${sort}`);
+            switch (sort) {
+                case SortField.NAME:
+                    output.searchParams.set('sort', 'name');
+                    break;
+
+                case SortField.PAGECOUNT:
+                    output.searchParams.set('sort', 'pagecount');
+                    break;
+            }
         }
 
     }
@@ -65,7 +83,7 @@ export function browseURL(base: URL | string, options?: {
     if (options != null) {
         const { filter, item_per_page, order, page, search, sort, tag } = options;
         if (filter != null) {
-            switch (filter) {          
+            switch (filter) {
                 case Filter.FAVORITE_ITEMS:
                     output.searchParams.set('filter', 'favorite_items');
                     break;

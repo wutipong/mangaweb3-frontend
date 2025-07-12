@@ -37,12 +37,12 @@
 	let { data }: Props = $props();
 
 	let name = $derived(data.request.name);
-	let pageCount = $derived(data.response.page_count);
+	let pageCount = $derived(data.response.pageCount);
 	let tags = $derived(data.response.tags);
 	let favorite = $state(data.response.favorite);
 
 	function createImageUrls(name: string, pageCount: number): string[] {
-		const url = new URL('/api/view/get_image', page.url.origin);
+		const url = new URL('/view/page_image', page.url.origin);
 		const output = [];
 		const user = data.request.user
 		url.searchParams.append('name', name);
@@ -63,7 +63,7 @@
 	}
 
 	function downloadPage() {
-		const url = new URL('/api/view/get_image', page.url.origin);
+		const url = new URL('/view/page_image', page.url.origin);
 		url.searchParams.set('name', name);
 		url.searchParams.set('i', current.toString());
 
@@ -151,7 +151,7 @@
 <PageScroll PageCount={pageCount} {onValueChange} Current={current} />
 
 <div class="fullscreen" style="padding-top:80px;">
-	<ImageViewer imageURLs={createImageUrls(name, pageCount)} {onIndexChange} bind:this={viewer} startIndex={data.response.current_page}/>
+	<ImageViewer imageURLs={createImageUrls(name, pageCount)} {onIndexChange} bind:this={viewer} startIndex={data.response.currentPage}/>
 </div>
 
 <Navbar color="dark" dark expand="md" sticky={'top'}>
@@ -170,7 +170,7 @@
 					<DropdownItem header>Tags</DropdownItem>
 					{#each tags as tag}
 						<DropdownItem onclick={() => goto(browseURL(page.url.origin, { tag: tag.name }))}>
-							{#if tag.favorite}
+							{#if tag.isFavorite}
 								<Icon name="star-fill" class="me-3" />
 							{:else}
 								<Icon name="tag" class="me-3" />

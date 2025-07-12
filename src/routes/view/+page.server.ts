@@ -2,6 +2,9 @@ import type { PageServerLoad } from './$types';
 import type { Tag } from '$lib/tag';
 import { getUser } from '$lib/user';
 import { variables } from '$lib/variables';
+import { GrpcTransport } from '@protobuf-ts/grpc-transport';
+import { ChannelCredentials } from '@grpc/grpc-js';
+import { MangaClient } from '$lib/grpc/manga.client';
 
 interface Request {
     name: string;
@@ -26,30 +29,30 @@ let response: Response = {
 
 export const prerender = false;
 
-export const load: PageServerLoad = async ({ request, fetch, url }) => {
+export const load: PageServerLoad = async ({ request, url }) => {
     const params = url.searchParams;
-    let backendReq: Request = {
-        name: '',
-        user: ''
-    };
-
+    
+    let name = ''
     if (params.has('name')) {
-        backendReq.name = params.get('name') as string;
+        name = params.get('name') as string;
     }
 
-    backendReq.user = getUser(request);
+    const user = getUser(request);
 
-    const resp = await fetch(
-        new URL('/view', variables.apiBasePath),
-        {
-            method: 'POST',
-            body: JSON.stringify(backendReq)
-        }
-    );
-    response = await resp.json();
+    let transport = new GrpcTransport({
+        host: variables.apiBasePath,
+        channelCredentials: ChannelCredentials.createInsecure(),
+    })
+
+    let client = new MangaClient(transport)
+
+    const call = await client.detail({
+        name: name,
+        user: user,
+    })
 
     return {
-        request: backendReq,
-        response: response,
+        request: call.request,
+        response: call.response,
     };
 };

@@ -27,6 +27,7 @@
 	import { ITEM_PER_PAGE } from '$lib/constants';
 	import LoadingDialog from '$lib/LoadingDialog.svelte';
 	import PlaceholderCard from '$lib/PlaceholderCard.svelte';
+	import { Filter } from '$lib/grpc/types';
 
 	interface Props {
 		data: PageData;
@@ -34,10 +35,10 @@
 
 	let { data }: Props = $props();
 
-	let current_page = $derived(data.page);
-	let favoriteOnly = $derived(data.request.favorite_only);
-	let tags = $derived(favoriteOnly ? data.tags.filter((t) => t.favorite) : data.tags);
-	let total_page = $derived(data.total_page);
+	let current_page = $derived(data.request.page);
+	let favoriteOnly = $derived(data.request.filter==Filter.FAVORITE_TAGS);
+	let tags = $derived(data.response.items);
+	let total_page = $derived(data.response.totalPage);
 
 	let order = $derived(data.request.order);
 	let sort = $derived(data.request.sort);
@@ -56,8 +57,8 @@
 	}
 
 	function createThumbnailUrl(name: string) {
-		const output = new URL('/api/tag/thumbnail', page.url.origin);
-		output.searchParams.append('tag', name);
+		const output = new URL('/tags/thumbnail', page.url.origin);
+		output.searchParams.append('name', name);
 
 		return output;
 	}

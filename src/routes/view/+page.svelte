@@ -44,9 +44,9 @@
 	function createImageUrls(name: string, pageCount: number): string[] {
 		const url = new URL('/view/page_image', page.url.origin);
 		const output = [];
-		const user = data.request.user
+		const user = data.request.user;
 		url.searchParams.append('name', name);
-		url.searchParams.append('user', user)
+		url.searchParams.append('user', user);
 		for (let i = 0; i < pageCount; i++) {
 			url.searchParams.set('i', i.toString());
 			output.push(url.toString());
@@ -54,14 +54,14 @@
 
 		return output;
 	}
-
+	/** TODO: Imeplement download
 	function downloadManga() {
-		const url = new URL('/api/view/download', page.url.origin);
+		const url = new URL('/view/download', page.url.origin);
 		url.searchParams.set('name', name);
 
 		download(url.toString());
 	}
-
+	*/
 	function downloadPage() {
 		const url = new URL('/view/page_image', page.url.origin);
 		url.searchParams.set('name', name);
@@ -72,10 +72,10 @@
 
 	async function toggleFavorite() {
 		const url = new URL('/browse/set_favorite', page.url.origin);
-		url.searchParams.set("name", name)
-		url.searchParams.set("favorite", (!favorite)? "true": "false")
+		url.searchParams.set('name', name);
+		url.searchParams.set('favorite', !favorite ? 'true' : 'false');
 
-		const resp = await fetch(url, { method: 'GET'});
+		const resp = await fetch(url, { method: 'GET' });
 		const json = await resp.json();
 
 		if (json.favorite) {
@@ -86,9 +86,9 @@
 
 		favorite = json.favorite;
 	}
-
+	/** TODO: Implement FixMetadata
 	async function fixMetaData() {
-		const url = new URL('/api/view/fix_meta', page.url.origin);
+		const url = new URL('/view/fix_meta', page.url.origin);
 		const req = {
 			name: name
 		};
@@ -102,7 +102,7 @@
 			toast.show('Fix metadata', 'The metadata updates fails.');
 		}
 	}
-
+*/
 	async function updateCover() {
 		const url = new URL('/view/thumb_edit', page.url.origin);
 		url.searchParams.set('index', `${current}`);
@@ -147,7 +147,12 @@
 <PageScroll PageCount={pageCount} {onValueChange} Current={current} />
 
 <div class="fullscreen" style="padding-top:80px;">
-	<ImageViewer imageURLs={createImageUrls(name, pageCount)} {onIndexChange} bind:this={viewer} startIndex={data.response.currentPage}/>
+	<ImageViewer
+		imageURLs={createImageUrls(name, pageCount)}
+		{onIndexChange}
+		bind:this={viewer}
+		startIndex={data.response.currentPage}
+	/>
 </div>
 
 <Navbar color="dark" dark expand="md" sticky={'top'}>
@@ -184,20 +189,24 @@
 						<Icon name="download" class="me-3" />
 						Download Current Page
 					</DropdownItem>
+					<!--TODO: Implement Download
 					<DropdownItem onclick={() => downloadManga()}>
 						<Icon name="download" class="me-3" />
 						Download Manga
 					</DropdownItem>
+					-->
 					<DropdownItem divider />
 					<DropdownItem header>Maintenance</DropdownItem>
 					<DropdownItem onclick={() => updateCover()}>
 						<Icon name="journal-arrow-up" class="me-3" />
 						Replace Cover
 					</DropdownItem>
+					<!--TODO: Add fix Metadata
 					<DropdownItem onclick={() => fixMetaData()}>
 						<Icon name="tools" class="me-3" />
 						Fix the manga
 					</DropdownItem>
+					-->
 				</DropdownMenu>
 			</Dropdown>
 			<NavItem>
@@ -239,7 +248,7 @@
 		</tr>
 		<tr>
 			<th>Favorite ?</th>
-			<td>{favorite? "Yes": "No"}</td>
+			<td>{favorite ? 'Yes' : 'No'}</td>
 		</tr>
 	</Table>
 </Modal>

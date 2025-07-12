@@ -19,7 +19,7 @@
 		NavbarBrand,
 		NavbarToggler,
 		NavItem,
-		NavLink,
+		NavLink
 	} from '@sveltestrap/sveltestrap';
 
 	import Cropper, { type CropArea, type OnCropCompleteEvent } from 'svelte-easy-crop';
@@ -31,7 +31,7 @@
 	}
 
 	function createImageUrl(name: string, page: number, base: string | URL): URL {
-		const url = new URL('/api/view/get_image', base);
+		const url = new URL('/view/page_image', base);
 		if (name != null) {
 			url.searchParams.append('name', name);
 		}
@@ -51,7 +51,7 @@
 	let zoom = $state(1);
 	let aspect = $state(127 / 180);
 
-	let cropDetails: CropArea ;
+	let cropDetails: CropArea;
 
 	function onCropComplete(e: OnCropCompleteEvent) {
 		cropDetails = e.pixels;
@@ -59,15 +59,18 @@
 
 	let dialog: MessageDialog;
 	async function updateCover() {
-		const url = new URL('/api/view/update_cover', page.url.origin);
-		const req = {
-			index: index,
-			name: name,
-			crop_details: cropDetails
-		};
+		const url = new URL('/view/update_cover', page.url.origin);
 
-		const resp = await fetch(url, { method: 'POST', body: JSON.stringify(req) });
+		url.searchParams.set('i', index.toString());
+		url.searchParams.set('x', cropDetails.x.toString());
+		url.searchParams.set('y', cropDetails.y.toString());
+		url.searchParams.set('w', cropDetails.width.toString());
+		url.searchParams.set('h', cropDetails.height.toString());
+		url.searchParams.set('name', name ?? '');
+
+		const resp = await fetch(url, { method: 'GET' });
 		const json = await resp.json();
+
 		if (json.success) {
 			dialog.show('Update Cover', 'The cover image is updated successfully.');
 		} else {

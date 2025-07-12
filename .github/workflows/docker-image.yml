@@ -27,7 +27,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            wutipong/mangaweb3-frontend
+            wutipong/mangaweb4-frontend
           tags: |
             type=ref,event=branch
             type=ref,event=pr

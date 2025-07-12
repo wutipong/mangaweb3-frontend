@@ -2,8 +2,8 @@ import { assets } from '$app/paths';
 import type { RequestHandler } from './$types';
 
 const manifest = `{
-    "name":"Mangaweb3",
-    "short_name":"mangaweb3",
+    "name":"managaweb4",
+    "short_name":"managaweb4",
     "icons":[
         {
             "src":"${assets}/android-chrome-192x192.png",

@@ -1,65 +1,27 @@
 import { getUser } from '$lib/user';
 import { variables } from '$lib/variables';
+import { GrpcTransport } from '@protobuf-ts/grpc-transport';
 import type { PageServerLoad } from './$types';
+import { ChannelCredentials } from '@grpc/grpc-js';
+import { HistoryClient } from '$lib/grpc/history.client';
+import { ITEM_PER_PAGE } from '$lib/constants';
 
-interface Request {
-    user: string
-    item_per_page: number;
-    page: number;
-}
+export const load: PageServerLoad = async ({ request, url }) => {
+    let transport = new GrpcTransport({
+        host: variables.apiBasePath,
+        channelCredentials: ChannelCredentials.createInsecure(),
+    })
 
-interface Item {
-    id: number;
-    name: string;
-    favorite: boolean;
-    read: boolean;
-    page_count: number;
-    create_time: string;
-    access_time: string;
-    tag_favorite : boolean;
-}
+    let client = new HistoryClient(transport)
 
-interface Page {
-    content: string;
-    is_active: boolean;
-    is_enabled: boolean;
-    is_hidden_on_small: boolean;
-    link_url: string;
-}
+    const pageStr = url.searchParams.get('page') ?? "0"
+    const page = parseInt(pageStr);
+    const user = getUser(request);
 
-interface Response {
-    items: Item[];
-    pages: Page[];
-    tag_favorite: boolean;
-    total_page: number;
-}
-
-function createDefaultRequest(): Request {
-    return {
-        user: '',
-        item_per_page: 30,
-        page: 0,
-    };
-}
-
-export const load: PageServerLoad = async ({ request, fetch, url }) => {
-    const backendReq = createDefaultRequest();
-    backendReq.user = getUser(request);
-    const params = url.searchParams;
-
-    if (params.has('page')) {
-        let v = params.get('page');
-        if (v != null) {
-            backendReq.page = parseInt(v);
-        }
-    }
-
-    const apiUrl = new URL('/history', variables.apiBasePath);
-    const response = await fetch(apiUrl, { method: 'POST', body: JSON.stringify(backendReq) });
-    const obj = await response.json() as Response;
+    let call = await client.list({ page: page, user, itemPerPage: ITEM_PER_PAGE })
 
     return {
-        request: backendReq,
-        response: obj
+        request: call.request,
+        response: call.response
     }
 };

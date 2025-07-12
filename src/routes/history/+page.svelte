@@ -24,6 +24,7 @@
 	import { ITEM_PER_PAGE } from '$lib/constants';
 	import LoadingDialog from '$lib/LoadingDialog.svelte';
 	import PlaceholderCard from '$lib/PlaceholderCard.svelte';
+	import { Timestamp } from '$lib/grpc/google/protobuf/timestamp';
 
 	interface Props {
 		data: PageData;
@@ -33,7 +34,7 @@
 
 	let items = $derived(data.response.items);
 	let pageIndex = $derived(data.request.page);
-	let totalPage = $derived(data.response.total_page);
+	let totalPage = $derived(data.response.totalPage);
 	let navbarToggleOpen = $state(false);
 
 	let updated = $state(false);
@@ -46,7 +47,7 @@
 	}
 
 	function createThumbnailUrl(name: string): URL {
-		let u = new URL('/api/browse/thumbnail', page.url.origin);
+		let u = new URL('/browse/thumbnail', page.url.origin);
 		u.searchParams.append('name', name);
 		return u;
 	}
@@ -101,15 +102,15 @@
 				{#each items as item}
 					<div class="col">
 						<ItemCard
-							favorite={item.favorite}
-							favoriteTag={item.tag_favorite}
-							isRead={item.read}
+							favorite={item.isFavorite}
+							favoriteTag={item.hasFavoriteTag}
+							isRead={item.isRead}
 							id={item.id}
 							name={item.name}
-							pageCount={item.page_count}
-							accessTime={item.access_time}
+							pageCount={item.pageCount}
 							linkUrl={viewURL(page.url, item.name)}
 							imageUrl={createThumbnailUrl(item.name)}
+							accessTime={item.accessTime?Timestamp.toDate(item.accessTime): new Date()}
 						/>
 					</div>
 				{/each}

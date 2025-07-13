@@ -5,6 +5,7 @@ import { GrpcTransport } from '@protobuf-ts/grpc-transport';
 import { ChannelCredentials } from '@grpc/grpc-js';
 import { MangaClient } from '$lib/grpc/manga.client';
 import { Filter, SortField, SortOrder } from '$lib/grpc/types';
+import { $enum } from 'ts-enum-util';
 
 
 
@@ -51,7 +52,7 @@ function createDefaultRequest(): {
     };
 }
 
-export const load: PageServerLoad = async ({ request, fetch, url }) => {
+export const load: PageServerLoad = async ({ request, url }) => {
     let transport = new GrpcTransport({
         host: variables.apiBasePath,
         channelCredentials: ChannelCredentials.createInsecure(),
@@ -64,44 +65,15 @@ export const load: PageServerLoad = async ({ request, fetch, url }) => {
 
     const params = url.searchParams;
     if (params.has('filter')) {
-        const v = params.get('filter');
-
-        switch (v) {
-            case 'favorite_items':
-                filter = Filter.FAVORITE_ITEMS;
-                break;
-
-            case 'favorite_tags':
-                filter = Filter.FAVORITE_TAGS
-                break;
-        }
+        filter = $enum(Filter).getValueOrDefault(params.get('filter'), Filter.UNKNOWN);
     }
 
     if (params.has('sort')) {
-        const v = params.get('sort');
-
-        switch (v) {
-            case 'name':
-                sort = SortField.NAME;
-                break;
-            case 'creation_time':
-                sort = SortField.CREATION_TIME;
-                break;
-            case 'pagecount':
-                sort = SortField.PAGECOUNT;
-        }
+        sort = $enum(SortField).getValueOrDefault(params.get('sort'), SortField.NAME);
     }
 
     if (params.has('order')) {
-        const v = params.get('order');
-
-        switch (v) {
-            case 'ascending':
-                order = SortOrder.ASCENDING;
-                break;
-            case 'descending':
-                order = SortOrder.DESCENDING;
-        }
+        order = $enum(SortOrder).getValueOrDefault(params.get('order'), SortOrder.ASCENDING);
     }
 
     if (params.has('tag')) {

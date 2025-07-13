@@ -68,53 +68,30 @@ export function browseURL(base: URL | string, options?: {
 
     if (options != null) {
         const { filter, item_per_page, order, page, search, sort, tag } = options;
+
         if (filter != null) {
-            switch (filter) {
-                case Filter.FAVORITE_ITEMS:
-                    output.searchParams.set('filter', 'favorite_items');
-                    break;
-                case Filter.FAVORITE_TAGS:
-                    output.searchParams.set('filter', 'favorite_tags');
-                    break;
-            }
+            output.searchParams.set('filter', $enum(Filter).getKeyOrDefault(filter, "UNKNOWN"));
         }
         if (item_per_page != null) {
             output.searchParams.set('item_per_page', `${item_per_page}`);
         }
         if (order != null) {
-            switch (order) {
-                case SortOrder.ASCENDING:
-                    output.searchParams.set('order', 'ascending');
-                    break;
-                case SortOrder.DESCENDING:
-                    output.searchParams.set('order', 'descending');
-                    break;
-            }
+            output.searchParams.set('order', $enum(SortOrder).getKeyOrDefault(order, "ASCENDING"));
         }
         if (page != null) {
             output.searchParams.set('page', `${page}`);
         }
 
         if (search != null) {
-            output.searchParams.set('search', `${search}`);
+            output.searchParams.set('search', search);
         }
 
         if (sort != null) {
-            switch (sort) {
-                case SortField.NAME:
-                    output.searchParams.set('sort', 'name');
-                    break;
-                case SortField.CREATION_TIME:
-                    output.searchParams.set('sort', 'creation_time');
-                    break;
-                case SortField.PAGECOUNT:
-                    output.searchParams.set('sort', 'pagecount');
-                    break;
-            }
+            output.searchParams.set('sort', $enum(SortField).getKeyOrDefault(sort, "NAME"));
         }
 
         if (tag != null) {
-            output.searchParams.set('tag', `${tag}`);
+            output.searchParams.set('tag', tag);
         }
     }
 

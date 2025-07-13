@@ -42,7 +42,7 @@ export const load: PageServerLoad = async ({ request, fetch, url }) => {
                 sort = SortField.NAME
                 break;
             case 'itemCount':
-                sort = SortField.PAGECOUNT
+                sort = SortField.ITEMCOUNT
                 break;
         }
     }

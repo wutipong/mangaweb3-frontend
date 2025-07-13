@@ -33,7 +33,11 @@ export enum SortField {
     /**
      * @generated from protobuf enum value: SORT_FIELD_PAGECOUNT = 2;
      */
-    PAGECOUNT = 2
+    PAGECOUNT = 2,
+    /**
+     * @generated from protobuf enum value: SORT_FIELD_ITEMCOUNT = 3;
+     */
+    ITEMCOUNT = 3
 }
 /**
  * @generated from protobuf enum mangaweb4.types.SortOrder

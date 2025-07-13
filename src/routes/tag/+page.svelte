@@ -66,7 +66,7 @@
 	function createTagListUrl(options?: {
 		filter?: Filter.UNKNOWN | Filter.FAVORITE_TAGS;
 		order?: SortOrder;
-		sort?: SortField;
+		sort?: SortField.NAME | SortField.ITEMCOUNT;
 		search?: string;
 		page?: number;
 		item_per_page?: number;
@@ -98,14 +98,18 @@
 						callOptions.order = callOptions.order ?? 'ascending';
 						break;
 
-					case SortField.PAGECOUNT:
+					case SortField.ITEMCOUNT:
 						callOptions.order = callOptions.order ?? 'descending';
 						break;
 				}
 			}
 		}
 
-		return tagURL(page.url.origin, callOptions);
+		if (callOptions.filter != Filter.UNKNOWN && callOptions.filter != Filter.FAVORITE_TAGS) {
+			return '';
+		}
+
+		return tagURL(page.url.origin, { ...callOptions });
 	}
 </script>
 
@@ -137,7 +141,10 @@
 				<DropdownMenu>
 					<DropdownItem
 						active={favoriteOnly}
-						onclick={() => goto(tagURL(page.url, { filter: (!favoriteOnly) ? Filter.FAVORITE_TAGS : Filter.UNKNOWN }))}
+						onclick={() =>
+							goto(
+								tagURL(page.url, { filter: !favoriteOnly ? Filter.FAVORITE_TAGS : Filter.UNKNOWN })
+							)}
 					>
 						<Icon name="star" class="me-3" />
 						Favorite
@@ -154,8 +161,8 @@
 						<Icon name="type" class="me-3" /> Name
 					</DropdownItem>
 					<DropdownItem
-						active={sort == SortField.PAGECOUNT}
-						onclick={() => goto(createTagListUrl({ sort: SortField.PAGECOUNT }))}
+						active={sort == SortField.ITEMCOUNT}
+						onclick={() => goto(createTagListUrl({ sort: SortField.ITEMCOUNT }))}
 					>
 						<Icon name="journals" class="me-3" /> Item counts
 					</DropdownItem>

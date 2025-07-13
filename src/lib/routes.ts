@@ -58,8 +58,8 @@ export function tagURL(base: URL | string, options?: {
                     output.searchParams.set('sort', 'name');
                     break;
 
-                case SortField.PAGECOUNT:
-                    output.searchParams.set('sort', 'pagecount');
+                case SortField.ITEMCOUNT:
+                    output.searchParams.set('sort', 'itemcount');
                     break;
             }
         }

@@ -1,5 +1,4 @@
 import type { PageServerLoad } from './$types';
-import type { Tag } from '$lib/tag';
 import { getUser } from '$lib/user';
 import { variables } from '$lib/variables';
 import { GrpcTransport } from '@protobuf-ts/grpc-transport';

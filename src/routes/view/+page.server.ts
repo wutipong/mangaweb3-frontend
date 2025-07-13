@@ -1,18 +1,9 @@
 import type { PageServerLoad } from './$types';
-import type { Tag } from '$lib/tag';
 import { getUser } from '$lib/user';
 import { variables } from '$lib/variables';
 import { GrpcTransport } from '@protobuf-ts/grpc-transport';
 import { ChannelCredentials } from '@grpc/grpc-js';
 import { MangaClient } from '$lib/grpc/manga.client';
-
-interface Response {
-    browse_url: string;
-    favorite: boolean;
-    page_count: number;
-    current_page: number;
-    tags: Tag[];
-}
 
 export const prerender = false;
 

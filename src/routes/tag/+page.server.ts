@@ -71,7 +71,6 @@ export const load: PageServerLoad = async ({ request, url }) => {
     let client = new TagClient(transport)
     const call = await client.list({
         user: user,
-        tag: '', //TODO: remove this when server supports it
         filter: filter,
         page: page,
         itemPerPage: item_per_page,

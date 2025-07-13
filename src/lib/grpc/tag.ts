@@ -23,10 +23,6 @@ export interface TagListRequest {
      */
     user: string;
     /**
-     * @generated from protobuf field: string Tag = 2
-     */
-    tag: string;
-    /**
      * @generated from protobuf field: mangaweb4.types.Filter Filter = 3
      */
     filter: Filter;
@@ -154,7 +150,6 @@ class TagListRequest$Type extends MessageType<TagListRequest> {
     constructor() {
         super("TagListRequest", [
             { no: 1, name: "User", kind: "scalar", jsonName: "User", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "Tag", kind: "scalar", jsonName: "Tag", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "Filter", kind: "enum", jsonName: "Filter", T: () => ["mangaweb4.types.Filter", Filter, "FILTER_"] },
             { no: 4, name: "Page", kind: "scalar", jsonName: "Page", T: 5 /*ScalarType.INT32*/ },
             { no: 5, name: "ItemPerPage", kind: "scalar", jsonName: "ItemPerPage", T: 5 /*ScalarType.INT32*/ },
@@ -166,7 +161,6 @@ class TagListRequest$Type extends MessageType<TagListRequest> {
     create(value?: PartialMessage<TagListRequest>): TagListRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.user = "";
-        message.tag = "";
         message.filter = 0;
         message.page = 0;
         message.itemPerPage = 0;
@@ -184,9 +178,6 @@ class TagListRequest$Type extends MessageType<TagListRequest> {
             switch (fieldNo) {
                 case /* string User */ 1:
                     message.user = reader.string();
-                    break;
-                case /* string Tag */ 2:
-                    message.tag = reader.string();
                     break;
                 case /* mangaweb4.types.Filter Filter */ 3:
                     message.filter = reader.int32();
@@ -221,9 +212,6 @@ class TagListRequest$Type extends MessageType<TagListRequest> {
         /* string User = 1; */
         if (message.user !== "")
             writer.tag(1, WireType.LengthDelimited).string(message.user);
-        /* string Tag = 2; */
-        if (message.tag !== "")
-            writer.tag(2, WireType.LengthDelimited).string(message.tag);
         /* mangaweb4.types.Filter Filter = 3; */
         if (message.filter !== 0)
             writer.tag(3, WireType.Varint).int32(message.filter);

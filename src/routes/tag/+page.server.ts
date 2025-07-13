@@ -6,13 +6,13 @@ import { GrpcTransport } from '@protobuf-ts/grpc-transport';
 import { ChannelCredentials } from '@grpc/grpc-js';
 import { TagClient } from '$lib/grpc/tag.client';
 import { SortOrder, SortField, Filter } from '$lib/grpc/types';
-
+import { $enum } from 'ts-enum-util';
 
 export const prerender = false;
 
 function createDefaultRequest(request: Request): {
     user: string;
-    favorite_only: boolean;
+    filter: Filter;
     order: SortOrder;
     sort: SortField;
     search: string;
@@ -22,7 +22,7 @@ function createDefaultRequest(request: Request): {
     return {
         user: getUser(request),
         search: "",
-        favorite_only: false,
+        filter: Filter.UNKNOWN,
         page: 0,
         item_per_page: 30,
         order: SortOrder.ASCENDING,
@@ -30,36 +30,22 @@ function createDefaultRequest(request: Request): {
     };
 }
 
-export const load: PageServerLoad = async ({ request, fetch, url }) => {
-    let { user, search, favorite_only, page, item_per_page, order, sort } = createDefaultRequest(request);
+export const load: PageServerLoad = async ({ request, url }) => {
+    let { user, search, filter, page, item_per_page, order, sort } = createDefaultRequest(request);
 
     const params = url.searchParams;
     if (params.has('sort')) {
-        const v = params.get('sort');
-
-        switch (v) {
-            case 'name':
-                sort = SortField.NAME
-                break;
-            case 'itemCount':
-                sort = SortField.ITEMCOUNT
-                break;
-        }
+        sort = $enum(SortField)
+            .getValueOrDefault(params.get('sort'), SortField.NAME);
     }
 
     if (params.has('order')) {
-        const v = params.get('order');
-        switch (v) {
-            case 'ascending':
-                order = SortOrder.ASCENDING;
-                break;
-            case 'descending':
-                order = SortOrder.DESCENDING;
-        }
+        order = $enum(SortOrder)
+            .getValueOrDefault(params.get('order'), SortOrder.ASCENDING);
     }
 
-    if (url.searchParams.has('favorite_only')) {
-        favorite_only = url.searchParams.get('favorite_only') == "true"
+    if (url.searchParams.has('filter')) {
+        filter = $enum(Filter).getValueOrDefault(params.get('filter'), Filter.UNKNOWN);
     }
     if (url.searchParams.has('page')) {
         const v = url.searchParams.get('page')
@@ -85,8 +71,8 @@ export const load: PageServerLoad = async ({ request, fetch, url }) => {
     let client = new TagClient(transport)
     const call = await client.list({
         user: user,
-        tag: '',
-        filter: favorite_only? Filter.FAVORITE_TAGS: Filter.UNKNOWN,
+        tag: '', //TODO: remove this when server supports it
+        filter: filter,
         page: page,
         itemPerPage: item_per_page,
         search: search,

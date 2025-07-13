@@ -1,3 +1,4 @@
+import { $enum } from "ts-enum-util";
 import { Filter, SortField, SortOrder } from "./grpc/types";
 
 export function aboutURL(base: URL | string): URL {
@@ -33,8 +34,8 @@ export function tagURL(base: URL | string, options?: {
             output.searchParams.set('page', `${page}`);
         }
 
-        if (filter == Filter.FAVORITE_TAGS) {
-            output.searchParams.set('favorite_only', "true");
+        if (filter != null) {
+            output.searchParams.set('filter', $enum(Filter).getKeyOrDefault(filter, "UNKNOWN"));
         }
 
         if (search != null) {
@@ -42,26 +43,11 @@ export function tagURL(base: URL | string, options?: {
         }
 
         if (order != null) {
-            switch (order) {
-                case SortOrder.ASCENDING:
-                    output.searchParams.set('order', 'ascending');
-                    break;
-                case SortOrder.DESCENDING:
-                    output.searchParams.set('order', 'descending');
-                    break;
-            }
+            output.searchParams.set('order', $enum(SortOrder).getKeyOrDefault(order, "ASCENDING"));
         }
 
         if (sort != null) {
-            switch (sort) {
-                case SortField.NAME:
-                    output.searchParams.set('sort', 'name');
-                    break;
-
-                case SortField.ITEMCOUNT:
-                    output.searchParams.set('sort', 'itemcount');
-                    break;
-            }
+            output.searchParams.set('sort', $enum(SortField).getKeyOrDefault(sort, "NAME"));
         }
 
     }

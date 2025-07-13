@@ -53,6 +53,7 @@
 		"bootswatch": "^5.3.5",
 		"fs-extra": "^11.3.0",
 		"svelte-easy-crop": "^4.0.1",
-		"svelte-eslint-parser": "^1.1.2"
+		"svelte-eslint-parser": "^1.1.2",
+		"ts-enum-util": "^4.1.0"
 	}
 }

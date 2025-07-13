@@ -13,7 +13,8 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"generate-pwa-assets": "pwa-assets-generator --preset minimal-2023 static/favicon.svg",
-		"generate-grpc": "protoc --ts_out=src/lib/grpc --proto_path=./schema history.proto maintenance.proto manga.proto tag.proto types.proto"
+		"generate-grpc": "protoc --ts_out=src/lib/grpc --proto_path=./schema history.proto maintenance.proto manga.proto tag.proto types.proto",
+		"knip": "knip"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.51.1",
@@ -23,7 +24,7 @@
 		"@sveltejs/kit": "^2.20.7",
 		"@types/bootstrap": "^5.2.10",
 		"@types/fs-extra": "^11.0.4",
-		"@types/node": "^22.14.1",
+		"@types/node": "^22.16.3",
 		"@typescript-eslint/eslint-plugin": "^8.29.1",
 		"@typescript-eslint/parser": "^8.29.1",
 		"@vite-pwa/assets-generator": "^1.0.0",
@@ -31,6 +32,7 @@
 		"eslint": "^9.24.0",
 		"eslint-config-prettier": "^10.1.2",
 		"eslint-plugin-svelte": "^3.5.1",
+		"knip": "^5.61.3",
 		"prettier": "^3.5.3",
 		"prettier-plugin-svelte": "^3.3.3",
 		"sass": "^1.86.3",

@@ -309,6 +309,7 @@
 							favoriteTag={item.hasFavoriteTag}
 							imageUrl={createThumbnailUrl(item.name)}
 							linkUrl={viewURL(page.url, item.name)}
+							currentPage={item.currentPage}
 						/>
 					</div>
 				{/each}

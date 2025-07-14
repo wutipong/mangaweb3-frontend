@@ -96,6 +96,14 @@ export interface MangaListResponseItem {
      * @generated from protobuf field: bool HasFavoriteTag = 6
      */
     hasFavoriteTag: boolean;
+    /**
+     * @generated from protobuf field: int32 CurrentPage = 7
+     */
+    currentPage: number;
+    /**
+     * @generated from protobuf field: int32 MaxProgress = 8
+     */
+    maxProgress: number;
 }
 /**
  * @generated from protobuf message MangaThumbnailRequest
@@ -511,7 +519,9 @@ class MangaListResponseItem$Type extends MessageType<MangaListResponseItem> {
             { no: 3, name: "IsFavorite", kind: "scalar", jsonName: "IsFavorite", T: 8 /*ScalarType.BOOL*/ },
             { no: 4, name: "IsRead", kind: "scalar", jsonName: "IsRead", T: 8 /*ScalarType.BOOL*/ },
             { no: 5, name: "PageCount", kind: "scalar", jsonName: "PageCount", T: 5 /*ScalarType.INT32*/ },
-            { no: 6, name: "HasFavoriteTag", kind: "scalar", jsonName: "HasFavoriteTag", T: 8 /*ScalarType.BOOL*/ }
+            { no: 6, name: "HasFavoriteTag", kind: "scalar", jsonName: "HasFavoriteTag", T: 8 /*ScalarType.BOOL*/ },
+            { no: 7, name: "CurrentPage", kind: "scalar", jsonName: "CurrentPage", T: 5 /*ScalarType.INT32*/ },
+            { no: 8, name: "MaxProgress", kind: "scalar", jsonName: "MaxProgress", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<MangaListResponseItem>): MangaListResponseItem {
@@ -522,6 +532,8 @@ class MangaListResponseItem$Type extends MessageType<MangaListResponseItem> {
         message.isRead = false;
         message.pageCount = 0;
         message.hasFavoriteTag = false;
+        message.currentPage = 0;
+        message.maxProgress = 0;
         if (value !== undefined)
             reflectionMergePartial<MangaListResponseItem>(this, message, value);
         return message;
@@ -548,6 +560,12 @@ class MangaListResponseItem$Type extends MessageType<MangaListResponseItem> {
                     break;
                 case /* bool HasFavoriteTag */ 6:
                     message.hasFavoriteTag = reader.bool();
+                    break;
+                case /* int32 CurrentPage */ 7:
+                    message.currentPage = reader.int32();
+                    break;
+                case /* int32 MaxProgress */ 8:
+                    message.maxProgress = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -579,6 +597,12 @@ class MangaListResponseItem$Type extends MessageType<MangaListResponseItem> {
         /* bool HasFavoriteTag = 6; */
         if (message.hasFavoriteTag !== false)
             writer.tag(6, WireType.Varint).bool(message.hasFavoriteTag);
+        /* int32 CurrentPage = 7; */
+        if (message.currentPage !== 0)
+            writer.tag(7, WireType.Varint).int32(message.currentPage);
+        /* int32 MaxProgress = 8; */
+        if (message.maxProgress !== 0)
+            writer.tag(8, WireType.Varint).int32(message.maxProgress);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

@@ -15,6 +15,7 @@
 		imageUrl?: string | URL;
 		accessTime?: number | string | Date;
 		placeholder?: boolean;
+		currentPage?: number;
 	}
 
 	const ERROR_IMAGE = `data:image/svg+xml;utf8,
@@ -40,7 +41,8 @@
 		linkUrl,
 		imageUrl = PLACEHOLDER_IMAGE,
 		accessTime = '',
-		placeholder
+		placeholder,
+		currentPage
 	}: Props = $props();
 
 	let borderCls = $state('');
@@ -61,6 +63,9 @@
 	function onImageError() {
 		if (img) img.src = ERROR_IMAGE;
 	}
+
+	let progressPercent = $derived(((currentPage ?? 0) / (pageCount ?? 1)) * 100);
+	const READ_THRESHOLD = 95; // 5%
 </script>
 
 <Card class="{borderCls} h-100" id={id.toString()}>
@@ -125,7 +130,11 @@
 				</span>
 			{:else}
 				<span class="badge">
-					<span><Icon name="check" /> Read </span>
+					{#if progressPercent < READ_THRESHOLD}
+						<span><Icon name="book-half" /> {Math.round(progressPercent)}% </span>
+					{:else}
+						<span><Icon name="check" /> Read </span>
+					{/if}
 				</span>
 			{/if}
 			{#if pageCount}

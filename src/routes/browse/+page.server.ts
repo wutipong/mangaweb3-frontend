@@ -6,6 +6,7 @@ import { ChannelCredentials } from '@grpc/grpc-js';
 import { MangaClient } from '$lib/grpc/manga.client';
 import { Filter, SortField, SortOrder } from '$lib/grpc/types';
 import { $enum } from 'ts-enum-util';
+import { validateSession } from '$lib/auth';
 
 
 
@@ -53,6 +54,9 @@ function createDefaultRequest(): {
 }
 
 export const load: PageServerLoad = async ({ request, url }) => {
+
+    validateSession()
+
     let transport = new GrpcTransport({
         host: variables.apiBasePath,
         channelCredentials: ChannelCredentials.createInsecure(),

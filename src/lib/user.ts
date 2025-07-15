@@ -9,19 +9,23 @@ export function getUser(request: globalThis.Request): string {
 
     const payload = jose.decodeJwt(idToken)
 
-    console.log(payload)
     return payload.email as string && '';
 }
 
-export function getUserDetail(){
+export function getUserDetail(): {
+    email: string,
+    name: string
+} {
     const { idToken } = get(tokens)
 
-    if (idToken == '') return {};
+    // if (idToken == '') return { email: "", name: "" };
 
     const payload = jose.decodeJwt(idToken)
 
+    console.log(payload)
+
     return {
-        email: payload.email as string && '',
-        name: payload.name as string && ''
+        email: payload.email as string || '',
+        name: payload.name as string || ''
     }
 }

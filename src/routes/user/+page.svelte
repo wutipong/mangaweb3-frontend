@@ -1,0 +1,75 @@
+<script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
+	import { aboutURL, browseURL, historyURL, tagURL } from '$lib/routes';
+	import {
+	Button,
+		Collapse,
+		Container,
+		Dropdown,
+		DropdownItem,
+		DropdownMenu,
+		DropdownToggle,
+		Icon,
+		Image,
+		Nav,
+		NavItem,
+		NavLink,
+		Navbar,
+		NavbarBrand,
+		NavbarToggler,
+	} from '@sveltestrap/sveltestrap';
+
+	let navbarToggleOpen = $state(false);
+
+	function handleUpdate(event: CustomEvent<boolean>) {
+		navbarToggleOpen = event.detail;
+	}
+
+	let { email, name } = page.data
+</script>
+
+<svelte:head>
+	<title>User: Mangaweb 3</title>
+</svelte:head>
+
+<Navbar color="dark" dark expand="md" sticky={'top'}>
+	<NavbarBrand href="/">About</NavbarBrand>
+	<NavbarToggler onclick={() => (navbarToggleOpen = !navbarToggleOpen)} />
+	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
+		<Nav navbar>
+			<Dropdown nav inNavbar>
+				<DropdownToggle nav caret>Browse</DropdownToggle>
+				<DropdownMenu>
+					<DropdownItem onclick={() => goto(browseURL(page.url.origin))}>
+						<Icon name="list-ul" class="me-3" />
+						All items
+					</DropdownItem>
+					<DropdownItem onclick={() => goto(tagURL(page.url.origin))}>
+						<Icon name="tags-fill" class="me-3" />
+						Tag list
+					</DropdownItem>
+				</DropdownMenu>
+			</Dropdown>
+			<NavItem>
+				<NavLink onclick={() => goto(historyURL(page.url.origin))}>History</NavLink>
+			</NavItem>
+			<NavItem>
+				<NavLink onclick={() => goto(aboutURL(page.url.origin))}>About</NavLink>
+			</NavItem>
+		</Nav>
+	</Collapse>
+</Navbar>
+<Container>
+	<Image
+		src="https://www.gravatar.com/avatar/f3f94a89b1f34c5366cade921e48d7a0"
+		class="rounded-circle"
+		width="80"
+		height="80"
+	/>
+
+    <h2>{name}</h2>
+    <p><b>Email</b> {email}</p>
+
+	<Button href="https://auth.sleepyhead.name/application/o/mangaweb4-dev/end-session/">Logout</Button>
+</Container>

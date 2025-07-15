@@ -97,3 +97,12 @@ export function browseURL(base: URL | string, options?: {
 
     return output;
 }
+
+export function loginUrl(baseUrl: URL | string, targetUrl: URL | string) {
+    const target = targetUrl.toString().substring(baseUrl.toString().length + 1)
+
+    const loginUrl = new URL("/login", baseUrl)
+    loginUrl.searchParams.set('target', target)
+
+    return loginUrl
+}

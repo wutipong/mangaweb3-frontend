@@ -8,6 +8,7 @@ import { Filter, SortField, SortOrder } from '$lib/grpc/types';
 import { $enum } from 'ts-enum-util';
 import { validateSession } from '$lib/auth';
 import { redirect } from '@sveltejs/kit';
+import { loginUrl } from '$lib/routes';
 
 
 
@@ -55,11 +56,7 @@ function createDefaultRequest(): {
 }
 
 export const load: PageServerLoad = async ({ request, url }) => {
-    try {
-        await validateSession()
-    } catch (e: any) {
-        console.log(e.message)
-    }
+    await validateSession(url)
 
     let transport = new GrpcTransport({
         host: variables.apiBasePath,

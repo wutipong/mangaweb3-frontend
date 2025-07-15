@@ -4,10 +4,13 @@ import { variables } from '$lib/variables';
 import { GrpcTransport } from '@protobuf-ts/grpc-transport';
 import { ChannelCredentials } from '@grpc/grpc-js';
 import { MangaClient } from '$lib/grpc/manga.client';
+import { validateSession } from '$lib/auth';
 
 export const prerender = false;
 
 export const load: PageServerLoad = async ({ request, url }) => {
+    await validateSession(url)
+    
     const params = url.searchParams;
     
     let name = ''

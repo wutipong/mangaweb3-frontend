@@ -1,5 +1,4 @@
 import { redirect } from "@sveltejs/kit";
-import { browseURL } from "$lib/routes";
 import type { PageLoad } from "./$types";
 import { updateToken } from "$lib/auth";
 
@@ -8,6 +7,9 @@ export const load: PageLoad = async ({ url, fetch }) => {
     if (!code) {
         throw new Error("Authorization code not found in URL");
     }
+    const target = url.searchParams.get('target')
+
+    const targetUrl = new URL(target ?? '/', url.origin)
     const resp = await fetch(
         'https://auth.sleepyhead.name/application/o/token/',
         {
@@ -23,7 +25,7 @@ export const load: PageLoad = async ({ url, fetch }) => {
         });
 
     const tokens = await resp.json();
-    updateToken(code, tokens.access_token, tokens.id_token);
+    updateToken(tokens.access_token, tokens.id_token);
 
-    redirect(307, browseURL(url.origin));
+    redirect(307, targetUrl);
 }

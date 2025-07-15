@@ -1,5 +1,6 @@
 import { redirect } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
+import { variables } from "$lib/variables";
 
 export const load: PageLoad = async ({ url, fetch }) => {
     const target = url.searchParams.get('target')
@@ -7,11 +8,11 @@ export const load: PageLoad = async ({ url, fetch }) => {
         return
     }
 
-    const oidpUrl = new URL('https://auth.sleepyhead.name/application/o/authorize/')
+    const oidpUrl = new URL(variables.oidcAuthURL)
     oidpUrl.searchParams.set('response_type', 'code')
     oidpUrl.searchParams.set('scope', 'openid email profile')
-    oidpUrl.searchParams.set('client_id', 'SZ87KOccOuVlpqUBmPYHk4G9OcbRfw3CXNFzS4v5')
-    oidpUrl.searchParams.set('redirect_uri', 'http://localhost:5173/login/callback')
+    oidpUrl.searchParams.set('client_id', variables.oidcClient)
+    oidpUrl.searchParams.set('redirect_uri', new URL("/login/callback", url.origin).toString())
     oidpUrl.searchParams.set('state', target)
 
     redirect(307, oidpUrl)

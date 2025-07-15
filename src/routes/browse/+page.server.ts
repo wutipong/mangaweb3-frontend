@@ -7,6 +7,7 @@ import { MangaClient } from '$lib/grpc/manga.client';
 import { Filter, SortField, SortOrder } from '$lib/grpc/types';
 import { $enum } from 'ts-enum-util';
 import { validateSession } from '$lib/auth';
+import { redirect } from '@sveltejs/kit';
 
 
 
@@ -54,8 +55,11 @@ function createDefaultRequest(): {
 }
 
 export const load: PageServerLoad = async ({ request, url }) => {
-
-    validateSession()
+    try {
+        await validateSession()
+    } catch (e: any) {
+        console.log(e.message)
+    }
 
     let transport = new GrpcTransport({
         host: variables.apiBasePath,

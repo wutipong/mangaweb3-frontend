@@ -12,7 +12,7 @@ export const load: PageLoad = async ({ url, fetch }) => {
 
     const targetUrl = new URL(target ?? '/', url.origin)
     const resp = await fetch(
-        variables.oidcTokenURL,
+        variables.oidcToken,
         {
             method: 'POST',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },

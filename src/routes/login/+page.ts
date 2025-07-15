@@ -8,7 +8,7 @@ export const load: PageLoad = async ({ url, fetch }) => {
         return
     }
 
-    const oidpUrl = new URL(variables.oidcAuthURL)
+    const oidpUrl = new URL(variables.oidcAuth)
     oidpUrl.searchParams.set('response_type', 'code')
     oidpUrl.searchParams.set('scope', 'openid email profile')
     oidpUrl.searchParams.set('client_id', variables.oidcClient)

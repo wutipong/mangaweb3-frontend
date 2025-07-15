@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	import { aboutURL, browseURL, historyURL, tagURL } from '$lib/routes';
 	import {
-	Button,
+		Button,
 		Collapse,
 		Container,
 		Dropdown,
@@ -17,8 +17,9 @@
 		NavLink,
 		Navbar,
 		NavbarBrand,
-		NavbarToggler,
+		NavbarToggler
 	} from '@sveltestrap/sveltestrap';
+	import md5 from 'md5'
 
 	let navbarToggleOpen = $state(false);
 
@@ -26,7 +27,8 @@
 		navbarToggleOpen = event.detail;
 	}
 
-	let { email, name } = page.data
+	let { email, name, logoutURL } = page.data;
+
 </script>
 
 <svelte:head>
@@ -62,14 +64,14 @@
 </Navbar>
 <Container>
 	<Image
-		src="https://www.gravatar.com/avatar/f3f94a89b1f34c5366cade921e48d7a0"
+		src="https://www.gravatar.com/avatar/{md5(email)}"
 		class="rounded-circle"
 		width="80"
 		height="80"
 	/>
 
-    <h2>{name}</h2>
-    <p><b>Email</b> {email}</p>
+	<h2>{name}</h2>
+	<p><b>Email</b> {email}</p>
 
-	<Button href="https://auth.sleepyhead.name/application/o/mangaweb4-dev/end-session/">Logout</Button>
+	<Button href={logoutURL}>Logout</Button>
 </Container>

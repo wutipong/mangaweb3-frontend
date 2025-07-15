@@ -8,8 +8,9 @@ export const variables = {
     oidcEnable: env.OIDC_ENABLE ? env.OIDC_ENABLE == "true" : false,
     oidcClient: env.OIDC_CLIENT ?? '',
     oidcSecret: env.OIDC_SECRET ?? '',
-    oidcAuthURL: env.OIDC_AUTHORIZE_URL ?? '',
-    oidcTokenURL: env.OIDC_TOKEN_URL ?? '',
+    oidcAuth: env.OIDC_AUTHORIZE ?? '',
+    oidcToken: env.OIDC_TOKEN ?? '',
     oidcIssuer: env.OIDC_ISSUER ?? '',
-    oidcJWKS : env.OIDC_JWKS ?? ''
+    oidcJWKS: env.OIDC_JWKS ?? '',
+    oidcLogout: env.OIDC_LOGOUT ?? ''
 };

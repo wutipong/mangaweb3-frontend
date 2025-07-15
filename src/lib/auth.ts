@@ -20,7 +20,7 @@ export async function validateSession(url: URL) {
     if (!JWKS) {
         return
     }
-    
+
     try {
         const { accessToken } = get(tokens);
 

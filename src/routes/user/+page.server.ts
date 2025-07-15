@@ -7,7 +7,6 @@ export const load: PageServerLoad = async ({ request, url }) => {
    await validateSession(url)
 
    const user = getUserDetail(request)
-   console.log("user", user)
 
    return { ...user, logoutURL: variables.oidcLogout }
 }

@@ -19,7 +19,7 @@
 		NavbarBrand,
 		NavbarToggler
 	} from '@sveltestrap/sveltestrap';
-	import md5 from 'md5'
+	import md5 from 'md5';
 
 	let navbarToggleOpen = $state(false);
 
@@ -28,7 +28,6 @@
 	}
 
 	let { email, name, logoutURL } = page.data;
-
 </script>
 
 <svelte:head>
@@ -36,7 +35,7 @@
 </svelte:head>
 
 <Navbar color="dark" dark expand="md" sticky={'top'}>
-	<NavbarBrand href="/">About</NavbarBrand>
+	<NavbarBrand href="/">User</NavbarBrand>
 	<NavbarToggler onclick={() => (navbarToggleOpen = !navbarToggleOpen)} />
 	<Collapse isOpen={navbarToggleOpen} navbar expand="md" on:update={handleUpdate}>
 		<Nav navbar>
@@ -65,13 +64,15 @@
 <Container>
 	<Image
 		src="https://www.gravatar.com/avatar/{md5(email)}"
-		class="rounded-circle"
+		class="rounded-circle mt-4"
 		width="80"
 		height="80"
 	/>
 
-	<h2>{name}</h2>
+	<h2 class="mt-4">{name}</h2>
 	<p><b>Email</b> {email}</p>
 
-	<Button href={logoutURL}>Logout</Button>
+	{#if logoutURL != ''}
+		<Button href={logoutURL} class="mt-4" size="xl">Logout</Button>
+	{/if}
 </Container>

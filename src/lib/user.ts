@@ -4,7 +4,6 @@ import * as jose from 'jose'
 import { variables } from './variables';
 
 const DEFAULT_EMAIL = "default@example.com"
-const DEFAULT_NAME = "Default User"
 
 export function getUser(request: Request): string {
     if (!variables.oidcEnable) {
@@ -47,5 +46,5 @@ export function getUserDetailCF(request: Request): {
 } {
 
     const email = request.headers.get("Cf-Access-Authenticated-User-Email") ?? DEFAULT_EMAIL
-    return { email, name: DEFAULT_NAME }
+    return { email, name: "Cloudflare User" }
 }

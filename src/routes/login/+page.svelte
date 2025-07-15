@@ -2,8 +2,6 @@
 	import { page } from '$app/state';
 	import { Container, Button } from '@sveltestrap/sveltestrap';
 	import { browseURL, loginUrl } from '$lib/routes';
-
-	console.log(page.url)
 </script>
 
 <svelte:head>

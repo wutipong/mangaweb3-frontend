@@ -104,7 +104,5 @@ export function loginUrl(baseUrl: URL | string, targetUrl: URL | string) {
     const loginUrl = new URL("/login", baseUrl)
     loginUrl.searchParams.set('target', target)
 
-    console.log(target)
-
     return loginUrl
 }

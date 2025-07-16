@@ -9,8 +9,6 @@ import { validateSession } from '$lib/auth';
 export const prerender = false;
 
 export const load: PageServerLoad = async ({ request, url }) => {
-    await validateSession(url)
-    
     const params = url.searchParams;
     
     let name = ''

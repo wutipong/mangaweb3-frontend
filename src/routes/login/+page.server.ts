@@ -1,8 +1,8 @@
 import { redirect } from "@sveltejs/kit";
-import type { PageLoad } from "./$types";
+import type { PageServerLoad } from "./$types";
 import { variables } from "$lib/variables";
 
-export const load: PageLoad = async ({ url, fetch }) => {
+export const load: PageServerLoad = async ({ url, fetch }) => {
     const target = url.searchParams.get('target')
     if (target == null) {
         return

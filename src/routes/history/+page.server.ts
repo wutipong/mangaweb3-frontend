@@ -5,11 +5,8 @@ import type { PageServerLoad } from './$types';
 import { ChannelCredentials } from '@grpc/grpc-js';
 import { HistoryClient } from '$lib/grpc/history.client';
 import { ITEM_PER_PAGE } from '$lib/constants';
-import { validateSession } from '$lib/auth';
 
 export const load: PageServerLoad = async ({ request, url }) => {
-    await validateSession(url)
-    
     let transport = new GrpcTransport({
         host: variables.apiBasePath,
         channelCredentials: ChannelCredentials.createInsecure(),

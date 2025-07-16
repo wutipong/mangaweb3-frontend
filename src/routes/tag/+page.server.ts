@@ -6,7 +6,6 @@ import { ChannelCredentials } from '@grpc/grpc-js';
 import { TagClient } from '$lib/grpc/tag.client';
 import { SortOrder, SortField, Filter } from '$lib/grpc/types';
 import { $enum } from 'ts-enum-util';
-import { validateSession } from '$lib/auth';
 
 export const prerender = false;
 
@@ -31,8 +30,6 @@ function createDefaultRequest(request: Request): {
 }
 
 export const load: PageServerLoad = async ({ request, url }) => {
-    await validateSession(url)
-    
     let { user, search, filter, page, item_per_page, order, sort } = createDefaultRequest(request);
 
     const params = url.searchParams;

@@ -4,8 +4,6 @@ import { getUserDetail } from "$lib/user";
 import { variables } from "$lib/variables";
 
 export const load: PageServerLoad = async ({ request, url }) => {
-   await validateSession(url)
-
    const user = getUserDetail(request)
 
    return { ...user, logoutURL: variables.oidcLogout }

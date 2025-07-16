@@ -34,3 +34,57 @@ OIDC_JWKS=<JWKS URL>
 OIDC_LOGOUT=<Logout URL>
 ```
 
+## Development
+
+**MangaWeb 4** was developed with [Node.JS](https://nodejs.org/en) runtime for a long time (since version 1). However, recently I made a switch to [Bun](https://bun.com/) and I don't find any issue. I assumed that both runtime can be use. Feel free to create an issue if you run into a problem though.
+
+### Running MangaWeb 4
+
+Before you can run **MangaWeb 4**, you have to install its dependency first. Use `npm install` command to install the dependencies.
+
+After that, use the command `npm run dev -- --open` to start the server in development environment. 
+
+For more information, please consult [SvelteKit](https://svelte.dev/docs/kit/introduction) documentation.
+
+### Setup gRPC code generation.
+
+**MangaWeb 4** use gRPC to communicate between the frontend service and backend service. In order to update the gRPC's generated code, firstly intialize and update subprojects in the repository using the following command.
+
+gRPC code is generated from protobuf schema files (*.proto) that is in separated project which is added as a submodule of this project. The code will be generated using `go generate` command. 
+
+
+### Initialize the submodule
+
+To initialize submodule, run the following command.
+
+```sh
+$ git submodule init
+```
+
+And then, update the submodule to pull the code.
+
+```
+$ git submodule update
+```
+
+### Install gRPC toolchain
+
+Install `protoc` on the system. Using the instruction from the [protobuf website](https://protobuf.dev/installation/)
+
+Personally I find problems with include path when install `protoc` on Windows using `winget`, so I recommend using [Chocolatey](https://chocolatey.org/) instead.
+
+```sh
+$ choco install protoc
+```
+
+### Generating gRPC-related code.
+
+Run `npm run generate-grpc` to generate gRPC code.
+
+### Generating Web Application Manifest resources
+
+**MangaWeb 4** includes progressive web application (PWA)'s web application manifest resources so it could run as a standalone application despite being a web application. 
+
+In order to update the PWA's icon, make changes to the file `static/favicon.svg` and then run the script `npm run generate-pwa-assets` to update other icons. 
+
+**MangaWeb 4** uses [Vite PWA Plugin](https://vite-pwa-org.netlify.app/) to setup PWA.

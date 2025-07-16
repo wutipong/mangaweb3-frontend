@@ -36,7 +36,11 @@ OIDC_LOGOUT=<Logout URL>
 
 ## Development
 
-**MangaWeb 4** was developed with [Node.JS](https://nodejs.org/en) runtime for a long time (since version 1). However, recently I made a switch to [Bun](https://bun.com/) and I don't find any issue. I assumed that both runtime can be use. Feel free to create an issue if you run into a problem though.
+**MangaWeb 4** was developed with [Node.JS](https://nodejs.org/en) runtime for a long time (since version 1). However, recently I made a switch to [Bun](https://bun.com/) and I don't find any issue. 
+
+To put it simply, you can switch the command `npm` with `bun` and it should work just fine.
+
+Feel free to create an issue if you run into a problem though.
 
 ### Running MangaWeb 4
 
@@ -48,32 +52,18 @@ For more information, please consult [SvelteKit](https://svelte.dev/docs/kit/int
 
 ### Setup gRPC code generation.
 
-**MangaWeb 4** use gRPC to communicate between the frontend service and backend service. In order to update the gRPC's generated code, firstly intialize and update subprojects in the repository using the following command.
+**MangaWeb 4** use gRPC to communicate between the frontend service and backend service. The gRPC toolchain is required, please use the instruction from the [protobuf website](https://protobuf.dev/installation/) to install.
 
-gRPC code is generated from protobuf schema files (*.proto) that is in separated project which is added as a submodule of this project. The code will be generated using `go generate` command. 
-
-
-### Initialize the submodule
-
-To initialize submodule, run the following command.
+Then, setup the schema submodule using the following command.
 
 ```sh
 $ git submodule init
-```
-
-And then, update the submodule to pull the code.
-
-```
 $ git submodule update
 ```
 
-### Install gRPC toolchain
+And lastly, run `npm run generate-grpc` to generate gRPC code.
 
-Use the instruction from the [protobuf website](https://protobuf.dev/installation/)
-
-### Generating gRPC-related code.
-
-Run `npm run generate-grpc` to generate gRPC code.
+The grpc's schema files are kept separately in [mangaweb4-grpc-schema](https://github.com/mangaweb4/mangaweb4-grpc-schema) repository. If you need to update the `*.proto` file, make sure to commit the change back to the repository and then update the code on the backend side, otherwise the code between the two components might be out-of-sync and can cause communication issue.
 
 ### Generating Web Application Manifest resources
 

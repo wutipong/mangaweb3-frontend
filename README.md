@@ -69,13 +69,7 @@ $ git submodule update
 
 ### Install gRPC toolchain
 
-Install `protoc` on the system. Using the instruction from the [protobuf website](https://protobuf.dev/installation/)
-
-Personally I find problems with include path when install `protoc` on Windows using `winget`, so I recommend using [Chocolatey](https://chocolatey.org/) instead.
-
-```sh
-$ choco install protoc
-```
+Use the instruction from the [protobuf website](https://protobuf.dev/installation/)
 
 ### Generating gRPC-related code.
 

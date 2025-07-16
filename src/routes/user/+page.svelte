@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { aboutURL, browseURL, historyURL, tagURL } from '$lib/routes';
+	import { aboutURL, browseURL, historyURL, tagURL, userURL } from '$lib/routes';
 	import {
 		Button,
 		Collapse,
@@ -54,6 +54,9 @@
 			</Dropdown>
 			<NavItem>
 				<NavLink onclick={() => goto(historyURL(page.url.origin))}>History</NavLink>
+			</NavItem>
+			<NavItem>
+				<NavLink onclick={() => goto(userURL(page.url.origin))}>User</NavLink>
 			</NavItem>
 			<NavItem>
 				<NavLink onclick={() => goto(aboutURL(page.url.origin))}>About</NavLink>

@@ -1,38 +1,36 @@
-# create-svelte
+# MangaWeb 4 Frontend
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+## Configurations
 
-## Creating a project
+**MangaWeb 4** can be configured using environment variables. Below is the default values.
 
-If you're seeing this, you've probably already done this step. Congrats!
+```sh
+BACKEND_URL=localhost:8972
+DEFAULT_SORT_FIELD=createTime # can be either 'name', 'pageCount', or 'createTime'
+DEFAULT_ORDER=descending # can be either 'ascending' or 'descending'
+```
+**MangaWeb 4** also supports reading environment variables from `.env` file at run time.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Authentication
 
-# create a new project in my-app
-npm create svelte@latest my-app
+By default, **MangaWeb 4** use Cloudflare Access's `Cf-Access-Authenticated-User-Email` request header value to identify the user. 
+
+If the request is made without this parameter, the default user (default@example.com) will be used instead. Also if this header is set with an email address that's not exists in the system, a new account will be created automatically. 
+
+### OpenID Connect Authentication
+
+**MangaWeb 4** also support OpenID Connect provider as the authentication source. **MangaWeb 4** has been tested with [Authentik](https://goauthentik.io/)'s implicit flow. Other kind of provider might or might not work. Feel free to open an issue if you have problems setting up your OIDC provider of choice.
+
+In order to use OIDC Provider as the authentication source, update the following environment variable.
+
+```sh
+OIDC_ENABLE=true
+OIDC_CLIENT=<Client ID>
+OIDC_SECRET=<Secret>
+OIDC_AUTHORIZE=<Authorize URL>
+OIDC_TOKEN=<Token URL>
+OIDC_ISSUER=<OpenID Configuration Issuer>
+OIDC_JWKS=<JWKS URL>
+OIDC_LOGOUT=<Logout URL>
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
